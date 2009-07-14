@@ -10,3 +10,4 @@
   * *Oblast* - oblast zájmu na pobočce - ICX, OGX, PR, TM, IT
   * *KPI* - důležitý vyčíslitelný ukazatel z oblasti
   * *LC* - pobočka s unikátními oblastmi a svými uživateli
+  * *Actual value* - číslo, kt se dosáhlo v daném ukazateli v příslušném termu
