@@ -46,7 +46,8 @@
 </form>
 
 			//implementace planningu v zavislosti na case <br>
-			//potreba vyresit jak se budou upravovat Areas a KPIs
+			//Areas ani KPIs se upravovat nebudou<br>
+                  //PLANUJEME pro jednotlive kvartaly a pro cely term!
 		</div>
 	</div>
 	<div id="colTwo">
