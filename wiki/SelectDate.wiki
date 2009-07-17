@@ -1,0 +1,21 @@
+#summary One-sentence summary of this page.
+
+= Introduction =
+
+This component will enable user to select date and process it to further use.
+
+ie. reload the parent page who's calling this component.
+
+
+= Details =
+
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
+
+
+== Related Use Cases ==
+
+  * [Planning]
+  * EnteringActual
