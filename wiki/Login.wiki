@@ -1,0 +1,16 @@
+#explanation of how login in apedog works
+= Introduction =
+
+Explanation of how login in apedog works
+
+
+= Details =
+
+*Succesful use case:* User wants is accessing apedog. If last user session is still alive it will redirect him to main_page.php.
+If there is no session set, user gets to index.php which is page with neutral template and possibility of login. User inserts username and password, if those match with one of $USERS array defined in index.php session is set and user is redirected to the main_page.php. After user finishes work, he logs out, the session is terminated and user is redirected to the index.php
+
+Everytime user want to access some inner page of a system there is a check if session with user is set, if not, user is redirected to index.php
+
+Based on the inserted username, picture in the top menu is chosen.
+
+Useful links are accessible either logged in or logged out - top menu of the page is depending on that.
