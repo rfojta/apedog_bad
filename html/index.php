@@ -17,7 +17,7 @@
         $USERS[] = array("login" => "Plzen", "pass" => "brucelee");
         $USERS[] = array("login" => "Pardubice", "pass" => "brucelee");
         $USERS[] = array("login" => "Brno", "pass" => "brucelee");
-        $USERS[] = array("login" => "Czu", "pass" => "brucelee");
+        $USERS[] = array("login" => "CZU", "pass" => "brucelee");
         $USERS[] = array("login" => "Ostrava", "pass" => "brucelee");
         $USERS[] = array("login" => "Karvina", "pass" => "brucelee");
         $USERS[] = array("login" => "Zlin", "pass" => "brucelee");
