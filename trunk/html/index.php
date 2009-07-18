@@ -9,6 +9,8 @@
 	$info = "You were successfully logged out.";
   }
 
+  if (isset($_SESSION['user'])) { header("Location: main_page.php");}
+
 	//$login_query = mysql_query("SELECT email, password FROM adr_person")  or die("Unsuccessful login query.");
 
 	$USERS[] = array("login" => "Praha", "pass" => "brucelee");
