@@ -11,3 +11,4 @@
   * *KPI* - důležitý vyčíslitelný ukazatel z oblasti
   * *LC* - pobočka s unikátními oblastmi a svými uživateli
   * *Actual value* - číslo, kt se dosáhlo v daném ukazateli v příslušném termu
+  * *Quarter, Q3,Q4,Q1,Q2* - ctvrtleti. Term zacina 3. ctvrtletim (od 1.10.)
