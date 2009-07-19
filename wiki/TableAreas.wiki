@@ -1,0 +1,17 @@
+#summary Description of table Areas
+
+= Introduction =
+
+Enumerations for Areas in AIESEC Czech Republic
+
+= Details =
+
+Columns
+  * Id
+  * Name
+  * Description
+
+
+= Related Tables =
+
+None
