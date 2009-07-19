@@ -1,17 +1,38 @@
-#summary One-sentence summary of this page.
+#summary Description of use case how to enter actual numbers
 
 = Introduction =
 
 This use case will enable user to add current values and compare it with planned numbers.
 
+= Used Data Tables
+
+  * TableTracking
+  * TableLCs
+  * TableUsers
+  * TableAreas
 
 = Details =
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+Sesion contains
+  * user login
 
+Page contains
+  * SelectTerm component
+  * List of areas
+  * Input for each area in current term
+  ** Input contains current value for term and area from TableTracking
+
+= SQL =
+
+For each input
+
+Update tracking set actual = 10
+
+where lc = 'Praha'
+
+and Term = '2009/3'
+
+and area = 'ICX';
 
 == Related Use cases ==
 
