@@ -1,0 +1,14 @@
+#summary Description of db table Users
+
+= Introduction =
+
+
+
+
+= Details =
+
+Columns
+  * Id
+  * Login
+  * Password
+  * LC - Lc
