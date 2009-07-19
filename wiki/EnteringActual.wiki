@@ -4,7 +4,7 @@
 
 This use case will enable user to add current values and compare it with planned numbers.
 
-= Used Data Tables
+= Used Data Tables =
 
   * TableTracking
   * TableLCs
@@ -26,13 +26,13 @@ Page contains
 
 For each input
 
+{{{
 Update tracking set actual = 10
-
 where lc = 'Praha'
-
 and Term = '2009/3'
-
 and area = 'ICX';
+}}}
+
 
 == Related Use cases ==
 
