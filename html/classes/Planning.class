@@ -10,15 +10,22 @@
  * @author Richard
  */
 class Planning {
-    var $dbres;
-    var $term_id;
-    var $area_list;
-    var $area_query = 'select * from areas';
-    var $kpi_query = 'select * from kpis where area = ';
+    private $dbres;
 
-    function Planning( $dbres, $term_id ) {
+    private $term_id;
+
+    private $area_query = 'select * from areas';
+    private $kpi_query = 'select * from kpis where area = ';
+
+    function Planning( $dbres, $term_id, $user ) {
         $this->dbres = $dbres;
         $this->term_id = $term_id;
+
+        $lc = new LC($dbres);
+        $this->lc_id = $lc->get_lc_by_user($user);
+
+        $this->tracking = new Tracking($dbres);
+
     }
 
     function get_area_list() {
@@ -47,25 +54,49 @@ class Planning {
         if( !$res ) {
             die( 'Invalid query: ' . mysql_error($this->dbres) );
         }
-        
+
         $out_array = array();
-        
+
         while( $row = mysql_fetch_assoc($res) ) {
             $out_array[] = $row;
         }
-        
+
         return $out_array;
-
-
-
     }
 
-    function submit( $post, $tracking ) {
+    function get_form_content() {
+        $area_list = $this->get_area_list();
+        $current_term = $this->term_id;
+        $lc_id = $this->lc_id;
+
+        echo "<ul>\n";
+        foreach( $area_list as $row ) {
+            $area_id = $row['id'];
+            echo '<li>';
+            echo "\n";
+            echo $row['name'] . ': ';
+            $actual = $this->tracking->get_actual(
+                $lc_id, $current_term, $area_id
+            );
+
+            echo '<input name="'
+                . $lc_id . '-'
+                . $current_term . '-'
+                . $area_id .'" value="' . $actual . '">';
+            echo "\n";
+            echo '</li>';
+            echo "\n";
+        }
+        echo "</ul>\n";
+    }
+
+    function submit( $post ) {
         foreach( $post as $key => $value ) {
-            // $tokens = array();
+        // $tokens = array();
             if( preg_match('/^(\d)-(\d)-(\d)$/', $key, $tokens) ) {
                 if( $value > 0 ) {
-                    $tracking->set_actual($tokens[1], $tokens[2],
+                    $this->tracking->set_actual(
+                        $tokens[1], $tokens[2],
                         $tokens[3], $value);
                 }
             }
