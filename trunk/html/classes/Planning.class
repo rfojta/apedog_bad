@@ -13,6 +13,8 @@ class Planning {
     private $dbres;
 
     private $term_id;
+    private $lc_id;
+    private $tracking;
 
     private $area_query = 'select * from areas';
     private $kpi_query = 'select * from kpis where area = ';
@@ -46,9 +48,8 @@ class Planning {
     }
 
     function get_kpis ($area_id ) {
-        $query = $this->kpi_query . '\''
-            . mysql_real_escape_string($area_id, $this->dbres)
-            . '\'';
+        $query = $this->kpi_query  
+            . mysql_real_escape_string($area_id, $this->dbres);
 
         $res = mysql_query( $query, $this->dbres );
         if( !$res ) {
