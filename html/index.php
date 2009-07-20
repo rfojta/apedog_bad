@@ -13,6 +13,7 @@ if (isset($_SESSION['user'])) {
     header("Location: main_page.php");
 }
 
+// TODO zmenit na promenne, tak aby bylo nezavisle na prostredi
 $dbres = mysql_connect('localhost','root','');
 if (!$dbres) {
     die('Could not connect: ' . mysql_error());
