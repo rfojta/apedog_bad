@@ -13,15 +13,11 @@ if (isset($_SESSION['user'])) {
     header("Location: main_page.php");
 }
 
-// TODO zmenit na promenne, tak aby bylo nezavisle na prostredi
-$dbres = mysql_connect('localhost','root','');
-if (!$dbres) {
-    die('Could not connect: ' . mysql_error());
-}
-mysql_select_db('apedog',$dbres);
-
+include('classes/Apedog.class');
 include('classes/Login.class');
 
+$apedog = new Apedog('prod');
+$dbres = $apedog->dbres;
 $login = new Login($dbres);
 
 list($code, $info) = $login->validate($_POST);
@@ -32,11 +28,6 @@ if( $code == 1 ) {
     header("Location: main_page.php");
     break;
 }
-
-
-
-
-
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
