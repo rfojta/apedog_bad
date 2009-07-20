@@ -10,15 +10,23 @@
  * @author Richard
  */
 class Login {
-//put your code here
     var $dbres;
     var $user_query = 'select pass from users where login = ';
     var $user_count_query = 'select count(pass) from users where login = ';
 
+    /**
+     *
+     * @param resource database link
+     */
     function Login($dbres) {
         $this->dbres = $dbres;
     }
 
+    /**
+     *
+     * @param array $_POST global variable
+     * @return array( code, message )
+     */
     function validate($post) {
         if (isset($post['userid'])) {
         // check user exists
@@ -35,6 +43,7 @@ class Login {
             $row = mysql_fetch_row($res);
             $count = $row[0];
 
+            // each user should be in table Users just once.
             if( $count == 1 ) {
                 $res = mysql_query( $this->user_query
                     . '\''
