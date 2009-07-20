@@ -21,18 +21,12 @@ if( isset($_REQUEST['term_id']) ) {
     $current_term = $_REQUEST['term_id'];
 }
 
-$terms = $term->get_term_labels('id');
+$terms = $term->get_term_labels();
 
-$lc = new LC($dbres);
-$lc_id = $lc->get_lc_by_user($_SESSION['user']);
-
-$planning = new Planning($dbres, $current_term);
-$area_list = $planning->get_area_list();
-
-$tracking = new Tracking($dbres);
+$planning = new Planning($dbres, $current_term, $_SESSION['user']);
 
 if( isset( $_POST['posted'])) {
-    $planning->submit( $_POST, $tracking );
+    $planning->submit( $_POST );
 }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -55,25 +49,7 @@ if( isset( $_POST['posted'])) {
                     <form method="POST">
                         <?php
                         include('components\select_term.php');
-
-                        echo "<ul>\n";
-                        foreach( $area_list as $row ) {
-                            $area_id = $row['id'];
-                            echo '<li>';
-                            echo "\n";
-                            echo $row['name'] . ': ';
-                            $actual = $tracking->get_actual($lc_id, $current_term, $area_id);
-                            echo '<input name="'
-                                . $lc_id . '-'
-                                . $current_term . '-'
-                                . $area_id .'" value="' . $actual . '">';
-                            echo "\n";
-                            echo '</li>';
-                            echo "\n";
-                        }
-                        echo "</ul>\n";
-
-                        // print_r( $tracking->parse_query(10,11,12) );
+                        $planning->get_form_content();
 
                         ?>
                         <input type="hidden" name="posted" value="1" />
