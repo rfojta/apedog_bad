@@ -11,6 +11,7 @@
  */
 class Tracking {
     private $dbres;
+    private $actual;
     private $get_actual_query =
     'select actual from tracking
      where lc = :lc_id
@@ -35,16 +36,32 @@ class Tracking {
 
 
 
-    function Tracking($dbres) {
+    function Tracking($dbres, $actual = 0) {
 
         $this->dbres = $dbres;
+        $this->actual = $actual;
 
     }
     //put your code here
-    function parse_query($pre_query, $values) {
+    function parse_query_actual($pre_query, $values) {
         $tags = array(':lc_id', ':term_id', ':area_id', ':actual');
         $query = str_replace($tags, $values, $pre_query);
         return $query;
+    }
+
+    function parse_query_target($pre_query, $values) {
+        $tags = array(':lc_id', ':term_id', ':area_id', ':target');
+        $a_query = str_replace('actual', 'target' , $pre_query);
+        $query = str_replace($tags, $values, $a_query);
+        return $query;
+    }
+
+    function parse_query($pre_query, $values) {
+        if( $this->actual == 0 ) {
+            return $this->parse_query_target($pre_query, $values);
+        } else {
+            return $this->parse_query_actual($pre_query, $values);
+        }
     }
 
 
@@ -68,7 +85,11 @@ class Tracking {
             $out_array[] = $row;
         }
 
-        return $out_array[0]['actual'];
+        if( $this->actual == 0 ) {
+            return $out_array[0]['target'];
+        } else {
+            return $out_array[0]['actual'];
+        }
     }
 
     function get_actual_count($lc_id, $term_id, $area_id) {
