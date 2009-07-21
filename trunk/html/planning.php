@@ -11,7 +11,7 @@ include('classes/Term.class');
 include('classes/LC.class');
 include('classes/Tracking.class');
 
-$apedog = new Apedog('devel');
+$apedog = new Apedog('prod');
 $dbres = $apedog->dbres;
 
 $term = new Term($dbres);
@@ -48,7 +48,7 @@ if( isset( $_POST['posted'])) {
                 <div class="content">
                     <form method="POST">
                         <?php
-                        include('components\select_term.php');
+                        include('components/select_term.php');
                         $planning->get_form_content();
 
                         ?>
