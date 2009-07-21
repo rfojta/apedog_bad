@@ -21,7 +21,6 @@ $dbres = $apedog->dbres;
 $login = new Login($dbres);
 
 list($code, $info) = $login->validate($_POST);
-mysql_close( $dbres );
 
 if( $code == 1 ) {
     $_SESSION['user'] = $info;
