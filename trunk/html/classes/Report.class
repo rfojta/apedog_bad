@@ -75,7 +75,8 @@ class Report {
         
         $cht = 'cht=bvg';
         $chbh = 'chbh=5,2';
-        $chm = 'chm=D,0033FF,1,0,6,3';
+        $chco2 = '0033FF';
+        $chm = 'chm=D,'.$chco2.',1,0,6,3';
         $chbh = 'chbh=20';
         $chs = 'chs=400x200';
         $chxt = 'chxt=x,y';
@@ -106,10 +107,13 @@ class Report {
           $chd2.= substr($chd3, 0, -1);
         }
         
-        $chco = 'chco=76A4FB';
+        $chco1 = '76A4FB';
+        $chco = 'chco='.$chco1.','.$chco2;
+        $chdl = 'chdl=Plan|Reality';
+        
         
         $chart_loc = 'http://chart.apis.google.com/chart?' . $cht . '&' . $chbh . '&' . $chm . '&' . $chbh . '&' . $chs . '&' .$chxt.
-        '&' . $chxlx . '&' .$chxly . '&' . $chd1 . '|' . $chd2 . '&' . $chco;
+        '&' . $chxlx . '&' .$chxly . '&' . $chd1 . '|' . $chd2 . '&' .$chco. '&' .$chdl;
         
         echo '<img src="'.$chart_loc.'">';
     }
