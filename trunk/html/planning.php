@@ -1,21 +1,66 @@
 <?php
+<<<<<<< .mine
+include('init.php');
+
+$planning = new Planning($dbres, $current_term, $_SESSION['user']);
+
+if( isset( $_POST['posted'])) {
+    $planning->submit( $_POST );
+}
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <title>Apedog: Planning</title>
+        <meta name="keywords" content="" />
+        <meta name="description" content="" />
+        <link href="default.css" rel="stylesheet" type="text/css" />
+    </head>
+    <body>
+=======
 session_cache_expire(60);
 session_start();
 if (!isset($_SESSION['user'])) { header("Location: index.php"); exit; }
 $info = $_SESSION['user'];
 $lc = $_SESSION['user'];
+>>>>>>> .r44
 
+<<<<<<< .mine
+        <?php include('menu.php'); ?>
+=======
 include('classes/Apedog.class');
 include('classes/Planning.class');
 include('classes/Term.class');
 include('classes/LC.class');
 include('classes/Tracking.class');
+>>>>>>> .r44
 
+<<<<<<< .mine
+        <div id="content">
+            <div id="colOne">
+                <h2 class="section">Planning</h2>
+                <div class="content">
+                    <form method="POST">
+                        <?php
+                        include('components/select_term.php');
+                        $planning->get_form_content();
+=======
 $apedog = new Apedog('prod');
 $dbres = $apedog->dbres;
+>>>>>>> .r44
 
+<<<<<<< .mine
+                        ?>
+                        <input type="hidden" name="posted" value="1" />
+                        <input type=submit />
+                    </form>
+=======
 $term = new Term($dbres);
+>>>>>>> .r44
 
+<<<<<<< .mine
+=======
 $current_term = $term->get_current_term();
 if( isset($_REQUEST['term_id']) ) {
     $current_term = $_REQUEST['term_id'];
@@ -40,6 +85,7 @@ if( isset( $_POST['posted'])) {
     </head>
     <body>
 
+>>>>>>> .r44
         <?php include('menu.php'); ?>
 
         <div id="content">
@@ -76,3 +122,4 @@ if( isset( $_POST['posted'])) {
 
     </body>
 </html>
+
