@@ -88,7 +88,7 @@ class Planning {
         echo "<ul>\n";
         foreach( $area_list as $row ) {
             $area_id = $row['id'];
-            $area_name = $row['name'];
+            $area_name = $row['name']; 
             $this->get_form_content_row( $area_id, $area_name );
         }
         echo "</ul>\n";

@@ -30,6 +30,8 @@ foreach( $terms as $term ) {
     echo "</option>\n";
 }
 
-echo "</select>\n"
+echo "</select>\n";
+
+return $term[0];
 
 ?>
