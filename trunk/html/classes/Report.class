@@ -24,6 +24,7 @@ class Report {
     protected $term_query = 'select * from terms';
 
     function __construct( $dbres, $user ) {
+        include('classes/LineOnBarChart.class');
         $this->dbres = $dbres;
         $this->area_id = $area_id;
 
@@ -72,50 +73,8 @@ class Report {
             $term_id = $row['ID'];  
             $this->get_chart_content_element( $term_id );
         }
-        
-        $cht = 'cht=bvg';
-        $chbh = 'chbh=5,2';
-        $chco2 = '0033FF';
-        $chm = 'chm=D,'.$chco2.',1,0,6,3';
-        $chbh = 'chbh=20';
-        $chs = 'chs=400x200';
-        $chxt = 'chxt=x,y';
-        
-        $chxlx = 'chxl=0:';        
-        foreach ( $term_list as $row){
-        $chxlx .= '|' .$row['ID'];
-        }
-        
-        $chxly = 'chxr=1,0,500,50';
-        
-        $chd = 'chd=t1:';
-
-        if (!empty($this->planned_data)){
-            foreach ($this->planned_data as $value){
-            if (isset($value)){
-                  $chd.= $value/5 . ',';
-                  }
-              }
-            $chd1 = substr($chd, 0, -1);
-        } 
-        
-        $chd3 = '';
-        if (!empty($this->actual_data)){
-          foreach ($this->actual_data as $value){         
-            $chd3.= $value/5 . ',';
-          }
-          $chd2.= substr($chd3, 0, -1);
-        }
-        
-        $chco1 = '76A4FB';
-        $chco = 'chco='.$chco1.','.$chco2;
-        $chdl = 'chdl=Plan|Reality';
-        
-        
-        $chart_loc = 'http://chart.apis.google.com/chart?' . $cht . '&' . $chbh . '&' . $chm . '&' . $chbh . '&' . $chs . '&' .$chxt.
-        '&' . $chxlx . '&' .$chxly . '&' . $chd1 . '|' . $chd2 . '&' .$chco. '&' .$chdl;
-        
-        echo '<img src="'.$chart_loc.'">';
+        $chart = new LineOnBarChart($this->planned_data,$this->actual_data,$term_list,500,'Plan','Reality','76A4FB','0033FF','400x200');
+        $chart->draw_chart();
     }
 }
 
