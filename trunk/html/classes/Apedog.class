@@ -34,10 +34,10 @@ class Apedog {
         
         if( $environment == 'prod' ) {
             $configuration = array(
-                server => 'mysql.webzdarma.cz',
+                server => 'localhost',
                 user => 'apedog',
-                password => 'jachta',
-                database => 'apedog'
+                password => 'ponorka',
+                database => 'apedog_cholerik_cz'
             );
         } else {
             $configuration = array(
