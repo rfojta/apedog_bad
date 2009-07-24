@@ -1,4 +1,4 @@
-#summary One-sentence summary of this page.
+#summary Description of functionality Planning
 
 = Use Case planning =
 
@@ -39,3 +39,10 @@ values (
 == Related Use cases ==
 
   * SelectDate
+
+== Related clasess ==
+
+  * ClassPlanning
+  * ClassTracking
+  * ClassLc
+  * ClassTerm
