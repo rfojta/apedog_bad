@@ -5,13 +5,13 @@ if (!isset($_SESSION['user'])) { header("Location: index.php"); exit; }
 $info = $_SESSION['user'];
 $lc = $_SESSION['user'];
 
-include('classes/Apedog.class');
-include('classes/Planning.class');
-include('classes/Entering.class');
-include('classes/Term.class');
-include('classes/LC.class');
-include('classes/Tracking.class');
-include('classes/Report.class');
+include('classes/Apedog.class.php');
+include('classes/Planning.class.php');
+include('classes/Entering.class.php');
+include('classes/Term.class.php');
+include('classes/LC.class.php');
+include('classes/Tracking.class.php');
+include('classes/Report.class.php');
 
 
 $apedog = new Apedog('devel');
