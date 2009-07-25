@@ -78,10 +78,23 @@ class Report {
         $chart = new LineOnBarChart($this->planned_data,$this->actual_data,$term_list,500,'Plan','Reality','76A4FB','0033FF','400x200');
         $chart->draw_chart();
         
-        $chart2 = new LineChart($this->planned_data,$this->actual_data,null,null,null,null,null,null,null,null,$term_list,500,
-        'Plan','Reality',null,null,null,null,null,null,null,null,'76A4FB','0033FF',null,null,null,null,null,null,null,null,'400x200');
+        
+	  $data=array();
+    $data[]=$this->planned_data;
+    $data[]=$this->actual_data;
+    
+	  $line_labels=array();
+    $line_labels[]='Plan';
+    $line_labels[]='Reality';
+    
+	  $line_colors=array();
+    $line_colors[]='76A4FB';
+    $line_colors[]='0033FF';
+    
+        $chart2 = new LineChart($data,$term_list,500,$line_labels,$line_colors,'400x200');
         $chart2->draw_chart();
     }
 }
 
 ?>
+

@@ -13,8 +13,8 @@ if (isset($_SESSION['user'])) {
     header("Location: main_page.php");
 }
 
-include('classes/Apedog.class');
-include('classes/Login.class');
+include('classes/Apedog.class.php');
+include('classes/Login.class.php');
 
 $apedog = new Apedog('devel');
 $dbres = $apedog->dbres;
