@@ -24,6 +24,9 @@
 				<li><a href="planning.php">Planning</a></li>
 				<li><a href="entering_values.php">Entering values</a></li>
 				<li><a href="reports.php">Reports</a></li>
+<?php if( $_SESSION['user'] == 'Praha'): ?>
+                                <li><a href="kpi_conf.php">KPI Cofiguration</a></li>
+                                <?php endif; ?>
 			</ul>
 		</div>
 	</div>
