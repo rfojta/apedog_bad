@@ -1,6 +1,6 @@
 =Co jeste udelame z technickeho hlediska=
   * Rozdeleni na quarters a KPIs
-  * u KPI sloupec LC (kteremu LC patri / vsem, aby mohly jednotlive LC mit vlastni)
+  * u KPI sloupec LC (kteremu LC patri - pozor muze patrit i 2 atd. takze asi spis nejaka dalsi tabulka, aby mohly jednotlive LC mit vlastni)
   * u KPI sloupec ktery urcuje jednotku (%, cislo, days)
   * u KPI sloupec ktery urcuje importance
   * u KPI sloupec ktery urcuje jestli hodnota termu je soucet quarters nebo jestli se rovna poslednimu quarteru
