@@ -1,13 +1,12 @@
 =Co jeste udelame z technickeho hlediska=
-* Rozdeleni na quarters a KPIs
-* u KPI sloupec LC (kteremu LC patri / vsem, aby mohly jednotlive LC mit vlastni)
-* u KPI sloupec ktery urcuje jednotku (%, cislo, days)
-* u KPI sloupec ktery urcuje importance
-* u KPI sloupec ktery urcuje jestli hodnota termu je soucet quarters nebo jestli se rovna poslednimu quarteru
-* implementaci toho vyse u planingu a reportu
-* selekty podle quarters, terms, KPIs, Areas, LC
-* eventualne export celeho LC do Excelu
+** Rozdeleni na quarters a KPIs
+** u KPI sloupec LC (kteremu LC patri / vsem, aby mohly jednotlive LC mit vlastni)
+** u KPI sloupec ktery urcuje jednotku (%, cislo, days)
+** u KPI sloupec ktery urcuje importance
+** u KPI sloupec ktery urcuje jestli hodnota termu je soucet quarters nebo jestli se rovna poslednimu quarteru
+** implementaci toho vyse u planingu a reportu
+** selekty podle quarters, terms, KPIs, Areas, LC
+** eventualne export celeho LC do Excelu
 
-* na mne jsou reporty - jedna zalozka jako je zde - jen z KPIs co poslal vojta http://www.corporater.com/en/products/popup/features/scorecard/bsc-classical.html
-* druha budou grafy ktere budou chtit a pod nimy vypis v tabulce
-
+** na mne jsou reporty - jedna zalozka jako je zde - jen z KPIs co poslal vojta http://www.corporater.com/en/products/popup/features/scorecard/bsc-classical.html
+** druha budou grafy ktere budou chtit a pod nimy vypis v tabulce
