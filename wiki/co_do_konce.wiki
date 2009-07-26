@@ -7,6 +7,9 @@
   * implementaci toho vyse u planingu a reportu
   * selekty podle quarters, terms, KPIs, Areas, LC
   * eventualne export celeho LC do Excelu
+  * remindery
+  * event. admin interface
+  * zamykani formularu k datum
 
   * na mne jsou reporty - jedna zalozka jako je zde - jen z KPIs co poslal vojta http://www.corporater.com/en/products/popup/features/scorecard/bsc-classical.html
   * druha budou grafy ktere budou chtit a pod nimy vypis v tabulce
