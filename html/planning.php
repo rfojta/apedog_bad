@@ -19,7 +19,9 @@ if( isset( $_POST['posted'])) {
     </head>
     <body>
 
-        <?php include('menu.php'); ?>
+        <?php
+        $page='planning';
+        include('menu.php'); ?>
 
         <div id="content">
             <div id="colOne">

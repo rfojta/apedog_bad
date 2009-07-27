@@ -13,7 +13,9 @@
 <link href="default.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-<?php include('menu.php'); ?>
+<?php
+$page='main_page';
+include('menu.php'); ?>
 <div id="content">
 	<div id="colOne">
 		<h2 class="section">Main Page</h2>

@@ -1,10 +1,26 @@
 <div id="header">
     <div id="menu">
-        <ul>
-            <li><a href="main_page.php" accesskey="1" title="">Home</a></li>
-            <li><a href="index.php?logout" accesskey="2" title="">Logout</a></li>
-            <li><a href="useful_links.php" accesskey="3" title="">Useful Links</a></li>
-        </ul>
+        
+            <?php
+            if ($page=='index'){
+                echo
+                '<ul>
+			<li><a href="main_page.php" title="">Home</a></li>
+                        <li><a href="useful_links.php" title="">Useful Links</a></li>
+		</ul>';
+            }
+            else {
+                echo
+                '<li><a href="main_page.php" title="">Home</a></li>
+                <li><a href="planning.php" title="">Planning</a></li>
+                <li><a href="entering_values.php" title="">Entering values</a></li>
+                <li><a href="reports.php" title="">Reports</a></li>
+                <li><a href="index.php?logout" title="">Logout</a></li>
+                <li><a href="useful_links.php" title="">Useful Links</a></li>';
+            }
+            ?>
+
+       
     </div>
 </div>
-<div id="splash"><img src="images/img02_<?php echo $_SESSION['user']; ?>.jpg" alt="" width="1024" height="140" /></div>
+<div id="splash"><img src="images/img02<?php if($page!='index'){echo '_'.$_SESSION['user'];} ?>.jpg" alt="" width="1024" height="140" /></div>

@@ -17,7 +17,11 @@ if( isset( $_POST['posted'])) {
 <link href="default.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-<?php include('menu.php'); ?>
+<?php
+$page='reports';
+include('menu.php');
+?>
+
 
 <div id="content">
 	<div id="colOne">
