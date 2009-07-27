@@ -21,11 +21,11 @@
 			<p>bbbbbbbbbbbbllllllllllllllablablabslkjdslkdgjfs;ldfkdtj</p>
 			//sem patri rozcestnik do 3 hlavnich vetvi
 			<ul>
-				<li><a href="planning.php">Planning</a></li>
-				<li><a href="entering_values.php">Entering values</a></li>
-				<li><a href="reports.php">Reports</a></li>
+				<li><a href="planning.php" title="Enter plans for each KPI">Planning</a></li>
+				<li><a href="entering_values.php" title="Enter actual values for each KPI">Entering values</a></li>
+				<li><a href="reports.php" title="See reports according to plans and fullfilling">Reports</a></li>
 <?php if( $_SESSION['user'] == 'Praha'): ?>
-                                <li><a href="kpi_conf.php">KPI Cofiguration</a></li>
+                                <li><a href="kpi_conf.php" title="Here you can configure areas and KPIs">KPI Cofiguration</a></li>
                                 <?php endif; ?>
 			</ul>
 		</div>
