@@ -24,8 +24,8 @@ class Report {
     protected $term_query = 'select * from terms';
 
     function __construct( $dbres, $user ) {
-        include('classes/charts/LineOnBarChart.class');
-        include('classes/charts/LineChart.class');
+        include('classes/charts/LineOnBarChart.class.php');
+        include('classes/charts/LineChart.class.php');
         
         $this->dbres = $dbres;
         $this->area_id = $area_id;
@@ -77,6 +77,8 @@ class Report {
         }
         $chart = new LineOnBarChart($this->planned_data,$this->actual_data,$term_list,500,'Plan','Reality','76A4FB','0033FF','400x200');
         $chart->draw_chart();
+
+        echo '<br>';
         
         
 	  $data=array();

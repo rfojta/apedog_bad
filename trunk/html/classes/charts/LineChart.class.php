@@ -1,5 +1,5 @@
 <?php
-/* 
+/*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -7,7 +7,7 @@
 /**
  * Prepared "Line" chart
  * Possibility up to 10 lines when multiple data series inserted in constructor
- *  
+ *
  * @author Krystof
  */
 class LineChart {
@@ -21,105 +21,93 @@ class LineChart {
 
       /**
        * Constructor
-       * 
+       *
        *Paramethers similar to other charts
-       *                                                
+       *
        * @author Krystof
        */
 
-      function __construct( 
-      $data_1,$data_2,$data_3,$data_4,$data_5,$data_6,$data_7,$data_8,$data_9,$data_10, 
-      $x_labels, $y_max, 
-      $line_1_label,$line_2_label,$line_3_label,$line_4_label,$line_5_label,
-      $line_6_label,$line_7_label,$line_8_label,$line_9_label,$line_10_label,
-      $line_1_color,$line_2_color,$line_3_color,$line_4_color,$line_5_color,
-      $line_6_color,$line_7_color,$line_8_color,$line_9_color,$line_10_color,
-      $scale) {
-      
-          $this->data[] = $data_1;
-          $this->data[] = $data_2;
-          $this->data[] = $data_3;
-          $this->data[] = $data_4;
-          $this->data[] = $data_5;
-          $this->data[] = $data_6;
-          $this->data[] = $data_7;
-          $this->data[] = $data_8;
-          $this->data[] = $data_9;
-          $this->data[] = $data_10;
+      function __construct($data,$x_labels,$y_max,$line_labels,$line_colors,$scale) {
+
+          $this->data = $data;
           $this->x_labels = $x_labels;
           $this->y_max = $y_max;
-          $this->line_labels[] = $line_1_label;
-          $this->line_labels[] = $line_2_label;
-          $this->line_labels[] = $line_3_label;
-          $this->line_labels[] = $line_4_label;
-          $this->line_labels[] = $line_5_label;
-          $this->line_labels[] = $line_6_label;
-          $this->line_labels[] = $line_7_label;
-          $this->line_labels[] = $line_8_label;
-          $this->line_labels[] = $line_9_label;
-          $this->line_labels[] = $line_10_label;
-          $this->line_colors[] = $line_1_color;
-          $this->line_colors[] = $line_2_color;
-          $this->line_colors[] = $line_3_color;
-          $this->line_colors[] = $line_4_color;
-          $this->line_colors[] = $line_5_color;
-          $this->line_colors[] = $line_6_color;
-          $this->line_colors[] = $line_7_color;
-          $this->line_colors[] = $line_8_color;
-          $this->line_colors[] = $line_9_color;
-          $this->line_colors[] = $line_10_color;
+          $this->line_labels= $line_labels;
+          $this->line_colors = $line_colors;
           $this->scale = $scale;
       }
-      
+
       function draw_chart(){
-        $cht = 'cht=lc';
-        $chs = 'chs='.$this->scale;
-        $chxt = 'chxt=x,y';
-        
-        $chxlx = 'chxl=0:';
+
+        $chxlx = '0:';
         foreach ($this->x_labels as $row){
           $chxlx .= '|' .$row['ID'];
         }
-           
-        $chxly = 'chxr=1,0,'.$this->y_max.','.$this->y_max/10;
-        
-        $chls= 'chls=';
-        $chd = 'chd=t:';
+
+        $chls= '';
+        $chd = 't:';
         foreach($this->data as $serie){
-  
+
           if (!empty($serie)){
-              foreach ($serie as $value){   
-                  $chd.= $value/1 . ',';          
-                } 
+              foreach ($serie as $value){
+                  $chd.= $value/1 . ',';
+                }
               $chd = substr($chd, 0, -1);
               $chd .= '|';
               $chls .= '6,1,0|';
           }
         }
         $chd = substr($chd, 0, -1);
-        $chls = substr($chls, 0, -1);;
-        
-        $chco = 'chco=';
+        $chls = substr($chls, 0, -1);
+
+        $chco = '';
         foreach($this->line_colors as $color){
           if($color!=null){
             $chco .=$color . ',';
             }
-        }        
+        }
         $chco = substr($chco, 0, -1);
-        
-        $chdl = 'chdl=';
+
+        $chdl = '';
         foreach($this->line_labels as $label){
           if($label!=null){
             $chdl .=$label . '|';
             }
-        }        
+        }
         $chdl = substr($chdl, 0, -1);
-        
-        $chds = 'chds=0,'.$this->y_max;
 
-        $chart_loc = 'http://chart.apis.google.com/chart?' . $cht . '&' . $chs . '&' .$chxt.
-        '&' . $chxlx . '&' .$chxly . '&' . $chd . '&' .$chds. '&' .$chco. '&' .$chdl. '&' .$chls;
-        
+        $keys = array();
+        $keys[]='cht';
+        $keys[]='chs';
+        $keys[]='chxt';
+        $keys[]='chxl';
+        $keys[]='chxly';
+        $keys[]='chls';
+        $keys[]='chd';
+        $keys[]='chco';
+        $keys[]='chdl';
+        $keys[]='chds';
+
+        $values = array();
+        $values[] = 'lc';
+        $values[] = $this->scale;
+        $values[] = 'x,y';
+        $values[] = $chxlx;
+        $values[] = '1,0,'.$this->y_max.','.$this->y_max/10;
+        $values[] = $chls;
+        $values[] = $chd;
+        $values[] = $chco;
+        $values[] = $chdl;
+        $values[] = '0,'.$this->y_max;
+
+        $parameters=array();
+        for($i=0;$i<sizeof($values);$i++){
+           $parameters[]=$keys[$i].'='.$values[$i];
+        }
+        $parameters_str=implode('&',$parameters);
+
+        $chart_loc = 'http://chart.apis.google.com/chart?' .$parameters_str;
+
         echo '<img src="'.$chart_loc.'">';
       }
 }
