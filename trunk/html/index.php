@@ -40,7 +40,9 @@ if( $code == 1 ) {
     </head>
     <body>
 
-        <?php include('menu2.php'); ?>
+        <?php
+        $page='index';
+        include('menu.php'); ?>
 
 
         <div id="content">
