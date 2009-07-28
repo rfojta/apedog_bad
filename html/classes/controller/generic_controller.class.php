@@ -5,7 +5,7 @@
  */
 
 /**
- * Description of Areaclass
+ * Description of GenericController
  *
  * @author Richard
  */
@@ -28,6 +28,11 @@ class GenericController {
     // for inserting purposes
     protected $insert_cache = array();
 
+    /**
+     *
+     * @param <type> $model data model object for related data table
+     * @param <type> $links further configuration of certain behaviour
+     */
     function  __construct($model, $links = array()) {
         $this->model = $model;
 
@@ -36,10 +41,16 @@ class GenericController {
         $this->name = $links['name'];
     }
 
+    /**
+     * reset object cache
+     */
     protected function clear_cache() {
         $this->insert_cache = array();
     }
 
+    /**
+     * Check whether controller cache is used and call insert into table.
+     */
     protected function flush() {
         if(count($this->insert_cache) > 0) {
             $columns = array_keys($this->insert_cache);
@@ -49,6 +60,12 @@ class GenericController {
         }
     }
 
+    /**
+     * Calls update into DB, when id is 'new', store value into cache
+     * @param <type> $field table column
+     * @param <type> $value value
+     * @param <type> $id row id
+     */
     protected function update($field, $value, $id) {
         if( $id == 'new') {
             $this->insert_cache[$field] = $value;
@@ -59,6 +76,9 @@ class GenericController {
         }
     }
 
+    /**
+     * Generates html list of objects stored in model
+     */
     protected function get_list() {
         $rows = $this->model->find_all();
         echo "<ul>";
@@ -68,14 +88,21 @@ class GenericController {
         echo "</ul>";
     }
 
+    /**
+     * Generates html for one item in the list
+     * @param <type> $row
+     */
     protected function get_list_item($row) {
         echo "<li>";
         $this->get_list_item_content($row);
         echo "</li>";
     }
 
+    /**
+     * Generate inner html of one item
+     * @param <type> $row
+     */
     protected function get_list_item_content($row) {
-    // TODO parametrize page_name
         $page_name = $_SERVER['PHP_SELF'];
         echo "<a href=\"$page_name?id="
             . $row['id'] . "\">"
@@ -83,15 +110,29 @@ class GenericController {
             . "</a>";
     }
 
+    /**
+     * Return label for specified row
+     * @param <type> $id row id
+     * @return <type> 
+     */
     public function get_label($id) {
         $row = $this->model->find($id);
         return $this->get_row_label($row);
     }
 
+    /**
+     * Convert $row into single string
+     * @param <type> $row
+     * @return <type> string
+     */
     protected function get_row_label( $row ) {
-        return $row['name'] . " - " . $row[description];
+        return $row['name'] . " - " . $row['description'];
     }
 
+    /**
+     * Generates edit form for specified item and load values from db model
+     * @param <type> $id row id
+     */
     protected function edit_item($id) {
         if( $id == 'new') {
             $row = $this->model->new_item_row();
@@ -109,6 +150,12 @@ class GenericController {
 
     }
 
+    /**
+     * display html input with loaded value
+     * @param <type> $id row id
+     * @param <type> $key table column
+     * @param <type> $value value
+     */
     protected function edit_item_row($id, $key, $value) {
         echo "$key: <input name=\"$id-$key\" ";
         if($key == 'id') {
@@ -121,6 +168,9 @@ class GenericController {
         }
     }
 
+    /**
+     * Display link to create new item in db table
+     */
     protected function new_item_link() {
         $row = $this->model->new_item_row();
         $this->get_list_item_content($row);
@@ -163,10 +213,20 @@ class GenericController {
         $this->flush();
     }
 
+    /**
+     * Calls update with proper parameters
+     * @param <type> $tokens parsed input name
+     * @param <type> $value
+     */
     protected function set_values($tokens, $value) {
         $this->update($tokens[2], $value, $tokens[1]);
     }
 
+    /**
+     * Generates select tag with option according to this type
+     * @param <type> $id source object id
+     * @param <type> $selected current target object id
+     */
     public function get_list_box($id, $selected) {
         $rows = $this->model->find_all();
         $name = $this->name;
@@ -183,6 +243,10 @@ class GenericController {
         echo "</select>";
     }
 
+    /**
+     * Display list of child objects for current item
+     * @param <type> $id row id
+     */
     protected function child_list($id) {
         $name = $this->name;
         $chname = $this->child_conf['name'];
@@ -204,6 +268,11 @@ class GenericController {
         echo "</ul>\n";
     }
 
+    /**
+     * Retrieve rows from table
+     * @param <type> $id
+     * @return array of db rows
+     */
     protected function child_rows($id) {
         $name = $this->name;
         $model = $this->child_conf['model'];
@@ -211,6 +280,11 @@ class GenericController {
         return $rows;
     }
 
+    /**
+     * Generates list box for editing parent object
+     * @param <type> $id
+     * @param <type> $selected 
+     */
     protected function parent_list($id, $selected) {
         $descr = $this->parent_conf['descr'];
         $pname = $this->parent_conf['name'];

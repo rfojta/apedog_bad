@@ -52,7 +52,7 @@ if( $code == 1 ) {
                     <p>Apedog is a tool, which helps LCs in the Czech Republic to track their plans. It was developed to ensure sustainable growth, improving KPIs and improving AIESEC experience.</p>
                     <b><?php echo $info1; ?></b>
 
-                    <form action="index.php" method="post"><div align="left" >
+                    <form action="index.php" method="post"><div style="text-align: left;" >
                             
                             <table style="margin: 0pt; padding: 10px; text-align: left; border:0">
                                 <tr><td><label for="userid">Login: </label></td><td><input type="text" name="userid" id="userid" size="10" /></td></tr>
