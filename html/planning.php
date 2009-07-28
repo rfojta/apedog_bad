@@ -21,7 +21,7 @@ if( isset( $_POST['posted'])) {
 
         <?php
         $page='planning';
-        include('menu.php'); ?>
+        include('components/menu.php'); ?>
 
         <div id="content">
             <div id="colOne">
@@ -55,7 +55,7 @@ if( isset( $_POST['posted'])) {
             <div style="clear: both;">&nbsp;</div>
         </div>
 
-        <?php include('footer.php'); ?>
+        <?php include('components/footer.php'); ?>
 
     </body>
 </html>

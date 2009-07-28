@@ -10,7 +10,7 @@
 <body>
 <?php
     $page='useful_links';
-    include('menu.php');
+    include('components/menu.php');
 ?>
 
 <div id="content">
@@ -30,6 +30,6 @@
 
 	<div style="clear: both;">&nbsp;</div>
 </div>
-<?php include('footer.php'); ?>
+<?php include('compontents/footer.php'); ?>
 </body>
 </html>

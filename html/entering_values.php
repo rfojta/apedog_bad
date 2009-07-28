@@ -19,7 +19,7 @@ if( isset( $_POST['posted'])) {
         <link href="default.css" rel="stylesheet" type="text/css" />
     </head>
     <body>
-        <?php include('menu.php'); ?>
+        <?php include('components/menu.php'); ?>
         <div id="content">
             <div id="colOne">
                 <h2 class="section">Entering Values</h2>
@@ -48,6 +48,6 @@ if( isset( $_POST['posted'])) {
             </div>
             <div style="clear: both;">&nbsp;</div>
         </div>
-        <?php include('footer.php'); ?>
+        <?php include('components/footer.php'); ?>
     </body>
 </html>
