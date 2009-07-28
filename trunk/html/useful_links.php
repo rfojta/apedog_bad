@@ -19,10 +19,10 @@
 		<div class="content">
 			<p>You might be interested in this</p>
 			<ul>
-				<li><a href="http://aiesec.vse.cz/links" target="_blank">Page with (not only) Prague links</a></li>
-				<li><a href="http://aiesec.vse.cz/address/w" target="_blank">AIESEC WIKI</a></li>
-				<li><a href="http://aiesec.cz" target="_blank">AIESEC CR</a></li>
-                                <li><a href="http://aiesec.net" target="_blank">multipurpose AIESEC platform</a></li>
+				<li><a href="http://aiesec.vse.cz/links" rel="external">Page with (not only) Prague links</a></li>
+				<li><a href="http://aiesec.vse.cz/address/w" rel="external">AIESEC WIKI</a></li>
+				<li><a href="http://aiesec.cz" rel="external">AIESEC CR</a></li>
+                                <li><a href="http://aiesec.net" rel="external">multipurpose AIESEC platform</a></li>
                         </ul>
 		</div>
 	</div>

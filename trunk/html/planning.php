@@ -27,18 +27,20 @@ if( isset( $_POST['posted'])) {
             <div id="colOne">
                 <h2 class="section">Planning</h2>
                 <div class="content">
-                    <form method="POST">
+                    <form method="POST" action="">
                         <?php
                         include('components/select_term.php');
                         $planning->get_form_content();
 
                         ?>
+                        <p>
                         <input type="hidden" name="posted" value="1" />
                         <input type=submit />
+                        </p>
                     </form>
 
-			//implementace planningu v zavislosti na case <br>
-			//Areas ani KPIs se upravovat nebudou<br>
+			//implementace planningu v zavislosti na case <br/>
+			//Areas ani KPIs se upravovat nebudou<br/>
                     //PLANUJEME pro jednotlive kvartaly a pro cely term!
                 </div>
             </div>

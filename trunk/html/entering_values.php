@@ -24,14 +24,16 @@ if( isset( $_POST['posted'])) {
             <div id="colOne">
                 <h2 class="section">Entering Values</h2>
                 <div class="content">
-                    <form method="POST">
+                    <form method="POST" action="" >
                         <?php
                         include('components/select_term.php');
                         $entering->get_form_content();
 
                         ?>
+                        <p>
                         <input type="hidden" name="posted" value="1" />
                         <input type=submit />
+                        </p>
                     </form>
 			//implementation of entering actual values
                 </div>

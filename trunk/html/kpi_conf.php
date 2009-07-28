@@ -35,7 +35,7 @@ if( isset( $_POST['posted'])) {
             <div id="colOne">
                 <h2 class="section">KPI Configuration</h2>
                 <div class="content">
-                    <form method="POST">
+                    <form method="POST" action="">
                         <?php $kpi->get_form_content($_REQUEST); ?>
                         <p>
                             <input type="hidden" name="posted" value="1" />

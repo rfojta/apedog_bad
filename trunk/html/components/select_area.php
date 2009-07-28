@@ -1,4 +1,4 @@
-<script>
+<script type="text/javascript">
     function refreshWindow(source) {
         old_href = window.location.href;
         tokens = old_href.split('?');
