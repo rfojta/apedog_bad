@@ -65,10 +65,10 @@ class Planning {
         return $out_array;
     }
 
-    protected function get_form_content_row( $area_id, $area_name ) {
+    protected function get_form_content_row( $area_id, $area_name, $area_desc ) {
         echo '<li>';
         echo "\n";
-        echo $area_name . ': ';
+        echo "<span title=\"$area_desc\">$area_name</span>: ";
         $actual = $this->target_values->get_actual(
             $this->lc_id, $this->term_id, $area_id
         );
@@ -88,8 +88,9 @@ class Planning {
         echo "<ul>\n";
         foreach( $area_list as $row ) {
             $area_id = $row['id'];
-            $area_name = $row['name']; 
-            $this->get_form_content_row( $area_id, $area_name );
+            $area_name = $row['name'];
+            $area_desc = $row[description];
+            $this->get_form_content_row( $area_id, $area_name, $area_desc );
         }
         echo "</ul>\n";
     }
