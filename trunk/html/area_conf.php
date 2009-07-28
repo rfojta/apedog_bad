@@ -19,10 +19,9 @@ $dbutil = new DB_Util($apedog->dbres);
 $area_model = new AreaModel($dbutil);
 $kpi_model = new KpiModel($dbutil);
 $area = new Area($area_model, $kpi_model);
-$kpi = new Kpi($kpi_model, $area);
 
 if( isset( $_POST['posted'])) {
-    $kpi->submit( $_POST );
+    $area->submit( $_POST );
 }
 
 ?>
@@ -42,7 +41,7 @@ if( isset( $_POST['posted'])) {
                 <h2 class="section">KPI Configuration</h2>
                 <div class="content">
                     <form method="POST">
-                        <?php $kpi->get_form_content($_REQUEST); ?>
+                        <?php $area->get_form_content($_REQUEST); ?>
                         <p>
                             <input type="hidden" name="posted" value="1" />
                             <input type=submit />

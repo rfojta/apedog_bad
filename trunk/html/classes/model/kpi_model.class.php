@@ -21,5 +21,14 @@ class KpiModel extends AreaModel {
         $rows = $this->dbutil->process_query_assoc($query);
         return $rows;
     }
+
+     public function new_item_row() {
+        return array(
+        'id' => 'new',
+        'name' => 'new',
+        'description' => 'create new item',
+        'area' => ''
+        );
+    }
 }
 ?>

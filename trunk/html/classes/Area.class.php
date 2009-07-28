@@ -13,11 +13,12 @@ class Area {
 //put your code here
 
     protected $model;
+    protected $request;
     private $kpi_model;
 
     // for inserting purposes
     protected $insert_cache = array();
-    
+
     function  __construct($model, $kpi_model) {
         $this->model = $model;
         $this->kpi_model = $kpi_model;
@@ -62,25 +63,36 @@ class Area {
     }
 
     protected function get_list_item_content($row) {
-        echo "<a href=\"kpi_conf.php?id="
+    // TODO parametrize page_name
+        $page_name = $_SERVER['PHP_SELF'];
+        echo "<a href=\"$page_name?id="
             . $row['id'] . "\">"
-            . $row['name'] . " - " . $row[description]
+            . $this->get_row_label($row)
             . "</a>";
     }
 
     public function get_list_box($id, $selected) {
         $rows = $this->model->find_all();
-        echo "<select name=\"$id-areas\">";
+        echo "<select name=\"$id-area\">";
         foreach( $rows as $row ) {
             echo "<option value=\"" . $row['id'] . "\"";
             if( $row[id] == $selected ) {
                 echo "selected=\"1\"";
             }
             echo ">";
-            echo $row['name'] . " - " . $row[description]
+            echo $this->get_row_label($row)
                 . "</option>";
         }
-        echo "</ul>";
+        echo "</select>";
+    }
+
+    public function get_label($id) {
+        $row = $this->model->find($id);
+        return $this->get_row_label($row);
+    }
+
+    protected function get_row_label( $row ) {
+        return $row['name'] . " - " . $row[description];
     }
 
     protected function edit_item($id) {
@@ -104,29 +116,32 @@ class Area {
         if($key == 'id') {
             echo "type=\"hidden\" ";
         }
-        echo "value=\"$value\"><br>\n";
+        if( isset($this->request[$key])) {
+            echo "value=\"". $this->request[$key] . "\"> ($value)<br>\n";
+        } else {
+            echo "value=\"$value\"><br>\n";
+        }
     }
 
     protected function kpi_list($id) {
         echo "<hr>";
-        echo "KPIs for this area:<br>";
+        echo "KPIs for this area:&nbsp;";
+        echo "<a href=\"kpi_conf.php?id=new&area=$id\">Add new</a>";
+        echo "<br>";
 
         $rows = $this->kpi_model->find_by_area($id);
 
         echo "<ul>\n";
         foreach( $rows as $row ) {
-            echo "<li>";
+            echo "<li><a href=\"kpi_conf.php?id=" . $row[id] . "\">";
             echo $row[name] . " - ", $row[description];
-            echo "</li>";
+            echo "</a></li>";
         }
         echo "</ul>\n";
     }
 
     protected function new_item_link() {
-        $row = array( 'id' => 'new',
-            'name' => 'new',
-            'description' => 'create new item'
-        );
+        $row = $this->model->new_item_row();
         $this->get_list_item_content($row);
         echo "<br>";
     }
@@ -142,6 +157,7 @@ class Area {
 
         echo "</td><td>";
         $id = $request[id];
+        $this->request = $request;
         if(isset($id) ) {
             $this->edit_item($id);
         }
