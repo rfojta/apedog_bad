@@ -12,10 +12,27 @@ include('classes/Term.class.php');
 include('classes/LC.class.php');
 include('classes/Tracking.class.php');
 include('classes/Report.class.php');
+include('classes/db_util.class.php');
+
+include_once('classes/model/generic_model.class.php');
+include_once('classes/controller/generic_controller.class.php');
+
+foreach( glob('classes/model/*.php') as $php_class ) {
+    // echo "$php_class<br>\n";
+    include_once($php_class);
+}
+
+foreach( glob('classes/controller/*.php') as $php_class ) {
+    // echo "$php_class<br>\n";
+    include_once($php_class);
+}
+
 
 
 $apedog = new Apedog('devel');
 $dbres = $apedog->dbres;
+
+$dbutil = new DB_Util($apedog->dbres);
 
 $term = new Term($dbres);
 
