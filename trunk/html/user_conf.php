@@ -10,7 +10,9 @@ if (!isset($_SESSION['user'])) { header("Location: index.php"); exit; }
 include('init.php');
 
 $user_model = new UserModel($dbutil);
-$user = new UserController($user_model);
+$lc_model = new LcModel($dbutil);
+$lc = new LcController($lc_model);
+$user = new UserController($user_model, $lc);
 
 if( isset( $_POST['posted'])) {
     $user->submit( $_POST );
