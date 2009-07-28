@@ -9,21 +9,21 @@
  *
  * @author Richard
  */
-class LcController extends GenericController {
+class TermController extends GenericController {
 //put your code here
 
     protected function get_row_label( $row ) {
-        return $row['name'] . " - " . $row['description'];
+        return $row['term_from'] . " - " . $row['term_to'];
     }
 
-    function  __construct($model, $user_model) {
+    function  __construct($model, $quarter_model) {
         parent::__construct($model,
             array(
-               'name' => 'lc',
+               'name' => 'term',
                'child' => array(
-                   'name' => 'user',
-                   'model' => $user_model,
-                   'link'  => 'user_conf.php'
+                   'name' => 'quarter',
+                   'model' => $quarter_model,
+                   'link'  => 'quarter_conf.php'
                )
             ));
     }
