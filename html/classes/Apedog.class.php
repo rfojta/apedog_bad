@@ -26,6 +26,7 @@ class Apedog {
         }
 
         mysql_select_db($configuration['database'], $this->dbres);
+        mysql_set_charset('utf8');
     }
 
     //put your code here

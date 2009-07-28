@@ -9,16 +9,10 @@ session_start();
 if (!isset($_SESSION['user'])) { header("Location: index.php"); exit; }
 include('init.php');
 
-include('classes/Area.class.php');
-include('classes/Kpi.class.php');
-include('classes/model/area_model.class.php');
-include('classes/model/kpi_model.class.php');
-include('classes/db_util.class.php');
 
-$dbutil = new DB_Util($apedog->dbres);
 $area_model = new AreaModel($dbutil);
 $kpi_model = new KpiModel($dbutil);
-$area = new Area($area_model, $kpi_model);
+$area = new AreaController($area_model, $kpi_model);
 
 if( isset( $_POST['posted'])) {
     $area->submit( $_POST );

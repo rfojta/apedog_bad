@@ -9,22 +9,15 @@
  *
  * @author Richard
  */
-class Kpi extends Area {
+class KpiController extends GenericController {
 //put your code here
     protected $table_name = 'kpis';
     protected $area;
     protected $area_link = 'area_conf.php';
 
     function  __construct($model, $area) {
-        $this->model = $model;
+        parent::__construct($model);
         $this->area = $area;
-    }
-
-    public function test_queries() {
-        $qs = $this->queries;
-        foreach( $qs as $q ) {
-            echo $this->$q . "<br>";
-        }
     }
 
     private function area_list($id, $selected) {
@@ -32,8 +25,7 @@ class Kpi extends Area {
         echo "<span title=\"select superior area for this KPI\">Area: </span>";
         if( isset( $this->request['area']) ) {
             $a->get_list_box($id, $this->request['area']);
-        // TODO doplnit area label misto id
-
+     
         } else {
             $a->get_list_box($id, $selected);
         }
@@ -41,10 +33,6 @@ class Kpi extends Area {
             $link = $this->area_link;
             echo "(<a href=\"$link?id=$selected\">". $a->get_label($selected) ."</a>)";
         }
-    }
-
-    protected function kpi_list() {
-
     }
 
     protected function edit_item_row($id, $key, $value) {

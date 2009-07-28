@@ -9,17 +9,15 @@
  *
  * @author Richard
  */
-class KpiModel extends GenericModel {
+class UserModel extends GenericModel {
 
-    protected $table_name = 'kpis';
+    protected $table_name = 'users';
     //put your code here
 
-    protected $kpi_query = 'select * from kpis where area = ';
-    protected $editable_fields = array('name', 'description', 'area');
+    protected $lc_query = 'select * from users where lc = ';
 
-
-    public function find_by_area( $area ) {
-        $query = $this->kpi_query . $area;
+    public function find_by_lc( $lc ) {
+        $query = $this->lc_query . $area;
         $rows = $this->dbutil->process_query_assoc($query);
         return $rows;
     }

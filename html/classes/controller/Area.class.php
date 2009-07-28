@@ -9,66 +9,17 @@
  *
  * @author Richard
  */
-class Area {
+class AreaController extends GenericController {
 //put your code here
 
-    protected $model;
-    protected $request;
     private $kpi_model;
 
     // for inserting purposes
     protected $insert_cache = array();
 
     function  __construct($model, $kpi_model) {
-        $this->model = $model;
+        parent::__construct($model);
         $this->kpi_model = $kpi_model;
-    }
-
-    protected function clear_cache() {
-        $this->insert_cache = array();
-    }
-
-    protected function flush() {
-        if(count($this->insert_cache) > 0) {
-            $columns = array_keys($this->insert_cache);
-            $values = array_values($this->insert_cache);
-            $this->model->insert($columns, $values);
-            $this->clear_cache();
-        }
-    }
-
-    protected function update($field, $value, $id) {
-        if( $id == 'new') {
-            $this->insert_cache[$field] = $value;
-        }
-        else {
-            echo "... updating $field!<br>";
-            $this->model->update($field, $value, $id);
-        }
-    }
-
-    protected function get_list() {
-        $rows = $this->model->find_all();
-        echo "<ul>";
-        foreach( $rows as $row ) {
-            $this->get_list_item($row);
-        }
-        echo "</ul>";
-    }
-
-    protected function get_list_item($row) {
-        echo "<li>";
-        $this->get_list_item_content($row);
-        echo "</li>";
-    }
-
-    protected function get_list_item_content($row) {
-    // TODO parametrize page_name
-        $page_name = $_SERVER['PHP_SELF'];
-        echo "<a href=\"$page_name?id="
-            . $row['id'] . "\">"
-            . $this->get_row_label($row)
-            . "</a>";
     }
 
     public function get_list_box($id, $selected) {
@@ -84,11 +35,6 @@ class Area {
                 . "</option>";
         }
         echo "</select>";
-    }
-
-    public function get_label($id) {
-        $row = $this->model->find($id);
-        return $this->get_row_label($row);
     }
 
     protected function get_row_label( $row ) {
@@ -111,18 +57,6 @@ class Area {
         }
     }
 
-    protected function edit_item_row($id, $key, $value) {
-        echo "$key: <input name=\"$id-$key\" ";
-        if($key == 'id') {
-            echo "type=\"hidden\" ";
-        }
-        if( isset($this->request[$key])) {
-            echo "value=\"". $this->request[$key] . "\"> ($value)<br>\n";
-        } else {
-            echo "value=\"$value\"><br>\n";
-        }
-    }
-
     protected function kpi_list($id) {
         echo "<hr>";
         echo "KPIs for this area:&nbsp;";
@@ -138,12 +72,6 @@ class Area {
             echo "</a></li>";
         }
         echo "</ul>\n";
-    }
-
-    protected function new_item_link() {
-        $row = $this->model->new_item_row();
-        $this->get_list_item_content($row);
-        echo "<br>";
     }
 
     /**

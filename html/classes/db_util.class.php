@@ -65,5 +65,10 @@ class DB_Util {
         }
     }
 
+    function get_columns($table) {
+        $query = "show columns from $table";
+        return $this->process_query_assoc($query);
+    }
+
 }
 ?>
