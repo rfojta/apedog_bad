@@ -11,77 +11,43 @@
  */
 class Area {
 //put your code here
-    protected $dbutil;
-    protected $id;
-    protected $table_name = 'areas';
 
-    protected $queries = array('select_query', 'update_query', 'insert_query');
-    protected $select_query = 'select * from :table_name';
-    protected $kpi_query = 'select * from kpis where area = ';
+    protected $model;
+    private $kpi_model;
 
-    protected $editable_fields;
-    protected $update_query = 'update :table_name
-        set :field = \':value\', updated = current_timestamp()
-        where id = :id';
-
-    protected $insert_query = 'insert into :table_name
-        (:columns) values (:values)';
-
-    function  __construct($dbutil) {
-        $this->dbutil = $dbutil;
-        //TODO add description, name
-        $this->select_query = 'select * from ' . $this->table_name;
-        $this->editable_fields = array('name', 'description');
-
-        $this->parse_queries();
+    // for inserting purposes
+    protected $insert_cache = array();
+    
+    function  __construct($model, $kpi_model) {
+        $this->model = $model;
+        $this->kpi_model = $kpi_model;
     }
 
-    private function parse_queries() {
-        foreach( $this->queries as $q) {
-            $this->$q = $this->parse_table_name($this->$q);
+    protected function clear_cache() {
+        $this->insert_cache = array();
+    }
+
+    protected function flush() {
+        if(count($this->insert_cache) > 0) {
+            $columns = array_keys($this->insert_cache);
+            $values = array_values($this->insert_cache);
+            $this->model->insert($columns, $values);
+            $this->clear_cache();
         }
     }
-
-    private function parse_table_name( $query ) {
-        return str_replace(':table_name', $this->table_name, $query );
-
-    }
-
-    protected function parse_query($pre_query, $values) {
-        $tags = array(':field', ':value', ':id');
-        $query = str_replace($tags, $values, $pre_query);
-        return $query;
-    }
-
 
     protected function update($field, $value, $id) {
-    // TODO rewrite condition to test if is allowed
-        if( in_array($field, $this->editable_fields)) {
-            echo "... updating $field!<br>";
-            $query = $this->update_query;
-            $values = array($field, $value, $id);
-            $query = $this->parse_query($query, $values);
-            $this->dbutil->do_query($query);
+        if( $id == 'new') {
+            $this->insert_cache[$field] = $value;
         }
-    }
-
-    protected function parse_insert_query($pre_query, $values) {
-        $tags = array(':columns', ':values');
-        $query = str_replace($tags, $values, $pre_query);
-        return $query;
-    }
-
-    protected function insert($columns, $values ) {
-        $pre_query = $this->insert_query;
-        $cs = join(', ', $columns);
-        $vs = "'" . join("', '", $values) . "'";
-        $query = $this->parse_insert_query($pre_query, array($cs, $vs));
-        $this->dbutil->do_query($query);
+        else {
+            echo "... updating $field!<br>";
+            $this->model->update($field, $value, $id);
+        }
     }
 
     protected function get_list() {
-        $query = $this->select_query;
-        $rows = $this->dbutil->process_query_assoc($query);
+        $rows = $this->model->find_all();
         echo "<ul>";
         foreach( $rows as $row ) {
             $this->get_list_item($row);
@@ -99,12 +65,11 @@ class Area {
         echo "<a href=\"kpi_conf.php?id="
             . $row['id'] . "\">"
             . $row['name'] . " - " . $row[description]
-            . "</li>";
+            . "</a>";
     }
 
     public function get_list_box($id, $selected) {
-        $query = $this->select_query;
-        $rows = $this->dbutil->process_query_assoc($query);
+        $rows = $this->model->find_all();
         echo "<select name=\"$id-areas\">";
         foreach( $rows as $row ) {
             echo "<option value=\"" . $row['id'] . "\"";
@@ -120,15 +85,9 @@ class Area {
 
     protected function edit_item($id) {
         if( $id == 'new') {
-            $row = array(
-                'id' => 'new',
-                'name' => 'new',
-                'description' => 'create new item'
-            );
+            $row = $this->model->new_item_row();
         } else {
-            $query = $this->select_query . " where id = " . $id;
-            $rows = $this->dbutil->process_query_assoc($query);
-            $row = $rows[0];
+            $row = $this->model->find($id);
         }
 
         foreach( $row as $key => $value) {
@@ -152,8 +111,7 @@ class Area {
         echo "<hr>";
         echo "KPIs for this area:<br>";
 
-        $query = $this->kpi_query . $id;
-        $rows = $this->dbutil->process_query_assoc($query);
+        $rows = $this->kpi_model->find_by_area($id);
 
         echo "<ul>\n";
         foreach( $rows as $row ) {
@@ -173,23 +131,39 @@ class Area {
         echo "<br>";
     }
 
+    /**
+     * Generates HTML form for areas
+     * @param <type> $request http request data
+     */
     public function get_form_content($request) {
+        echo "<table width=\"100%\"><tr><td>";
+        $this->new_item_link();
+        $this->get_list();
+
+        echo "</td><td>";
         $id = $request[id];
         if(isset($id) ) {
             $this->edit_item($id);
         }
-        echo "<br>";
-        $this->new_item_link();
-        $this->get_list();
+        echo "</td></tr></table>";
     }
 
+    /**
+     * Handles page form submit
+     * @param <type> $post HTTP POST data
+     */
     public function submit($post) {
+
+        $this->clear_cache();
+
         foreach($post as $key => $value) {
         // $tokens = array();
             if( preg_match('/^(\w+)-(\w+)$/', $key, $tokens) ) {
                 $this->set_values($tokens, $value);
             }
         }
+
+        $this->flush();
     }
 
     protected function set_values($tokens, $value) {
