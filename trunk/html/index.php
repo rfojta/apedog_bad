@@ -42,7 +42,7 @@ if( $code == 1 ) {
 
         <?php
         $page='index';
-        include('menu.php'); ?>
+        include('components/menu.php'); ?>
 
 
         <div id="content">
@@ -64,10 +64,10 @@ if( $code == 1 ) {
                 </div>
             </div>
 
-            <?php include('recent_updates.php'); ?>
+            <?php include('components/recent_updates.php'); ?>
 
             <div style="clear: both;">&nbsp;</div>
         </div>
-        <?php include('footer.php'); ?>
+        <?php include('components/footer.php'); ?>
     </body>
 </html>

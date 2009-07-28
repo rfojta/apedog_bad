@@ -19,7 +19,7 @@ if( isset( $_POST['posted'])) {
 <body>
 <?php
 $page='reports';
-include('menu.php');
+include('components/menu.php');
 ?>
 
 
@@ -48,6 +48,6 @@ include('menu.php');
 	<div style="clear: both;">&nbsp;</div>
 </div>
     
-<?php include('footer.php'); ?>
+<?php include('components/footer.php'); ?>
 </body>
 </html>

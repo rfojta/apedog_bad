@@ -15,7 +15,7 @@ if (!isset($_SESSION['user'])) { header("Location: index.php"); exit; }
     <body>
         <?php
         $page='main_page';
-        include('menu.php'); ?>
+        include('components/menu.php'); ?>
         <div id="content">
             <div id="colOne">
                 <h2 class="section">Main Page</h2>
@@ -48,6 +48,6 @@ if (!isset($_SESSION['user'])) { header("Location: index.php"); exit; }
             </div>
             <div style="clear: both;">&nbsp;</div>
         </div>
-        <?php include('footer.php'); ?>
+        <?php include('components/footer.php'); ?>
     </body>
 </html>
