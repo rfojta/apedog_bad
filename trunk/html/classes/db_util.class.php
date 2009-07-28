@@ -11,7 +11,7 @@
  */
 class DB_Util {
 //put your code here
-    protected $dbres;
+    public $dbres;
     protected $debug;
 
     function  __construct( $dbres, $debug = 0 ) {
@@ -68,6 +68,10 @@ class DB_Util {
     function get_columns($table) {
         $query = "show columns from $table";
         return $this->process_query_assoc($query);
+    }
+
+    function escape($item) {
+        return mysql_real_escape_string($item, $this->dbres);
     }
 
 }
