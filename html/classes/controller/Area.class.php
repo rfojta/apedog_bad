@@ -18,23 +18,14 @@ class AreaController extends GenericController {
     protected $insert_cache = array();
 
     function  __construct($model, $kpi_model) {
-        parent::__construct($model);
+        parent::__construct($model, array(
+                'name' => 'area',
+                'child' => array(
+                    'model' => $kpi_model,
+                    'name' => 'kpi',
+                    'link' => 'kpi_conf.php'
+                )));
         $this->kpi_model = $kpi_model;
-    }
-
-    public function get_list_box($id, $selected) {
-        $rows = $this->model->find_all();
-        echo "<select name=\"$id-area\">";
-        foreach( $rows as $row ) {
-            echo "<option value=\"" . $row['id'] . "\"";
-            if( $row[id] == $selected ) {
-                echo "selected=\"1\"";
-            }
-            echo ">";
-            echo $this->get_row_label($row)
-                . "</option>";
-        }
-        echo "</select>";
     }
 
     protected function get_row_label( $row ) {
@@ -63,7 +54,7 @@ class AreaController extends GenericController {
         echo "<a href=\"kpi_conf.php?id=new&area=$id\">Add new</a>";
         echo "<br>";
 
-        $rows = $this->kpi_model->find_by_area($id);
+        $rows = $this->child_rows($id);
 
         echo "<ul>\n";
         foreach( $rows as $row ) {

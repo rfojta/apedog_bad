@@ -91,9 +91,15 @@ class GenericModel {
         return $row;
     }
 
+    public function find_by( $column, $value ) {
+        $query = $this->select_query . " where $column = $value";
+        $rows = $this->dbutil->process_query_assoc($query);
+        return $rows;
+    }
+
     public function new_item_row() {
         return array(
-            'id' => 'new'
+        'id' => 'new'
         );
     }
 
@@ -101,6 +107,10 @@ class GenericModel {
         return $this->dbutil->get_columns($this->table_name);
     }
 
-    //put your code here
+    public function get_row_label( $row ) {
+        return $row['id'];
+    }
+
+//put your code here
 }
 ?>

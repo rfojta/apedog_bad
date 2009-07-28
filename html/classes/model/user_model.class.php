@@ -30,5 +30,9 @@ class UserModel extends GenericModel {
         'area' => ''
         );
     }
+
+    public function get_row_label($row) {
+        return $row['login'];
+    }
 }
 ?>

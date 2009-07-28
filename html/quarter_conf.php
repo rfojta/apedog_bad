@@ -9,19 +9,21 @@ session_start();
 if (!isset($_SESSION['user'])) { header("Location: index.php"); exit; }
 include('init.php');
 
-$model = new LcModel($dbutil);
-$user_model = new UserModel($dbutil);
-$controller = new LcController($model, $user_model);
+$model = new QuarterModel($dbutil);
+$term_model = new TermModel($dbutil);
+
+$term_controller = new TermController($term_model, $model);
+$controller = new QuarterController($model, $user_model);
 
 if( isset( $_POST['posted'])) {
     $controller->submit( $_POST );
 }
 
-$page_title = "Apedog: LC Configuration";
+$page_title = "Apedog: Quarter Configuration";
 $page_help = "
 <h3>$page_title</h3>
-<p>you can add, modify, remove Users or LCs</p>
-<p>Each User belongs to one LC</p>
+<p>you can add, modify, remove Quarter or Terms</p>
+<p>Each Quarter belongs to one Term</p>
 ";
 include('components/basic_form.php');
 
