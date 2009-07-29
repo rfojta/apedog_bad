@@ -107,6 +107,15 @@ class GenericModel {
         return $this->dbutil->get_columns($this->table_name);
     }
 
+    public function get_column_type($column) {
+        $rows = $this->get_columns();
+        foreach( $rows as $row ) {
+            if( $row['Field'] == $column) {
+                return $row['Type'];
+            }
+        }
+    }
+
     public function get_row_label( $row ) {
         return $row['id'];
     }

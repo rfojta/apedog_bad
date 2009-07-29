@@ -163,10 +163,12 @@ class GenericController {
             $this->parent_list($id, $value);
         }
         else {
+            $type = $this->model->get_column_type($key);
             echo "$key: <input name=\"$id-$key\" ";
             if($key == 'id') {
                 echo "type=\"hidden\" ";
             }
+            echo 'class="'.$type.'"';
             if( isset($this->request[$key])) {
                 echo "value=\"". $this->request[$key] . "\"> ($value)<br>\n";
             } else {
