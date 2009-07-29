@@ -13,10 +13,6 @@ $model = new TermModel($dbutil);
 $child_model = new QuarterModel($dbutil);
 $controller = new TermController($model, $child_model);
 
-if( isset( $_POST['posted'])) {
-    $controller->submit( $_POST );
-}
-
 $page_title = "Apedog: Term Configuration";
 $page_help = "
 <h3>$page_title</h3>

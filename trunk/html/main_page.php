@@ -28,13 +28,7 @@ if (!isset($_SESSION['user'])) { header("Location: index.php"); exit; }
                         <li><a href="reports.php" title="See reports according to plans and fullfilling">Reports</a></li>
 
                         <?php if( $_SESSION['user'] == 'Praha'):
-                            echo "<li>Configuration: <ul>";
-                            foreach( glob('administration/*_conf.php') as $conf_page) {
-                                echo "<li>";
-                                echo "<a href=\"$conf_page\" title=\"Here you can configure $conf_page\">$conf_page configuration</a>";
-                                echo "</li>\n";
-                            }
-                            echo "</ul></li>";
+                            echo "<li><a href=\"admin.php\" title=\"You can choose which object you want to configure\">Configuration</a></li>";
                         endif; ?>
                     </ul>
                 </div>

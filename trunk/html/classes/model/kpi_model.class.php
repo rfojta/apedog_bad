@@ -32,5 +32,9 @@ class KpiModel extends GenericModel {
         'area' => ''
         );
     }
+
+    public function get_row_label( $row ) {
+        return $row['name'] . " - " . $row['description'];
+    }
 }
 ?>

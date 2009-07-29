@@ -13,9 +13,6 @@ $model = new LcModel($dbutil);
 $user_model = new UserModel($dbutil);
 $controller = new LcController($model, $user_model);
 
-if( isset( $_POST['posted'])) {
-    $controller->submit( $_POST );
-}
 
 $page_title = "Apedog: LC Configuration";
 $page_help = "

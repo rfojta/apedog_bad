@@ -17,8 +17,8 @@ class QuarterModel extends GenericModel {
     public function new_item_row() {
         return array(
         'id' => 'new',
-        'quarter_from' => '',
-        'quarter_to' => '',
+        'quarter_from' => 'new',
+        'quarter_to' => 'create new quarter',
         'description' => '',
         'term' => ''
         );

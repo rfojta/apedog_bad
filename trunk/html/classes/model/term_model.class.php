@@ -19,10 +19,14 @@ class TermModel extends GenericModel {
     public function new_item_row() {
         return array(
         'id' => 'new',
-        'term_from' => '',
-        'term_to' => '',
+        'term_from' => 'new',
+        'term_to' => 'create new term',
         'description' => 'create new item'
         );
+    }
+
+    public function get_row_label( $row ) {
+        return $row['term_from'] . " - " . $row['term_to'];
     }
 }
 ?>

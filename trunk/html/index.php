@@ -4,7 +4,7 @@
 session_start();
 $info1 = "Please login.";
 if (isset($_REQUEST['logout'])) {
-    unset($_SESSION['user']);
+    unset($_SESSION);
     session_destroy();
     $info1 = "You were successfully logged out.";
 }

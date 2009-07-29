@@ -18,6 +18,7 @@ class UserController extends GenericController {
     function  __construct($model, $lc) {
         parent::__construct($model);
         $this->lc = $lc;
+        $this->lc_link = 'admin.php?what=lc';
     }
 
     protected function get_row_label( $row ) {
@@ -35,7 +36,7 @@ class UserController extends GenericController {
         }
         if( $selected > 0 ) {
             $link = $this->lc_link;
-            echo "(<a href=\"$link?id=$selected\">". $a->get_label($selected) ."</a>)<br>";
+            echo "(<a href=\"$link&id=$selected\">". $a->get_label($selected) ."</a>)<br>";
         }
     }
 

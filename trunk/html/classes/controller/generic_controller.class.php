@@ -113,7 +113,7 @@ class GenericController {
     /**
      * Return label for specified row
      * @param <type> $id row id
-     * @return <type> 
+     * @return <type>
      */
     public function get_label($id) {
         $row = $this->model->find($id);
@@ -144,7 +144,7 @@ class GenericController {
             $this->edit_item_row($id, $key, $value);
         }
 
-        if( id != 'new' && isset( $this->child_conf) ) {
+        if( $id != 'new' && isset( $this->child_conf) ) {
             $this->child_list($id);
         }
 
@@ -157,14 +157,21 @@ class GenericController {
      * @param <type> $value value
      */
     protected function edit_item_row($id, $key, $value) {
-        echo "$key: <input name=\"$id-$key\" ";
-        if($key == 'id') {
-            echo "type=\"hidden\" ";
+        $pname = $this->parent_conf['name'];
+
+        if( $key == $pname ) {
+            $this->parent_list($id, $value);
         }
-        if( isset($this->request[$key])) {
-            echo "value=\"". $this->request[$key] . "\"> ($value)<br>\n";
-        } else {
-            echo "value=\"$value\"><br>\n";
+        else {
+            echo "$key: <input name=\"$id-$key\" ";
+            if($key == 'id') {
+                echo "type=\"hidden\" ";
+            }
+            if( isset($this->request[$key])) {
+                echo "value=\"". $this->request[$key] . "\"> ($value)<br>\n";
+            } else {
+                echo "value=\"$value\"><br>\n";
+            }
         }
     }
 
@@ -254,14 +261,14 @@ class GenericController {
         $chmodel = $this->child_conf['model'];
         echo "<hr>";
         echo $chname . "s for this $name:&nbsp;";
-        echo "<a href=\"$chlink?id=new&$name=$id\">Add new</a>";
+        echo "<a href=\"$chlink&id=new&$name=$id\">Add new</a>";
         echo "<br>";
 
         $rows = $this->child_rows($id);
 
         echo "<ul>\n";
         foreach( $rows as $row ) {
-            echo "<li><a href=\"$chlink?id=" . $row[id] . "\">";
+            echo "<li><a href=\"$chlink&id=" . $row[id] . "\">";
             echo $chmodel->get_row_label($row);
             echo "</a></li>";
         }
@@ -283,7 +290,7 @@ class GenericController {
     /**
      * Generates list box for editing parent object
      * @param <type> $id
-     * @param <type> $selected 
+     * @param <type> $selected
      */
     protected function parent_list($id, $selected) {
         $descr = $this->parent_conf['descr'];
@@ -299,7 +306,7 @@ class GenericController {
         }
         if( $selected > 0 ) {
             $link = $this->parent_conf['link'];
-            echo "(<a href=\"$link?id=$selected\">"
+            echo "(<a href=\"$link&id=$selected\">"
                 . $p_ctrl->get_label($selected) ."</a>)";
         }
     }
