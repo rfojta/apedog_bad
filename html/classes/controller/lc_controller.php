@@ -23,7 +23,8 @@ class LcController extends GenericController {
                'child' => array(
                    'name' => 'user',
                    'model' => $user_model,
-                   'link'  => 'user_conf.php'
+//                   'link'  => 'user_conf.php',
+                   'link'  => 'admin.php?what=user'
                )
             ));
     }

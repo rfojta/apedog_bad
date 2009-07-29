@@ -12,12 +12,7 @@ include('init.php');
 $model = new QuarterModel($dbutil);
 $term_model = new TermModel($dbutil);
 
-$term_controller = new TermController($term_model, $model);
-$controller = new QuarterController($model, $user_model);
-
-if( isset( $_POST['posted'])) {
-    $controller->submit( $_POST );
-}
+$controller = new TermController($term_model, $model);
 
 $page_title = "Apedog: Quarter Configuration";
 $page_help = "

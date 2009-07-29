@@ -19,7 +19,7 @@ class QuarterController extends GenericController {
                 'parent' => array(
                     'controller' => $term_controller,
                     'name' => 'term',
-                    'link' => 'term_conf.php'
+                    'link' => 'admin.php?what=term'
                 )));
     }
 

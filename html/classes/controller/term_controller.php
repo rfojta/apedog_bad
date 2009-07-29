@@ -23,7 +23,8 @@ class TermController extends GenericController {
                'child' => array(
                    'name' => 'quarter',
                    'model' => $quarter_model,
-                   'link'  => 'quarter_conf.php'
+//                   'link'  => 'quarter_conf.php',
+                   'link'  => 'admin.php?what=quarter'
                )
             ));
     }
