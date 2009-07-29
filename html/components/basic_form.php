@@ -16,6 +16,22 @@ if( isset( $_POST['posted'])) {
         <meta name="keywords" content="" />
         <meta name="description" content="" />
         <link href="default.css" rel="stylesheet" type="text/css" />
+        <!-- Added for testing datepicker -->
+        <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/ui-lightness/jquery-ui.css" type="text/css" media="all" />
+        <link rel="stylesheet" href="http://static.jquery.com/ui/css/demo-docs-theme/ui.theme.css" type="text/css"
+
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js" type="text/javascript"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js" type="text/javascript"></script>
+        <script type="text/javascript">
+            $(function() {
+                $(".date").datepicker();
+                //$(".datetime").datepicker();
+                $('.date').datepicker('option', {dateFormat: 'yy-mm-dd'});
+                // $('.datetime').datepicker('option', {dateFormat: 'yy-mm-dd hh:mm:ss'});
+                $(".date").datepicker($.datepicker.regional['en'])
+            });
+        </script>
+
     </head>
     <body>
         <?php include('menu.php'); ?>
