@@ -72,7 +72,7 @@ class Report {
         $term_list = $this->get_term_list();
         
         foreach( $term_list as $row ) {
-            $term_id = $row['ID'];  
+            $term_id = $row['id'];  
             $this->get_chart_content_element( $term_id );
         }
         $chart = new LineOnBarChart($this->planned_data,$this->actual_data,$term_list,500,'Plan','Reality','76A4FB','0033FF','400x200');

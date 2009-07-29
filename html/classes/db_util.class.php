@@ -19,13 +19,18 @@ class DB_Util {
         $this->debug = $debug;
     }
 
+    function error($query) {
+        echo( 'Invalid query: ' . $query . ' ' . mysql_error($this->dbres) );
+    }
+
+
     function process_query_assoc($query) {
         if( $this->debug ) {
             echo "<pre>$query</pre>";
         }
         $res = mysql_query( $query, $this->dbres );
         if( !$res ) {
-            die( 'Invalid query: ' . mysql_error($this->dbres) );
+		$this->error($query);
         }
 
         $out_array = array();
@@ -43,7 +48,7 @@ class DB_Util {
         }
         $res = mysql_query( $query, $this->dbres );
         if( !$res ) {
-            die( 'Invalid query: ' . mysql_error($this->dbres) );
+		$this->error($query);
         }
 
         $out_array = array();
@@ -61,7 +66,7 @@ class DB_Util {
         }
         $res = mysql_query( $query, $this->dbres );
         if( !$res ) {
-            die( 'Invalid query: ' . mysql_error($this->dbres) );
+		$this->error($query);
         }
     }
 

@@ -1,7 +1,7 @@
 <?php
 include('init.php');
 
-$planning = new Planning($dbres, $current_term, $_SESSION['user']);
+$planning = new Planning($dbutil, $current_term, $_SESSION['user']);
 
 if( isset( $_POST['posted'])) {
     $planning->submit( $_POST );

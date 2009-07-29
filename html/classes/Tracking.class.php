@@ -10,7 +10,7 @@
  * @author Richard
  */
 class Tracking {
-    private $dbres;
+    private $dbutil;
     private $actual;
     private $get_actual_query =
     'select actual from tracking
@@ -36,9 +36,13 @@ class Tracking {
 
 
 
-    function Tracking($dbres, $actual = 0) {
-
-        $this->dbres = $dbres;
+    function Tracking($dbutil, $actual = 0) {
+	    if( is_a($dbutil, 'DB_util') ) {
+        $this->dbutil = $dbutil;
+	    } else {
+		    $dbres = $dbutil;
+		    $this->dbutil = new DB_util($dbres);
+	    }
         $this->actual = $actual;
 
     }
@@ -74,16 +78,7 @@ class Tracking {
         $values = array($lc_id, $term_id, $area_id);
         $query = $this->parse_query($pre_query, $values);
 
-        $res = mysql_query( $query, $this->dbres );
-        if( !$res ) {
-            die( 'Invalid query: ' . mysql_error($this->dbres) );
-        }
-
-        $out_array = array();
-
-        while( $row = mysql_fetch_assoc($res) ) {
-            $out_array[] = $row;
-        }
+        $out_array = $this->dbutil->process_query_assoc($query);
 
         if( $this->actual == 0 ) {
             return $out_array[0]['target'];
@@ -97,16 +92,7 @@ class Tracking {
         $values = array($lc_id, $term_id, $area_id);
         $query = $this->parse_query($pre_query, $values );
 
-        $res = mysql_query( $query, $this->dbres );
-        if( !$res ) {
-            die( 'Invalid query: ' . mysql_error($this->dbres) );
-        }
-
-        $out_array = array();
-
-        while( $row = mysql_fetch_row($res) ) {
-            $out_array[] = $row;
-        }
+        $out_array = $this->dbutil->process_query_array($query);
 
         return $out_array[0][0];
     }
@@ -125,11 +111,7 @@ class Tracking {
         $pre_query = $this->insert_actual_query;
         $query = $this->parse_query( $pre_query, $values );
 
-        $res = mysql_query( $query, $this->dbres );
-        if( !$res ) {
-            die( 'Invalid query: ' . mysql_error($this->dbres) );
-        }
-
+	$this->dbutil->do_query($query);
     }
 
     function update_actual($lc_id, $term_id, $area_id, $actual) {
@@ -137,10 +119,7 @@ class Tracking {
         $pre_query = $this->update_actual_query;
         $query = $this->parse_query( $pre_query, $values );
 
-        $res = mysql_query( $query, $this->dbres );
-        if( !$res ) {
-            die( 'Invalid query: ' . mysql_error($this->dbres) );
-        }
+	$this->dbutil->do_query($query);
     }
 
 }

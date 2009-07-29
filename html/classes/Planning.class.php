@@ -10,7 +10,7 @@
  * @author Richard
  */
 class Planning {
-    protected $dbres;
+    protected $dbutil;
 
     protected $term_id;
     protected $lc_id;
@@ -19,50 +19,28 @@ class Planning {
     protected $area_query = 'select * from areas';
     protected $kpi_query = 'select * from kpis where area = ';
 
-    function __construct( $dbres, $term_id, $user ) {
-        $this->dbres = $dbres;
+    function __construct( $dbutil, $term_id, $user ) {
+        $this->dbutil = $dbutil;
         $this->term_id = $term_id;
 
-        $lc = new LC($dbres);
+        $lc = new LC($dbutil->dbres);
         $this->lc_id = $lc->get_lc_by_user($user);
 
-        $this->target_values = new Tracking($dbres);
+        $this->target_values = new Tracking($dbutil);
 
     }
 
     function get_area_list() {
         $query = $this->area_query;
-
-        $res = mysql_query( $query, $this->dbres );
-        if( !$res ) {
-            die( 'Invalid query: ' . mysql_error($this->dbres) );
-        }
-
-        $out_array = array();
-
-        while( $row = mysql_fetch_assoc($res) ) {
-            $out_array[] = $row;
-        }
-
-        return $out_array;
+	$rows = $this->dbutil->process_query_assoc($query);
+        return $rows;
     }
 
     function get_kpis ($area_id ) {
         $query = $this->kpi_query
-            . mysql_real_escape_string($area_id, $this->dbres);
-
-        $res = mysql_query( $query, $this->dbres );
-        if( !$res ) {
-            die( 'Invalid query: ' . mysql_error($this->dbres) );
-        }
-
-        $out_array = array();
-
-        while( $row = mysql_fetch_assoc($res) ) {
-            $out_array[] = $row;
-        }
-
-        return $out_array;
+            . $this->dbutil->escape($area_id);
+	$rows = $this->dbutil->process_query_assoc($query);
+        return $rows;
     }
 
     protected function get_form_content_row( $area_id, $area_name, $area_desc ) {

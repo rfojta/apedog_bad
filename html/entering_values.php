@@ -1,7 +1,7 @@
 <?php
 include('init.php');
 
-$entering = new Entering($dbres, $current_term, $_SESSION['user']);
+$entering = new Entering($dbutil, $current_term, $_SESSION['user']);
 
 if( isset( $_POST['posted'])) {
     $entering->submit( $_POST );
