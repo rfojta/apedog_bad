@@ -29,7 +29,7 @@ if (!isset($_SESSION['user'])) { header("Location: index.php"); exit; }
 
                         <?php if( $_SESSION['user'] == 'Praha'):
                             echo "<li>Configuration: <ul>";
-                            foreach( glob('*_conf.php') as $conf_page) {
+                            foreach( glob('administration/*_conf.php') as $conf_page) {
                                 echo "<li>";
                                 echo "<a href=\"$conf_page\" title=\"Here you can configure $conf_page\">$conf_page configuration</a>";
                                 echo "</li>\n";
