@@ -144,11 +144,20 @@ class GenericController {
             $this->edit_item_row($id, $key, $value);
         }
 
+        $this->get_delete_checkbox($name);
+        
         if( $id != 'new' && isset( $this->child_conf) ) {
             $this->child_list($id);
         }
 
     }
+    /**
+     * display html input with loaded value
+     * @param $id of deleted item
+     */
+     protected function delete_item($id){
+        $this->model->delete_row($id);
+     }
 
     /**
      * display html input with loaded value
@@ -192,13 +201,20 @@ class GenericController {
      */
     public function get_form_content($request) {
         echo "<table width=\"100%\"><tr><td>";
+
+        $id = $request[id];
+        $delete=$request[delete];
+        if($delete=='yes'&& $id!='new'){
+            $this->delete_item($id);
+        }
+
         $this->new_item_link();
         $this->get_list();
-
+ 
         echo "</td><td>";
-        $id = $request[id];
+        
         $this->request = $request;
-        if(isset($id) ) {
+        if(isset($id)&&$delete!='yes' ) {
             $this->edit_item($id);
         }
         echo "</td></tr></table>";
@@ -302,7 +318,7 @@ class GenericController {
         echo "<span title=\"select superior $pname for this $name\">$pname: </span>";
         if( isset( $this->request[$pname]) ) {
             $p_ctrl->get_list_box($id, $this->request[$pname]);
-
+            $this->get_delete_checkbox();
         } else {
             $p_ctrl->get_list_box($id, $selected);
         }
@@ -311,6 +327,11 @@ class GenericController {
             echo "(<a href=\"$link&id=$selected\">"
                 . $p_ctrl->get_label($selected) ."</a>)";
         }
+    }
+
+    protected function get_delete_checkbox(){
+        echo "<br><input type='checkbox' name='delete' value='yes'/>";
+        echo "<b>Permanently delete this ".$this->name." and all its history</b>";
     }
 }
 ?>
