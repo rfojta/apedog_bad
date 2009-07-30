@@ -22,6 +22,8 @@ class GenericModel {
     protected $insert_query = 'insert into :table_name
         (:columns, created) values (:values, current_timestamp())';
 
+    protected $delete_query = 'delete from :table_name';
+
     protected $dbutil;
     protected $id;
 
@@ -118,6 +120,12 @@ class GenericModel {
 
     public function get_row_label( $row ) {
         return $row['id'];
+    }
+
+    public function delete_row($id){
+        $pre_query = $this->delete_query . " where id = " . $id;
+        $query = $this->parse_table_name($pre_query);
+        $this->dbutil->do_query($query);
     }
 
 //put your code here

@@ -25,9 +25,11 @@ class UserModel extends GenericModel {
     public function new_item_row() {
         return array(
         'id' => 'new',
-        'name' => 'new',
-        'description' => 'create new item',
-        'area' => ''
+        'name' => '',
+        'surname' => '',
+        'pass' => '',
+        'login' => 'new',
+        'lc'=>'create new user'
         );
     }
 
