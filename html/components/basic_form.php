@@ -29,11 +29,10 @@ if( isset( $_POST['posted'])) {
 		<script type="text/javascript" src="js/jquery-ui-1.7.2.custom.min.js"></script>
 
         <script type="text/javascript">
+            
             $(function() {
-                $(".date").datepicker();
-                //$(".datetime").datepicker();
+                // it's needed to preserve the value loaded from database
                 $('.date').datepicker('option', {dateFormat: 'yy-mm-dd'});
-                // $('.datetime').datepicker('option', {dateFormat: 'yy-mm-dd hh:mm:ss'});
                 $(".date").datepicker($.datepicker.regional['en'])
             });
         </script>
