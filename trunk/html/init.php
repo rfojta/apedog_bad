@@ -13,6 +13,7 @@ include('classes/LC.class.php');
 include('classes/Tracking.class.php');
 include('classes/Report.class.php');
 include('classes/db_util.class.php');
+include('classes/Reminder.class.php');
 
 include_once('classes/model/generic_model.class.php');
 include_once('classes/controller/generic_controller.class.php');
