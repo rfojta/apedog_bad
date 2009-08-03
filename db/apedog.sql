@@ -63,8 +63,8 @@ CREATE TABLE IF NOT EXISTS `detail_tracking` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `kpi` int(10) unsigned NOT NULL,
   `lc` int(10) unsigned NOT NULL,
-  `actual` int(10) unsigned NOT NULL,
-  `target` int(10) unsigned NOT NULL,
+  `actual` int(10) unsigned default NULL,
+  `target` int(10) unsigned default NULL,
   `created` datetime NOT NULL,
   `updated` datetime NOT NULL,
   `quarter` int(10) unsigned NOT NULL,
@@ -80,9 +80,9 @@ CREATE TABLE IF NOT EXISTS `detail_tracking` (
 --
 
 INSERT INTO `detail_tracking` (`id`, `kpi`, `lc`, `actual`, `target`, `created`, `updated`, `quarter`) VALUES
-(1, 7, 1, 0, 20, '0000-00-00 00:00:00', '2009-07-29 01:17:48', 1),
-(2, 8, 1, 0, 30, '0000-00-00 00:00:00', '2009-07-29 01:17:48', 1);
-
+(1, 7, 1, NULL, 20, '0000-00-00 00:00:00', '2009-07-29 01:17:48', 3),
+(2, 8, 1, NULL, 30, '0000-00-00 00:00:00', '2009-07-29 01:17:48', 3),
+(3, 5, 2, NULL, 90, '0000-00-00 00:00:00', '2009-07-29 01:17:48', 3);
 -- --------------------------------------------------------
 
 --
@@ -175,7 +175,8 @@ CREATE TABLE IF NOT EXISTS `quarters` (
 
 INSERT INTO `quarters` (`id`, `quarter_from`, `quarter_to`, `description`, `created`, `updated`, `term`) VALUES
 (1, '0000-00-00', '0000-00-00', '0000-00-00 00:00:00', '2009-07-28 20:44:24', '0000-00-00 00:00:00', 2),
-(2, '2009-08-01', '2009-07-16', '0000-00-00 00:00:00', '2009-07-29 14:35:20', '0000-00-00 00:00:00', 1);
+(2, '2009-08-01', '2009-07-16', '0000-00-00 00:00:00', '2009-07-29 14:35:20', '0000-00-00 00:00:00', 1),
+(3, '2009-05-01', '2009-07-09', '0000-00-00 00:00:00', '2009-07-29 14:35:20', '0000-00-00 00:00:00', 3);
 
 -- --------------------------------------------------------
 
@@ -243,8 +244,8 @@ CREATE TABLE IF NOT EXISTS `tracking` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `area` int(10) unsigned NOT NULL,
   `lc` int(10) unsigned NOT NULL,
-  `actual` int(10) unsigned NOT NULL,
-  `target` int(10) unsigned NOT NULL,
+  `actual` int(10) unsigned default NULL,
+  `target` int(10) unsigned default NULL,
   `created` datetime NOT NULL,
   `updated` datetime NOT NULL,
   `term` int(10) unsigned default NULL,
@@ -295,6 +296,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `login` varchar(45) character set latin1 collate latin1_general_ci NOT NULL,
   `created` datetime NOT NULL,
   `updated` datetime NOT NULL,
+  `email` varchar(45) character set latin1 collate latin1_general_ci default NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `users-lc` (`lc`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=11 ;
@@ -303,17 +305,17 @@ CREATE TABLE IF NOT EXISTS `users` (
 -- Vypisuji data pro tabulku `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `surname`, `lc`, `pass`, `login`, `created`, `updated`) VALUES
-(1, 'Marek', 'Beran', 1, 'brucelee', 'Praha', '0000-00-00 00:00:00', '2009-07-28 17:52:50'),
-(2, '', '', 3, 'brucelee', 'Ostrava', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(3, '', '', 8, 'brucelee', 'Plzen', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(4, '', '', 7, 'brucelee', 'Pardubice', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(5, '', '', 2, 'brucelee', 'Brno', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(6, '', '', 6, 'brucelee', 'CZU', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(7, '', '', 9, 'brucelee', 'Karvina', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(8, '', '', 5, 'brucelee', 'Zlin', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(9, '', '', 4, 'brucelee', 'Olomouc', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(10, '', '', 10, 'brucelee', 'MC', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
+INSERT INTO `users` (`id`, `name`, `surname`, `lc`, `pass`, `login`, `created`, `updated`, `email`) VALUES
+(1, 'Marek', 'Beran', 1, 'brucelee', 'Praha', '0000-00-00 00:00:00', '2009-07-28 17:52:50', 'krystof1000@gmail.com'),
+(2, '', '', 3, 'brucelee', 'Ostrava', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 'krystof1000@gmail.com'),
+(3, '', '', 8, 'brucelee', 'Plzen', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 'krystof1000@gmail.com'),
+(4, '', '', 7, 'brucelee', 'Pardubice', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 'krystof1000@gmail.com'),
+(5, '', '', 2, 'brucelee', 'Brno', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 'krystof1000@gmail.com'),
+(6, '', '', 6, 'brucelee', 'CZU', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 'krystof1000@gmail.com'),
+(7, '', '', 9, 'brucelee', 'Karvina', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 'krystof1000@gmail.com'),
+(8, '', '', 5, 'brucelee', 'Zlin', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 'krystof1000@gmail.com'),
+(9, '', '', 4, 'brucelee', 'Olomouc', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 'krystof1000@gmail.com'),
+(10, '', '', 10, 'brucelee', 'MC', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 'krystof1000@gmail.com');
 
 --
 -- Omezení pro exportované tabulky

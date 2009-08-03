@@ -31,7 +31,7 @@ if( isset( $_POST['posted'])) {
         <script type="text/javascript">
             
             $(function() {
-                // it's needed to preserve the value loaded from database
+
                 $('.date').datepicker('option', {dateFormat: 'yy-mm-dd'});
                 $(".date").datepicker($.datepicker.regional['en'])
             });
