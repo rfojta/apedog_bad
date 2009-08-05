@@ -33,7 +33,7 @@ foreach( $areas as $area ) {
     echo "<option value=\"".$area['id']."\"";
     if( isset($_REQUEST['area_id']) ) {
         if( $area['id'] == $_REQUEST['area_id']) {
-            $chosen_area=$area['id'];
+            $area_id=$area['id'];
             echo " selected ";
         }
     }
@@ -45,6 +45,6 @@ foreach( $areas as $area ) {
 
 echo "</select>\n";
 
-return $chosen_area;
+return $area_id;
 
 ?>

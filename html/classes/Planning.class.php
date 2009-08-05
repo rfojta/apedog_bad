@@ -13,15 +13,17 @@ class Planning {
     protected $dbutil;
 
     protected $term_id;
+    protected $area_id;
     protected $lc_id;
     protected $target_values;
 
     protected $area_query = 'select * from areas';
     protected $kpi_query = 'select * from kpis where area = ';
 
-    function __construct( $dbutil, $term_id, $user ) {
+    function __construct( $dbutil, $term_id, $area_id, $user ) {
         $this->dbutil = $dbutil;
         $this->term_id = $term_id;
+        $this->quarter_id = $area_id;
 
         $lc = new LC($dbutil->dbres);
         $this->lc_id = $lc->get_lc_by_user($user);

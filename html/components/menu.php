@@ -12,7 +12,7 @@
             else {
                 echo
                 '<li><a href="main_page.php" title="">Home</a></li>
-                <li><a href="planning.php" title="">Planning</a></li>
+                <li><a href="detail_planning.php" title="">Planning</a></li>
                 <li><a href="entering_values.php" title="">Entering values</a></li>
                 <li><a href="reports.php" title="">Reports</a></li>
                 <li><a href="index.php?logout" title="">Logout</a></li>';

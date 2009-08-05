@@ -9,42 +9,52 @@
  *
  * @author Richard
  */
-class Entering extends Planning {
+class Entering extends DetailPlanning {
 //put your code here
 
     protected $actaul_values;
 
-    function  __construct($dbres, $term_id, $user) {
-        parent::__construct($dbres, $term_id, $user);
+    function  __construct($dbutil, $term_id, $current_area, $user ) {
+        parent::__construct($dbutil, $term_id, $current_area, $user );
 
-        $this->actual_values = new Tracking($dbres, 1);
+        $this->page = 'entering_values.php';
+        $this->actual_values = new DetailTracking($dbutil, 1);
     }
 
-    protected function get_form_content_row( $area_id, $area_name ) {
+    protected function get_kpi_input($kpi)  {
+        $quarter_id = $this->quarter_id;
+        $lc_id = $this->lc_id;
+        $kpi_id = $kpi['id'];
 
-        $actual = $this->actual_values->get_actual(
-            $this->lc_id, $this->term_id, $area_id
+        $actual = $this->actual_values->get_value(
+            $lc_id, $quarter_id, $kpi_id
         );
-        $target = $this->target_values->get_actual(
-            $this->lc_id, $this->term_id, $area_id
+        $target = $this->target_values->get_value(
+            $lc_id, $quarter_id, $kpi_id
         );
 
-        echo '<li>';
-        echo "\n";
-        echo $area_name . ': ';
-        echo '<input name="'
-            . $this->lc_id . '-'
-            . $this->term_id . '-'
-            . $area_id .'" value="' . $actual . '">';
-        echo "&nbsp;Planned: $target\n";
-        echo '</li>';
-        echo "\n";
+        echo "<tr> \n";
+        echo "<td> \n";
+        echo '<span title="' . $kpi['description'] . '">'
+            . $kpi['name'] . ':</span>';
+        echo "</td> \n";
+        echo "<td> \n";
+        echo "<input name=\"kpi-$kpi_id\" value=\"$actual\" />";
+        echo "</td> \n";
+        echo "<td> \n";
+        echo "Planned: ".$target;
+        echo "</td> \n";
+        echo "</tr> \n";
+        echo "</li> \n";
     }
-
-    protected function set_values( $tokens, $value ) {
-        $this->actual_values->set_actual(
-            $tokens[1], $tokens[2],
-            $tokens[3], $value);
+       
+    protected function set_values( $kpi,$quarter, $value ) {
+        $this->actual_values->set_value(
+            $this->lc_id,
+            $quarter,
+            $kpi[1],
+            $value
+        );
     }
 }
 ?>

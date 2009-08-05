@@ -11,7 +11,6 @@
  */
 class Term {
     private $dbres;
-    private $term_query = 'select * from terms';
     private $current_term_query =
     'select id from terms
          where term_to   > current_date()
