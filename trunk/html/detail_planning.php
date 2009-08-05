@@ -1,9 +1,8 @@
 <?php
 include('init.php');
-include('classes/DetailPlanning.class.php');
-include('classes/DetailTracking.class.php');
 
-$controller = new DetailPlanning($dbutil, $current_term, $_SESSION['user']);
+
+$controller = new DetailPlanning($dbutil, $current_term, $current_area, $_SESSION['user']);
 
 $page = 'planning';
 $page_title = "Apedog: Detail Planning";

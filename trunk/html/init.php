@@ -6,7 +6,8 @@ $info = $_SESSION['user'];
 $lc = $_SESSION['user'];
 
 include('classes/Apedog.class.php');
-include('classes/Planning.class.php');
+include('classes/DetailPlanning.class.php');
+include('classes/DetailTracking.class.php');
 include('classes/Entering.class.php');
 include('classes/Term.class.php');
 include('classes/LC.class.php');
@@ -14,6 +15,7 @@ include('classes/Tracking.class.php');
 include('classes/Report.class.php');
 include('classes/db_util.class.php');
 include('classes/Reminder.class.php');
+
 
 include_once('classes/model/generic_model.class.php');
 include_once('classes/controller/generic_controller.class.php');
@@ -40,6 +42,12 @@ $term = new Term($dbres);
 $current_term = $term->get_current_term();
 if( isset($_REQUEST['term_id']) ) {
     $current_term = $_REQUEST['term_id'];
+}
+
+
+$current_area = 'all';
+if( isset($_REQUEST['area_id']) ) {
+    $current_area = $_REQUEST['area_id'];
 }
 
 $terms = $term->get_term_labels();

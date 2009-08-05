@@ -166,7 +166,7 @@ CREATE TABLE IF NOT EXISTS `quarters` (
   `term` int(10) unsigned NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `term_from` (`quarter_from`,`quarter_to`),
-  UNIQUE KEY `quarter-term` (`term`)
+  KEY `quarter-term` (`term`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=3 ;
 
 --

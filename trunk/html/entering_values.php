@@ -1,7 +1,7 @@
 <?php
 include('init.php');
 
-$entering = new Entering($dbutil, $current_term, $_SESSION['user']);
+$entering = new Entering($dbutil, $current_term,$current_area, $_SESSION['user']);
 
 if( isset( $_POST['posted'])) {
     $entering->submit( $_POST );
@@ -26,16 +26,13 @@ if( isset( $_POST['posted'])) {
                 <div class="content">
                     <form method="POST" action="" >
                         <?php
-                        include('components/select_term.php');
                         $entering->get_form_content();
-
                         ?>
                         <p>
                         <input type="hidden" name="posted" value="1" />
-                        <input type=submit />
+                        <input type=submit value="Save"/>
                         </p>
                     </form>
-			//implementation of entering actual values
                 </div>
             </div>
             <div id="colTwo">
