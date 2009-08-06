@@ -7,7 +7,7 @@
 /**
  * Description of Planning
  *
- * @author Richard
+ * @author Richard, Krystof
  */
 class DetailPlanning {
     protected $dbutil;
@@ -28,7 +28,7 @@ class DetailPlanning {
         $this->dbutil = $dbutil;
         $this->term_id = $term_id;
         $this->area_id = $current_area;
-        $this->page = 'detail_planning.php';
+        $this->page = 'detail_planning.php?';
 
         $lc = new LC($dbutil->dbres);
         $this->lc_id = $lc->get_lc_by_user($user);
@@ -67,7 +67,7 @@ class DetailPlanning {
     protected function get_area_section( $area_list ) {
         echo "Select area: \n";
         echo "<select name=\"area_id\" id=\"area_id\"\n";
-        echo "onchange=\"window.location.href='".$this->page."?term_id=".$this->term_id
+        echo "onchange=\"window.location.href='".$this->page."term_id=".$this->term_id
             ."&quarter_id=".$this->quarter_id."&area_id='+this.value\">\n";
         echo "<option value=\"all\"";
             if( isset($_REQUEST['area_id']) ) {
@@ -108,6 +108,7 @@ class DetailPlanning {
 
         $this->get_term_section($term_list);
         $this->get_quarter_section($quarter_list);
+        echo '&nbsp;&nbsp;&nbsp;';
         $this->get_area_section($area_list);
         echo "<p>";
         echo "<table>";
@@ -129,9 +130,9 @@ class DetailPlanning {
     }
 
     function submit( $post ) {
+        $quarter;
         $rec;
         $kpi=array();
-        $quarter;
         foreach( $post as $key => $value ) {
         // $tokens = array();
             if( $key=='quarter_id') {
@@ -140,7 +141,7 @@ class DetailPlanning {
 
             if( preg_match('/^kpi-(\d+)$/', $key, $tokens) ) {
 
-                if( $value > 0 ) {
+                if( $value > 0 && $quarter!=null ) {
                     $kpi=$tokens;
                     $this->set_values($kpi,$quarter,$value);
                 }
@@ -164,7 +165,7 @@ class DetailPlanning {
     function get_term_section($term_list) {
         echo "Select term: \n";
         echo "<select name=\"term_id\" id=\"term_id\"\n";
-        echo "onchange=\"window.location.href='".$this->page."?area_id=".$this->area_id."&term_id='+this.value\">\n";
+        echo "onchange=\"window.location.href='".$this->page."area_id=".$this->area_id."&term_id='+this.value\">\n";
 
         foreach( $term_list as $term ) {
             echo "<option value=\"".$term['id']."\"";
@@ -186,7 +187,7 @@ class DetailPlanning {
     function get_quarter_section($quarter_list) {
         echo "Select quarter: \n";
         echo "<select name=\"quarter_id\" id=\"quarter_id\"\n";
-        echo "onchange=\"window.location.href='".$this->page."?area_id=".$this->area_id."&term_id=".$this->term_id."&quarter_id='+this.value\">\n";
+        echo "onchange=\"window.location.href='".$this->page."area_id=".$this->area_id."&term_id=".$this->term_id."&quarter_id='+this.value\">\n";
 
         foreach( $quarter_list as $quarter ) {
             echo "<option value=\"".$quarter['id']."\"";

@@ -7,7 +7,7 @@
 /**
  * Description of Entering
  *
- * @author Richard
+ * @author Richard, Krystof
  */
 class Entering extends DetailPlanning {
 //put your code here

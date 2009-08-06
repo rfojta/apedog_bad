@@ -166,7 +166,7 @@ CREATE TABLE IF NOT EXISTS `quarters` (
   `term` int(10) unsigned NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `term_from` (`quarter_from`,`quarter_to`),
-  KEY `quarter-term` (`term`)
+  UNIQUE KEY `quarter-term` (`term`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=3 ;
 
 --
@@ -351,3 +351,15 @@ ALTER TABLE `tracking`
 --
 ALTER TABLE `users`
   ADD CONSTRAINT `users_ibfk_1` FOREIGN KEY (`lc`) REFERENCES `lcs` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+
+ALTER TABLE `quarters` DROP FOREIGN KEY `quarters_ibfk_1` ;
+
+ALTER TABLE quarters DROP INDEX quarter-term ;
+
+ALTER TABLE `detail_tracking`
+  ADD CONSTRAINT `detail_tracking_ibfk_1` FOREIGN KEY (`kpi`) REFERENCES `kpis` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `quarters` ADD FOREIGN KEY ( `term` ) REFERENCES `apedog`.`terms` (
+`id`
+) ON DELETE CASCADE ON UPDATE CASCADE ;
