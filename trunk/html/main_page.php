@@ -25,6 +25,9 @@ if (!isset($_SESSION['user'])) { header("Location: index.php"); exit; }
                     <ul>
                         <li><a href="detail_planning.php" title="Enter plans for each KPI">Planning</a></li>
                         <li><a href="entering_values.php" title="Enter actual values for each KPI">Entering values</a></li>
+                        <?php if( $_SESSION['user'] == 'Praha'):
+                            echo "<li><a href=\"locking.php\" title=\"You can lock planning and entering values from editing\">Locking</a></li>";
+                        endif; ?>
                         <li><a href="reports.php" title="See reports according to plans and fullfilling">Reports</a></li>
                         <?php if( $_SESSION['user'] == 'Praha'):
                             echo "<li><a href=\"admin.php\" title=\"You can choose which object you want to configure\">Configuration</a></li>";

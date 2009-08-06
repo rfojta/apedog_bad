@@ -331,7 +331,7 @@ class GenericController {
 
     protected function get_delete_checkbox(){
         echo "<br><input type='checkbox' name='delete' value='yes'/>";
-        echo "<b>Permanently delete this ".$this->name." and all its history</b>";
+        echo "<b>Permanently delete this ".$this->name." and all related history</b>";
     }
 }
 ?>
