@@ -7,8 +7,8 @@ $lc = $_SESSION['user'];
 
 include('classes/Apedog.class.php');
 include('classes/DetailPlanning.class.php');
-include('classes/DetailTracking.class.php');
 include('classes/Locking.class.php');
+include('classes/DetailTracking.class.php');
 include('classes/Entering.class.php');
 include('classes/LockEntering.class.php');
 include('classes/LockPlanning.class.php');
@@ -39,6 +39,8 @@ $apedog = new Apedog('devel');
 $dbres = $apedog->dbres;
 
 $dbutil = new DB_Util($apedog->dbres);
+
+$locking = new Locking($dbutil);
 
 $term = new Term($dbres);
 

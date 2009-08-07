@@ -46,10 +46,6 @@ if( isset( $_POST['posted'])) {
                 <div class="content">
                     <form method="POST" action="">
                         <?php $controller->get_form_content($_REQUEST); ?>
-                        <p>
-                            <input type="hidden" name="posted" value="1" />
-                            <input type=submit value="Save" />
-                        </p>
                     </form>
                 </div>
             </div>

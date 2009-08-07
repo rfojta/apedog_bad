@@ -18,17 +18,19 @@ class DetailPlanning {
     protected $lc_id;
     protected $this_page;
     protected $target_values;
+    protected $locking;
 
     protected $area_query = 'select * from areas';
     protected $quarter_query = 'select * from quarters where term = ';
     protected $kpi_query = 'select * from kpis';
     protected $term_query = 'select * from terms';
 
-    function __construct( $dbutil, $term_id, $current_area, $user ) {
+    function __construct( $dbutil, $term_id, $current_area, $user, $locking ) {
         $this->dbutil = $dbutil;
         $this->term_id = $term_id;
         $this->area_id = $current_area;
         $this->page = 'detail_planning.php?';
+        $this->locking = $locking;
 
         $lc = new LC($dbutil->dbres);
         $this->lc_id = $lc->get_lc_by_user($user);
@@ -58,7 +60,11 @@ class DetailPlanning {
             . $kpi['name'] . ':</span>';
         echo "</td> \n";
         echo "<td> \n";
-        echo "<input name=\"kpi-$kpi_id\" value=\"$value\" />";
+        echo "<input name=\"kpi-$kpi_id\"";
+        if ($this->locking->get_count($this->lc_id, 'NULL', $this->term_id)){
+            echo ' disabled ';
+        }
+        echo "value=\"$value\" />";
         echo "</td> \n";
         echo "</tr> \n";
         echo "</li> \n";
@@ -110,6 +116,7 @@ class DetailPlanning {
         $this->get_quarter_section($quarter_list);
         echo '&nbsp;&nbsp;&nbsp;';
         $this->get_area_section($area_list);
+
         echo "<p>";
         echo "<table>";
         foreach( $kpi_list as $kpi ) {
@@ -117,7 +124,8 @@ class DetailPlanning {
         }
         echo "</table>";
         echo "</p>";
-        
+
+        $this->get_submit_button();
     }
 
     protected function set_values($kpi,$quarter, $value ) {
@@ -214,6 +222,17 @@ class DetailPlanning {
         }
         $rows = $this->dbutil->process_query_assoc($query);
             return $rows;
+    }
+
+    function get_submit_button(){
+        echo '<p>';
+        echo '<input type="hidden" name="posted" value="1" />';
+        echo '<input type=submit';
+        if ($this->locking->get_count($this->lc_id, 'NULL', $this->term_id)){
+            echo ' disabled';
+        }
+        echo ' value="Save" />';
+        echo '</p>';
     }
 }
 

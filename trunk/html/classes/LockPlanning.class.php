@@ -5,7 +5,7 @@
  */
 
 /**
- * Description of Locking of planning
+ * Description of Locking of entering values
  *
  * @author Krystof
  */
@@ -14,8 +14,8 @@ class LockPlanning extends DetailPlanning {
 
     protected $lcs_query = 'select * from lcs';
 
-    function  __construct($dbutil, $term_id, $current_area, $user ) {
-        parent::__construct($dbutil, $term_id, $current_area, $user );
+    function  __construct($dbutil, $term_id, $current_area, $user, $locking ) {
+        parent::__construct($dbutil, $term_id, $current_area, $user, $locking );
 
         $this->page = 'locking.php?planning&';
     }
@@ -28,7 +28,7 @@ class LockPlanning extends DetailPlanning {
 
         echo "<p>";
         echo "<table>";
-        foreach ($lcs_list as $lc){
+        foreach ($lcs_list as $lc) {
             $this->get_lc_input($lc);
         }
         echo "</table>";
@@ -42,8 +42,61 @@ class LockPlanning extends DetailPlanning {
         return $rows;
     }
 
-    function get_lc_input($lc){
-        
+    function get_lc_input($lc) {
+        $term_id = $this->term_id;
+        $lc_id = $lc['id'];
+        $value='';
+        $checked = '';
+        if (term_id!=null) {
+            $value = $this->locking
+                ->get_count($lc_id, 'NULL', $term_id);
+        }
+        if ($value==1) {
+            $checked=" checked='yes' ";
+        }
+        echo "<tr> \n";
+        echo "<td> \n";
+        echo '<span title="' . $lc['description'] . '">'
+            . $lc['name'] . ':</span>';
+        echo "</td> \n";
+        echo "<td> \n";
+        echo "<input type='checkbox'".$checked."name='lc-".$lc_id."' value='checked' />";
+        echo "</td> \n";
+        echo "</tr> \n";
+        echo "</li> \n";
+    }
+
+    function submit( $post ) {
+        $term;
+        $changed_lcs = array();
+        $lcs_list = $this->get_lcs_list();
+        foreach( $post as $key => $value ) {
+            if( $key=='term_id') {
+                $term=$value;
+            }
+
+            if( preg_match('/^lc-(\d+)$/', $key, $tokens) ) {
+                $lc=$tokens;
+                if ($term!='') {
+                    $this->set_values($lc,'NULL',$term);
+                    $changed_lcs[]=$lc[1];
+                }
+            }
+        }
+        foreach($lcs_list as $lc) {
+            if (!in_array($lc['id'], $changed_lcs)) {
+                $this->locking->delete_value($lc['id'],'NULL', $term);
+            }
+        }
+
+    }
+
+    protected function set_values($lc,$quarter,$term) {
+        $this->locking->set_value(
+            $lc[1],
+            'NULL',
+            $term
+        );
     }
 }
 ?>
