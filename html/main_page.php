@@ -23,14 +23,14 @@ if (!isset($_SESSION['user'])) { header("Location: index.php"); exit; }
                     <p></p>
                     <!-- rozcestnik -->
                     <ul>
-                        <li><a href="detail_planning.php" title="Enter plans for each KPI">Planning</a></li>
-                        <li><a href="entering_values.php" title="Enter actual values for each KPI">Entering values</a></li>
-                        <?php if( $_SESSION['user'] == 'Praha'):
-                            echo "<li><a href=\"locking.php\" title=\"You can lock planning and entering values from editing\">Locking</a></li>";
-                        endif; ?>
-                        <li><a href="reports.php" title="See reports according to plans and fullfilling">Reports</a></li>
-                        <?php if( $_SESSION['user'] == 'Praha'):
-                            echo "<li><a href=\"admin.php\" title=\"You can choose which object you want to configure\">Configuration</a></li>";
+                        <li><a href="detail_planning.php" title="Enter plans for each KPI"><img src="images/planning.png" border="0"></a></li>
+                        <li><a href="entering_values.php" title="Enter actual values for each KPI"><img src="images/entering.png" border="0"></a></li>
+                        <li><a href="reports.php" title="See reports according to plans and fullfilling"><img src="images/reports.png" border="0"></a></li>
+                        <?php if( $_SESSION['user'] == 'MC'):
+                            echo "<li><a href=\"locking.php\" title=\"You can lock planning and entering values from editing\"><img src='images/locking.png' border='0'></a></li>";
+                        endif; ?>                        
+                        <?php if( $_SESSION['user'] == 'MC'):
+                            echo "<li><a href=\"admin.php\" title=\"You can choose which object you want to configure\"><img src='images/configuration.png' border='0'></a></li>";
                         endif; ?>
                     </ul>
                 </div>

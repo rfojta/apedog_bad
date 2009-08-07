@@ -103,6 +103,10 @@ a:hover {
 	margin: 0 auto;
 }
 
+#content a {
+    text-decoration:none
+}
+
 #content h2 {
 	height: 25px;
 	padding: 6px 0 0 31px;
@@ -124,7 +128,10 @@ a:hover {
 
 #content li {
 	padding-left: 12px;
-	background: url(images/img09.gif) no-repeat left center;
+        padding: 6px 0 0 31px;
+	text-transform: uppercase;
+	font-size: 1em;
+	color: #000000;
 }
 
 #content .content {
