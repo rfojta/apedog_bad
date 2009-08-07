@@ -13,13 +13,11 @@ class LockEntering extends DetailPlanning {
 //put your code here
 
     protected $lcs_query = 'select * from lcs';
-    protected $locking;
 
-    function  __construct($dbutil, $term_id, $current_area, $user ) {
-        parent::__construct($dbutil, $term_id, $current_area, $user );
+    function  __construct($dbutil, $term_id, $current_area, $user, $locking) {
+        parent::__construct($dbutil, $term_id, $current_area, $user, $locking );
 
         $this->page = 'locking.php?entering&';
-        $this->locking = new Locking($this->dbutil);
     }
 
     function get_form_content() {
@@ -54,7 +52,7 @@ class LockEntering extends DetailPlanning {
         $checked = '';
         if ($quarter_id!=null) {
             $value = $this->locking
-                ->get_count($lc_id, $quarter_id);
+                ->get_count($lc_id, $quarter_id, 'NULL');
         }
         if ($value==1) {
             $checked=" checked='yes' ";
@@ -90,7 +88,7 @@ class LockEntering extends DetailPlanning {
         }
         foreach($lcs_list as $lc) {
             if (!in_array($lc['id'], $changed_lcs)&&$quarter!='') {
-                $this->locking->delete_value($lc['id'],$quarter);
+                $this->locking->delete_value($lc['id'],$quarter, 'NULL');
             }
         }
 
@@ -99,7 +97,8 @@ class LockEntering extends DetailPlanning {
     protected function set_values($lc,$quarter) {
         $this->locking->set_value(
             $lc[1],
-            $quarter
+            $quarter,
+            'NULL'
         );
     }
 }

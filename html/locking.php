@@ -22,7 +22,7 @@ include('init.php');
                         if( isset( $_REQUEST['entering'])) {
                             echo "<p><a href=".$_SERVER["PHP_SELF"]."?planning>Lock planning</a>&nbsp;";
                             echo "<b><a href=".$_SERVER["PHP_SELF"]."?entering>Lock enterning</a></b></p>";
-                            $lock_entering = new LockEntering($dbutil, $current_term,$current_area, $_SESSION['user']);                           
+                            $lock_entering = new LockEntering($dbutil, $current_term,$current_area, $_SESSION['user'], $locking);
                             if( isset( $_POST['posted'])) {
                                 $lock_entering->submit( $_POST );
                             }
@@ -30,7 +30,7 @@ include('init.php');
                         } else {
                             echo "<p><b><a href=".$_SERVER["PHP_SELF"]."?planning>Lock planning</a></b>&nbsp;";
                             echo "<a href=".$_SERVER["PHP_SELF"]."?entering>Lock enterning</a></p>";
-                            $lock_planning = new LockPlanning($dbutil, $current_term,$current_area, $_SESSION['user']);
+                            $lock_planning = new LockPlanning($dbutil, $current_term,$current_area, $_SESSION['user'], $locking);
                             if( isset( $_POST['posted'])) {
                                 $lock_planning->submit( $_POST );
                             }
