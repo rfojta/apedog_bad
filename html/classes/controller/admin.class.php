@@ -16,7 +16,7 @@ class Admin {
     public $page_title;
     public $page = 'configuration';
     public $page_help;
-    
+
     protected $dbutil;
 
     function  __construct($dbutil) {
@@ -38,7 +38,13 @@ class Admin {
         $area_model = new AreaModel($this->dbutil);
         $kpi_model = new KpiModel($this->dbutil);
         $area = new AreaController($area_model, $kpi_model);
-        $this->controller = new KpiController($kpi_model, $area);
+
+        $model = new CsfModel($this->dbutil);
+        $business_perspectiveModel = new Business_PerspectiveModel($this->dbutil);
+        $business_perspectiveController = new Business_PerspectiveController($business_perspectiveModel,$model);
+        $csf = new CsfController($model, $business_perspectiveController, $kpi_model);
+        
+        $this->controller = new KpiController($kpi_model, $area, $csf);
 
         $this->page_title = 'Apedog: KPI Configuration';
         $this->page_help = '
@@ -83,7 +89,7 @@ class Admin {
         $term_model = new TermModel($this->dbutil);
 
         $this->controller = new TermController($term_model, $model);
-        
+
         $this->page_title = "Apedog: Quarter Configuration";
         $this->page_help = "<h3>$this->page_title</h3>
 <p>you can add, modify, remove Quarter or Terms</p>
@@ -103,6 +109,33 @@ class Admin {
 <h3>$this->page_title</h3>
 <p>you can add, modify, remove Quarter or Terms</p>
 <p>Each Quarter belongs to one Term</p>
+            ";
+    }
+
+    function business_perspective() {
+        $model = new Business_PerspectiveModel($this->dbutil);
+        $csf_model = new CsfModel($this->dbutil);
+
+        $this->controller = new Business_PerspectiveController($model,$csf_model);
+        $this->page_title = "Apedog: Business Perspective Configuration";
+        $this->page_help = "<h3>$this->page_title</h3>
+<p>you can add, modify, remove Business Perspective or Critical Success Factors</p>
+<p>Each CSF belongs to one Business Perspective</p>
+            ";
+    }
+
+    function csf() {
+        $model = new CsfModel($this->dbutil);
+        $business_perspectiveModel = new Business_PerspectiveModel($this->dbutil);
+
+        $business_perspectiveController = new Business_PerspectiveController($business_perspectiveModel,$model);
+        $kpi_model = new KpiModel($this->dbutil);
+        $this->controller = new CsfController($model, $business_perspectiveController, $kpi_model);
+        $this->page_title = "Apedog: Critical Success factors configuration";
+        $this->page_help = "
+        <h3>$this->page_title</h3>
+        <p>you can add, modify, remove Business Perspective or Critical Success Factors</p>
+        <p>Each CSF belongs to one Business Perspective</p>
             ";
     }
 }

@@ -22,17 +22,17 @@ if (!isset($_SESSION['user'])) { header("Location: index.php"); exit; }
                 <div class="content">
                     <p></p>
                     <!-- rozcestnik -->
-                    <ul>
-                        <li><a href="detail_planning.php" title="Enter plans for each KPI"><img src="images/planning.png" border="0"></a></li>
-                        <li><a href="entering_values.php" title="Enter actual values for each KPI"><img src="images/entering.png" border="0"></a></li>
-                        <li><a href="reports.php" title="See reports according to plans and fullfilling"><img src="images/reports.png" border="0"></a></li>
+                    <table>
+                        <tr><td><a href="detail_planning.php" title="Enter plans for each KPI"><img src="images/planning.png" border="0"></a></tr></td>
+                        <tr><td><a href="entering_values.php" title="Enter actual values for each KPI"><img src="images/entering.png" border="0"></a></tr></td>
+                        <tr><td><a href="reports.php" title="See reports according to plans and fullfilling"><img src="images/reports.png" border="0"></a></tr></td>
                         <?php if( $_SESSION['user'] == 'MC'):
-                            echo "<li><a href=\"locking.php\" title=\"You can lock planning and entering values from editing\"><img src='images/locking.png' border='0'></a></li>";
+                            echo "<tr><td><a href=\"locking.php\" title=\"You can lock planning and entering values from editing\"><img src='images/locking.png' border='0'></a></td></tr>";
                         endif; ?>                        
                         <?php if( $_SESSION['user'] == 'MC'):
-                            echo "<li><a href=\"admin.php\" title=\"You can choose which object you want to configure\"><img src='images/configuration.png' border='0'></a></li>";
+                            echo "<tr><td><a href=\"admin.php\" title=\"You can choose which object you want to configure\"><img src='images/configuration.png' border='0'></a></td></tr>";
                         endif; ?>
-                    </ul>
+                    </table>
                 </div>
             </div>
             <div id="colTwo">

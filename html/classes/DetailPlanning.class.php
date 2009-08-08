@@ -61,7 +61,7 @@ class DetailPlanning {
         echo "</td> \n";
         echo "<td> \n";
         echo "<input name=\"kpi-$kpi_id\"";
-        if ($this->locking->get_count($this->lc_id, 'NULL', $this->term_id)){
+        if ($this->locking->get_count($this->lc_id, 'NULL', $this->term_id)) {
             echo ' disabled ';
         }
         echo "value=\"$value\" />";
@@ -76,12 +76,12 @@ class DetailPlanning {
         echo "onchange=\"window.location.href='".$this->page."term_id=".$this->term_id
             ."&quarter_id=".$this->quarter_id."&area_id='+this.value\">\n";
         echo "<option value=\"all\"";
-            if( isset($_REQUEST['area_id']) ) {
-                if('all' == $_REQUEST['area_id']) {
-                    $this->area_id='all';
-                    echo " selected ";
-                }
+        if( isset($_REQUEST['area_id']) ) {
+            if('all' == $_REQUEST['area_id']) {
+                $this->area_id='all';
+                echo " selected ";
             }
+        }
         echo ">";
         echo 'All';
         echo "</option>\n";
@@ -110,7 +110,7 @@ class DetailPlanning {
         $area_list = $this->get_area_list();
         $kpi_list = $this->get_kpi_list($this->area_id);
 
-        
+
 
         $this->get_term_section($term_list);
         $this->get_quarter_section($quarter_list);
@@ -182,7 +182,9 @@ class DetailPlanning {
                     $this->term_id=$term['id'];
                     echo " selected ";
                 }
-            }
+            } else if ($term['id']==$this->term_id) {
+                    echo " selected";
+                }
 
             echo ">";
             echo date('Y', strtotime($term['term_from'])).'/'.date('Y', strtotime($term['term_to']));
@@ -214,21 +216,21 @@ class DetailPlanning {
         echo "</select>\n";
     }
 
-    function get_kpi_list($area_id){
-        if ($area_id!='all'){
+    function get_kpi_list($area_id) {
+        if ($area_id!='all') {
             $query = $this->kpi_query . " where area = " . $this->dbutil->escape($area_id);
         } else {
             $query = $this->kpi_query;
         }
         $rows = $this->dbutil->process_query_assoc($query);
-            return $rows;
+        return $rows;
     }
 
-    function get_submit_button(){
+    function get_submit_button() {
         echo '<p>';
         echo '<input type="hidden" name="posted" value="1" />';
         echo '<input type=submit';
-        if ($this->locking->get_count($this->lc_id, 'NULL', $this->term_id)){
+        if ($this->locking->get_count($this->lc_id, 'NULL', $this->term_id)!=0) {
             echo ' disabled';
         }
         echo ' value="Save" />';
