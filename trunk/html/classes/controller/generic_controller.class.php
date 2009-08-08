@@ -17,6 +17,8 @@ class GenericController {
     // Developer can define parent controller
     protected $parent_conf;
 
+    protected $parent2_conf;
+
     // Developer can define child model
     protected $child_conf;
 
@@ -37,6 +39,7 @@ class GenericController {
         $this->model = $model;
 
         $this->parent_conf = $links['parent'];
+        $this->parent2_conf = $links['parent2'];
         $this->child_conf = $links['child'];
         $this->name = $links['name'];
     }
@@ -167,9 +170,12 @@ class GenericController {
      */
     protected function edit_item_row($id, $key, $value) {
         $pname = $this->parent_conf['name'];
+        $p2name = $this->parent2_conf['name'];
 
-        if( $key == $pname ) {
+        if( $key == $pname) {
             $this->parent_list($id, $value);
+        } else if ($key == $p2name){
+            $this->parent2_list($id, $value);
         }
         else {
             $type = $this->model->get_column_type($key);
@@ -218,6 +224,7 @@ class GenericController {
             $this->edit_item($id);
         }
         echo "</td></tr></table>";
+        $this->get_submit_button();
     }
 
     /**
@@ -255,7 +262,13 @@ class GenericController {
     public function get_list_box($id, $selected) {
         $rows = $this->model->find_all();
         $name = $this->name;
-        echo "<select name=\"$id-$name\">";
+         echo "<select name=\"$id-$name\">";
+         echo "<option value=\"" . $row['id'] . "\"";
+            if( $row[id] == $selected ) {
+                echo "selected=\"1\"";
+            }
+            echo ">";
+         echo "NULL</option>";
         foreach( $rows as $row ) {
             echo "<option value=\"" . $row['id'] . "\"";
             if( $row[id] == $selected ) {
@@ -329,9 +342,37 @@ class GenericController {
         }
     }
 
+    protected function parent2_list($id, $selected) {
+        $descr = $this->parent2_conf['descr'];
+        $p2name = $this->parent2_conf['name'];
+        $p_ctrl = $this->parent2_conf['controller'];
+        $name = $this->name;
+        echo '<br />';
+        echo "<span title=\"select superior $p2name for this $name\">$p2name: </span>";
+        if( isset( $this->request[$p2name]) ) {
+            $p_ctrl->get_list_box($id, $this->request[$p2name]);
+            $this->get_delete_checkbox();
+        } else {
+            $p_ctrl->get_list_box($id, $selected);
+        }
+        if( $selected > 0 ) {
+            $link = $this->parent2_conf['link'];
+            echo "(<a href=\"$link&id=$selected\">"
+                . $p_ctrl->get_label($selected) ."</a>)";
+        }
+    }
+
     protected function get_delete_checkbox(){
         echo "<br><input type='checkbox' name='delete' value='yes'/>";
         echo "<b>Permanently delete this ".$this->name." and all related history</b>";
+    }
+
+    function get_submit_button(){
+        echo '<p>';
+        echo '<input type="hidden" name="posted" value="1" />';
+        echo '<input type=submit';
+        echo ' value="Save" />';
+        echo '</p>';
     }
 }
 ?>

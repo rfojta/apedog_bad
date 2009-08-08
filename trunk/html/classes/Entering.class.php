@@ -63,5 +63,22 @@ class Entering extends DetailPlanning {
             $value
         );
     }
+
+    function get_submit_button(){
+        echo '<p>';
+        echo '<input type="hidden" name="posted" value="1" />';
+        echo '<input type=submit';
+        $quarter_id;
+        if ($this->quarter_id == null){
+            $quarter_id='NULL';
+        } else {
+            $quarter_id = $this->quarter_id;
+        }
+        if ($this->locking->get_count($this->lc_id, $quarter_id, 'NULL')!=0){
+            echo ' disabled';
+        }
+        echo ' value="Save" />';
+        echo '</p>';
+    }
 }
 ?>

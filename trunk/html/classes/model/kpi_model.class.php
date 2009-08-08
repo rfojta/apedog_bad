@@ -29,12 +29,13 @@ class KpiModel extends GenericModel {
         'id' => 'new',
         'name' => 'new',
         'description' => 'create new item',
-        'area' => ''
+        'area' => '',
+        'csf' => ''
         );
     }
 
     public function get_row_label( $row ) {
-        return $row['name'] . " - " . $row['description'];
+        return $row['name'];
     }
 }
 ?>
