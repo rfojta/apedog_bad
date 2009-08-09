@@ -11,7 +11,7 @@
  */
 class QuarterController extends GenericController {
 //put your code here
-    protected $editable_fields = array('quarter_from', 'quarter_to', 'description', 'term');
+    protected $editable_fields = array('quarter_from', 'quarter_to', 'description', 'term', 'quarter_in_term');
 
     function  __construct($model, $term_controller) {
         parent::__construct($model, array(

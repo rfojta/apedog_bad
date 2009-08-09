@@ -451,11 +451,11 @@ class Results {
             } else {
                 $rate = 0;
             }
-        if ($rate<0.9) {
+        if ($rate<0.9 && $actual!=null) {
             echo '<img src="images/red_trend.png">';
-        } else if ($rate<1.1) {
+        } else if ($rate<1.1 && $actual!=null) {
                 echo '<img src="images/yellow_trend.png">';
-            } else {
+            } else if ($rate >=1.1 & $past!=null){
                 echo '<img src="images/green_trend.png">';
             }
     }

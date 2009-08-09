@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Aug 09, 2009 at 01:03 AM
+-- Generation Time: Aug 09, 2009 at 09:41 PM
 -- Server version: 5.1.33
 -- PHP Version: 5.2.9
 
@@ -27,7 +27,7 @@ CREATE TABLE `areas` (
   `created` datetime NOT NULL,
   `updated` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=9 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=8 ;
 
 --
 -- Dumping data for table `areas`
@@ -84,7 +84,7 @@ CREATE TABLE `csfs` (
   `updated` datetime NOT NULL,
   `business_perspective` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=17 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=18 ;
 
 --
 -- Dumping data for table `csfs`
@@ -105,7 +105,8 @@ INSERT INTO `csfs` (`id`, `name`, `description`, `created`, `updated`, `business
 (13, 'G&A', 'critical success factor', '2009-08-08 23:09:29', '0000-00-00 00:00:00', 12),
 (14, 'IT', 'critical success factor', '2009-08-08 23:09:42', '0000-00-00 00:00:00', 13),
 (15, 'MT', 'critical success factor', '2009-08-08 23:09:52', '0000-00-00 00:00:00', 13),
-(16, 'R&I', 'critical success factor', '2009-08-08 23:10:04', '0000-00-00 00:00:00', 13);
+(16, 'R&I', 'critical success factor', '2009-08-08 23:10:04', '0000-00-00 00:00:00', 13),
+(17, 'dunno', 'critical success factor', '2009-08-09 12:53:30', '2009-08-09 12:59:01', 0);
 
 -- --------------------------------------------------------
 
@@ -128,11 +129,8 @@ CREATE TABLE `detail_tracking` (
   KEY `kpi` (`kpi`),
   KEY `quarter` (`quarter`),
   KEY `lc` (`lc`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=35 ;
 
---
--- Dumping data for table `detail_tracking`
---
 
 
 -- --------------------------------------------------------
@@ -151,7 +149,7 @@ CREATE TABLE `kpis` (
   `area` int(10) unsigned DEFAULT NULL,
   `csf` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=12 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
 
 --
 -- Dumping data for table `kpis`
@@ -167,7 +165,8 @@ INSERT INTO `kpis` (`id`, `name`, `description`, `created`, `updated`, `area`, `
 (8, 'Number of months of reserve = (cash + receivables - liabilities)/average monthly outflow', 'create new item', '2009-08-09 00:10:41', '2009-08-09 00:12:48', 6, 5),
 (9, 'Number of EP Raised', 'create new item', '2009-08-09 00:13:29', '0000-00-00 00:00:00', 3, 6),
 (10, 'Number of TN Raised', 'create new item', '2009-08-09 00:13:54', '0000-00-00 00:00:00', 2, 7),
-(11, 'How often do you run a competitive analysis? ', 'create new item', '2009-08-09 00:14:19', '0000-00-00 00:00:00', 2, 9);
+(11, 'How often do you run a competitive analysis? ', 'create new item', '2009-08-09 00:14:19', '0000-00-00 00:00:00', 2, 9),
+(12, 'did you run a competitive analysis?', 'Yes/no', '2009-08-09 12:46:02', '0000-00-00 00:00:00', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -236,18 +235,23 @@ CREATE TABLE `quarters` (
   `created` datetime NOT NULL,
   `updated` datetime NOT NULL,
   `term` int(10) unsigned NOT NULL,
+  `quarter_in_term` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
 
 --
 -- Dumping data for table `quarters`
 --
 
-INSERT INTO `quarters` (`id`, `quarter_from`, `quarter_to`, `description`, `created`, `updated`, `term`) VALUES
-(3, '2009-12-16', '2010-03-15', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0),
-(2, '2009-09-16', '2009-12-16', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1),
-(1, '2009-06-16', '2009-09-15', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1),
-(4, '2010-03-16', '2010-06-15', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0);
+INSERT INTO `quarters` (`id`, `quarter_from`, `quarter_to`, `description`, `created`, `updated`, `term`, `quarter_in_term`) VALUES
+(3, '2009-12-16', '2010-03-15', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1, 3),
+(2, '2009-09-16', '2009-12-15', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1, 2),
+(1, '2009-06-16', '2009-09-15', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1, 1),
+(4, '2010-03-16', '2010-06-15', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1, 4),
+(5, '2010-06-16', '2010-09-15', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 2, 1),
+(6, '2010-09-16', '2010-12-15', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 2, 2),
+(8, '2011-03-16', '2011-06-15', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 2, 4),
+(7, '2010-12-16', '2011-03-15', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 2, 3);
 
 -- --------------------------------------------------------
 
@@ -282,6 +286,7 @@ CREATE TABLE `terms` (
   `description` varchar(255) CHARACTER SET latin2 COLLATE latin2_czech_cs NOT NULL,
   `created` datetime NOT NULL,
   `updated` datetime NOT NULL,
+  `number_of_term` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `term_from` (`term_from`,`term_to`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
@@ -290,9 +295,9 @@ CREATE TABLE `terms` (
 -- Dumping data for table `terms`
 --
 
-INSERT INTO `terms` (`id`, `term_from`, `term_to`, `description`, `created`, `updated`) VALUES
-(2, '2010-06-16', '2011-06-15', '', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(1, '2009-06-16', '2010-06-15', '', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
+INSERT INTO `terms` (`id`, `term_from`, `term_to`, `description`, `created`, `updated`, `number_of_term`) VALUES
+(2, '2010-06-16', '2011-06-15', '', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 2),
+(1, '2009-06-16', '2010-06-15', '', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1);
 
 -- --------------------------------------------------------
 
