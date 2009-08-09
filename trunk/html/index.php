@@ -16,7 +16,7 @@ if (isset($_SESSION['user'])) {
 include('classes/Apedog.class.php');
 include('classes/Login.class.php');
 
-$apedog = new Apedog('devel');
+$apedog = new Apedog('prod');
 $dbres = $apedog->dbres;
 $login = new Login($dbres);
 
