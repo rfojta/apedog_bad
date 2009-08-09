@@ -338,7 +338,7 @@ class GenericController {
         if( $selected > 0 ) {
             $link = $this->parent_conf['link'];
             echo "(<a href=\"$link&id=$selected\">"
-                . $p_ctrl->get_label($selected) ."</a>)";
+                . $p_ctrl->get_label($selected) ."</a>)<br>";
         }
     }
 
@@ -347,7 +347,6 @@ class GenericController {
         $p2name = $this->parent2_conf['name'];
         $p_ctrl = $this->parent2_conf['controller'];
         $name = $this->name;
-        echo '<br />';
         echo "<span title=\"select superior $p2name for this $name\">$p2name: </span>";
         if( isset( $this->request[$p2name]) ) {
             $p_ctrl->get_list_box($id, $this->request[$p2name]);

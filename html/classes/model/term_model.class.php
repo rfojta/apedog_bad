@@ -14,7 +14,7 @@ class TermModel extends GenericModel {
     protected $table_name = 'terms';
     //put your code here
 
-    protected $editable_fields = array('term_from', 'term_to', 'description');
+    protected $editable_fields = array('term_from', 'term_to', 'description', 'number_of_term');
 
     public function new_item_row() {
         return array(
