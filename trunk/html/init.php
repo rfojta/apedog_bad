@@ -6,6 +6,7 @@ $info = $_SESSION['user'];
 $lc = $_SESSION['user'];
 
 include('classes/Apedog.class.php');
+include('classes/Results.class.php');
 include('classes/DetailPlanning.class.php');
 include('classes/Locking.class.php');
 include('classes/DetailTracking.class.php');

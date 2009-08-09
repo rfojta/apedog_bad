@@ -70,7 +70,6 @@ class DetailTracking {
         $pre_query = $this->get_query;
         $values = array($lc_id, $quarter_id, $kpi_id);
         $query = $this->parse_query($pre_query, $values);
-
         $rows = $this->dbutil->process_query_assoc($query);
 
         if( $this->actual == 0 ) {
