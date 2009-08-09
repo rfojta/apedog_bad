@@ -36,7 +36,7 @@ foreach( glob('classes/controller/*.php') as $php_class ) {
 
 
 
-$apedog = new Apedog('devel');
+$apedog = new Apedog('prod');
 $dbres = $apedog->dbres;
 
 $dbutil = new DB_Util($apedog->dbres);
