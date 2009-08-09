@@ -50,6 +50,10 @@ if( isset($_REQUEST['term_id']) ) {
     $current_term = $_REQUEST['term_id'];
 }
 
+$quarter_in_term = 1;
+if( isset($_REQUEST['quarter_in_term']) ) {
+    $quarter_in_term = $_REQUEST['quarter_in_term'];
+}
 
 $current_area = 'all';
 if( isset($_REQUEST['area_id']) ) {

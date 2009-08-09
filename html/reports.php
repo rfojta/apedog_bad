@@ -22,7 +22,7 @@ include('init.php');
                         if( isset( $_REQUEST['graphs'])) {
                             echo "<p><a href=".$_SERVER["PHP_SELF"]."?results>Reports - Results</a>&nbsp;";
                             echo "<b><a href=".$_SERVER["PHP_SELF"]."?graphs>Reports - Graphs</a></b></p>";
-                            $reports = new graphs($dbutil, $current_term,$current_area, $_SESSION['user'], $locking);
+                            $reports = new graphs($dbutil, $current_term,$current_area, $_SESSION['user'], $quarter_in_term);
                             if( isset( $_POST['graphs'])) {
                                 $reports->submit( $_POST );
                             }
@@ -30,7 +30,7 @@ include('init.php');
                         } else {
                             echo "<p><b><a href=".$_SERVER["PHP_SELF"]."?results>Reports - Results</a></b>&nbsp;";
                             echo "<a href=".$_SERVER["PHP_SELF"]."?graphs>Reports - Graphs</a></p>";
-                            $reports = new Results($dbutil, $current_term,$current_area, $_SESSION['user']);
+                            $reports = new Results($dbutil, $current_term,$current_area, $_SESSION['user'], $quarter_in_term);
                             if( isset( $_POST['posted'])) {
                                 $reports->submit( $_POST );
                             }

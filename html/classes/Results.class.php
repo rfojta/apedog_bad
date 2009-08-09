@@ -14,26 +14,32 @@ class Results {
 
     protected $term_id;
     protected $quarter_id;
+    protected $quarter_in_term;
     protected $area_id;
     protected $lc_id;
     protected $this_page;
     protected $target_values;
     protected $actual_values;
     protected $locking;
+    protected $user;
 
     protected $area_query = 'select * from areas';
-    protected $quarter_query = 'select * from quarters where term = ';
+    protected $quarter_query = 'select * from quarters';
     protected $kpi_query = 'select * from kpis';
     protected $term_query = 'select * from terms';
     protected $business_perspective_query = 'select * from business_perspectives';
     protected $csf_query = 'select * from csfs where business_perspective ';
     protected $lc_query = 'select * from lcs';
 
-    function __construct( $dbutil, $term_id, $current_area, $user ) {
+
+    function __construct( $dbutil, $term_id, $current_area, $user, $quarter_in_term ) {
         $this->dbutil = $dbutil;
-        $this->term_id = $term_id;
+
         $this->area_id = $current_area;
         $this->page = 'reports.php?results';
+        $this->user = $user;
+        $this->term_id = $term_id;
+        $this->quarter_in_term = $quarter_in_term;
 
         $lc = new LC($dbutil->dbres);
         $this->lc_id = $lc->get_lc_by_user($user);
@@ -52,7 +58,7 @@ class Results {
         echo "Select area: \n";
         echo "<select name=\"area_id\" id=\"area_id\"\n";
         echo "onchange=\"window.location.href='".$this->page."&term_id=".$this->term_id
-            ."&quarter_id=".$this->quarter_id."&area_id='+this.value\">\n";
+            ."&lc_id=".$this->lc_id."&quarter_in_term=".$this->quarter_in_term."&area_id='+this.value\">\n";
         echo "<option value=\"all\"";
         if( isset($_REQUEST['area_id']) ) {
             if('all' == $_REQUEST['area_id']) {
@@ -140,7 +146,7 @@ class Results {
     }
 
     function get_quarter_list($term_id) {
-        $query = $this->quarter_query . $term_id;
+        $query = $this->quarter_query . ' where term = '.$term_id;
         $rows = $this->dbutil->process_query_assoc($query);
         $this->quarter_id=$rows[0]['id'];
         return $rows;
@@ -149,7 +155,7 @@ class Results {
     function get_term_section($term_list) {
         echo "Select term: \n";
         echo "<select name=\"term_id\" id=\"term_id\"\n";
-        echo "onchange=\"window.location.href='".$this->page."&area_id=".$this->area_id."&term_id='+this.value\">\n";
+        echo "onchange=\"window.location.href='".$this->page."&lc_id=".$this->lc_id."&area_id=".$this->area_id."&quarter_in_term=".$this->quarter_in_term."&term_id='+this.value\">\n";
 
         foreach( $term_list as $term ) {
             echo "<option value=\"".$term['id']."\"";
@@ -173,16 +179,19 @@ class Results {
     function get_quarter_section($quarter_list) {
         echo "Select quarter: \n";
         echo "<select name=\"quarter_id\" id=\"quarter_id\"\n";
-        echo "onchange=\"window.location.href='".$this->page."&area_id=".$this->area_id."&term_id=".$this->term_id."&quarter_id='+this.value\">\n";
+        echo "onchange=\"window.location.href='".$this->page."&lc_id=".$this->lc_id."&area_id=".$this->area_id."&term_id=".$this->term_id."&quarter_in_term='+this.value\">\n";
 
         foreach( $quarter_list as $quarter ) {
-            echo "<option value=\"".$quarter['id']."\"";
-            if( isset($_REQUEST['quarter_id']) ) {
-                if( $quarter['id'] == $_REQUEST['quarter_id']) {
+            echo "<option value=\"".$quarter['quarter_in_term']."\"";
+            if( isset($_REQUEST['quarter_in_term']) ) {
+                if( $quarter['quarter_in_term'] == $_REQUEST['quarter_in_term']) {
                     $this->quarter_id=$quarter['id'];
+                    $this->quarter_in_term=$quarter['quarter_in_term'];
                     echo " selected ";
                 }
-            }
+            } else if ($quarter['quarter_in_term']==$this->quarter_in_term) {
+                    echo " selected ";
+                }
 
             echo ">";
             echo date('j.n.Y', strtotime($quarter['quarter_from'])).'-'.date('j.n.Y', strtotime($quarter['quarter_to']));
@@ -302,6 +311,7 @@ class Results {
         if ($target!=null && $target != 0) {
             $rate = $actual/$target;
         }
+        $past_values = $this->get_year_ago($kpi);
 
         echo '<tr>';
         echo '<td>';
@@ -322,8 +332,9 @@ class Results {
         echo '</td>';
         echo '<td align="center">';
         echo $this->get_status($rate);
-        echo '<td>';
         echo '</td>';
+        echo '<td align="center">';
+        echo $this->get_trend($actual, $past_values);
         echo '</td>';
         echo '</tr>';
     }
@@ -383,12 +394,14 @@ class Results {
         echo "Select LC: \n";
         echo "<select name=\"lc_id\" id=\"lc_id\"\n";
         echo "onchange=\"window.location.href='".$this->page."&area_id="
-            .$this->area_id."&term_id=".$this->term_id."&quarter_id=".$this->quarter_id."&lc_id='+this.value\">\n";
+            .$this->area_id."&lc_id=".$this->lc_id."&term_id=".$this->term_id."&quarter_in_term=".$this->quarter_in_term."&lc_id='+this.value\">\n";
         echo "<option value='all'";
         if( isset($_REQUEST['lc_id']) ) {
             if( $lc['id'] == $_REQUEST['lc_id']) {
-                $this->lc_id=$lc['id'];
-                echo " selected ";
+                
+                    $this->lc_id=$lc['id'];
+                    echo " selected ";
+               
             }
         }
         echo ">";
@@ -411,6 +424,40 @@ class Results {
             echo "</option>\n";
         }
         echo "</select>\n";
+    }
+
+    function get_year_ago($kpi) {
+        $query = $this->quarter_query. ' WHERE id = '.$this->quarter_id;
+        $rows = $this->dbutil->process_query_assoc($query);
+        $selected_quarter = $rows[0];
+
+        $year_ago = $selected_quarter['term']-1;
+        $quarter_in_term = $selected_quarter['quarter_in_term'];
+
+        $query = $this->quarter_query. ' WHERE term = '
+            .$year_ago. ' and quarter_in_term = '.$quarter_in_term;
+        $rows = $this->dbutil->process_query_assoc($query);
+        $quarter_term_ago = $rows[0];
+
+        $past_actual = $this->get_actual($this->lc_id, $quarter_term_ago['id'], $kpi['id']);
+        return $past_actual;
+    }
+
+    function get_trend($actual, $past) {
+        if ($past!=0) {
+            $rate = $actual/$past;
+        } else if ($actual > 0) {
+                $rate = 2;
+            } else {
+                $rate = 0;
+            }
+        if ($rate<0.9) {
+            echo '<img src="images/red_trend.png">';
+        } else if ($rate<1.1) {
+                echo '<img src="images/yellow_trend.png">';
+            } else {
+                echo '<img src="images/green_trend.png">';
+            }
     }
 }
 ?>
