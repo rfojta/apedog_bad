@@ -5,9 +5,9 @@
  */
 
 /**
- * Description of Tracking
+ * Description of Locking
  *
- * @author Richard
+ * @author Krystof
  */
 class Locking {
     private $dbutil;

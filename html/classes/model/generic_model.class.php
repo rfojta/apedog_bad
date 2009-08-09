@@ -62,6 +62,7 @@ class GenericModel {
             $query = $this->update_query;
             $values = array($field, $value, $id);
             $query = $this->parse_query($query, $values);
+            echo $query;
             $this->dbutil->do_query($query);
         }
     }
