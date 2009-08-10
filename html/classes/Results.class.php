@@ -99,23 +99,24 @@ class Results {
         }
         $this->get_term_section($term_list);
         $this->get_quarter_section($quarter_list);
-
-        echo "<table width=100%><tr><td valign=top>";
+        echo '<p>';
+        echo "<table width=100%><tr><td width='50%' valign=top>";
 	$i = 0;
         foreach( $business_perspectives_list as $bp ) {
-            echo "<p>";
+            
             echo "<table width=100% >";
             $this->get_output($bp);
             echo "</table>";
-            echo "</p>";
+            
             if( ( $i % 2 ) == 0 ) {
                 echo "</td>\n<td valign=top>";
             } else {
-                echo "</td></tr>\n<tr><td valign=top>";
+                echo "</td></tr>\n<tr><td width='50%' valign=top>";
             }
 	    $i++;
         }
         echo "</td></tr></table>";
+        echo "</p>";
 
 
         $this->get_area_section($area_list);
@@ -235,13 +236,13 @@ class Results {
         }
         $rate = $this->get_rate($kpi_list);
         echo '<tr bgcolor="#CCCCFF">';
-        echo '<td>';
+        echo '<th width="99%">';
         echo '<big>';
         echo '<span title="' . $bp['description'] . '">'
             . $bp['name']. ':</span>';
         echo '</big>';
-        echo '</td>';
-        echo '<th width="60" colspan="4" align="left">';
+        echo '</th>';
+        echo '<th colspan="4" align="left">';
         echo $rate;
         echo '</th>';
         echo '</tr>';
