@@ -18,22 +18,25 @@ include('init.php');
                 <div class="content">
                     <form method="POST" action="" >
                         <?php
-
+                        echo "<div class='inner_menu'>";
                         if( isset( $_REQUEST['entering'])) {
-                            echo "<p><a href=".$_SERVER["PHP_SELF"]."?planning>Lock planning</a>&nbsp;";
-                            echo "<b><a href=".$_SERVER["PHP_SELF"]."?entering>Lock enterning</a></b></p>";
+                            echo "<a href=".$_SERVER["PHP_SELF"]."?planning>Lock planning</a>&nbsp;";
+                            echo "<b><a href=".$_SERVER["PHP_SELF"]."?entering>Lock enterning</a></b>";
                             $lock_entering = new LockEntering($dbutil, $current_term,$current_area, $_SESSION['user'], $locking);
                             if( isset( $_POST['posted'])) {
                                 $lock_entering->submit( $_POST );
                             }
                             $lock_entering->get_form_content();
                         } else {
-                            echo "<p><b><a href=".$_SERVER["PHP_SELF"]."?planning>Lock planning</a></b>&nbsp;";
-                            echo "<a href=".$_SERVER["PHP_SELF"]."?entering>Lock enterning</a></p>";
+                            echo "<b><a href=".$_SERVER["PHP_SELF"]."?planning>Lock planning</a></b>&nbsp;";
+                            echo "<a href=".$_SERVER["PHP_SELF"]."?entering>Lock enterning</a>";
                             $lock_planning = new LockPlanning($dbutil, $current_term,$current_area, $_SESSION['user'], $locking);
                             if( isset( $_POST['posted'])) {
                                 $lock_planning->submit( $_POST );
                             }
+                            echo "<hr width='30%' align='left'>";
+                            echo "</div>";
+                            echo "<p></p>";
                             $lock_planning->get_form_content();
                         }
 
