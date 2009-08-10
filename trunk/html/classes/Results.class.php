@@ -100,13 +100,22 @@ class Results {
         $this->get_term_section($term_list);
         $this->get_quarter_section($quarter_list);
 
+        echo "<table width=100%><tr><td valign=top>";
+	$i = 0;
         foreach( $business_perspectives_list as $bp ) {
             echo "<p>";
-            echo "<table >";
+            echo "<table width=100% >";
             $this->get_output($bp);
             echo "</table>";
             echo "</p>";
+            if( ( $i % 2 ) == 0 ) {
+                echo "</td>\n<td valign=top>";
+            } else {
+                echo "</td></tr>\n<tr><td valign=top>";
+            }
+	    $i++;
         }
+        echo "</td></tr></table>";
 
 
         $this->get_area_section($area_list);
@@ -251,7 +260,7 @@ class Results {
         echo '<td>';
         echo 'Trend';
         echo '</td>';
-        echo '</tr>';
+        echo '</tr>' . "\n";
 
         foreach($csf_list as $csf) {
             $this->get_csf_section($csf);
@@ -398,10 +407,10 @@ class Results {
         echo "<option value='all'";
         if( isset($_REQUEST['lc_id']) ) {
             if( $lc['id'] == $_REQUEST['lc_id']) {
-                
-                    $this->lc_id=$lc['id'];
-                    echo " selected ";
-               
+
+                $this->lc_id=$lc['id'];
+                echo " selected ";
+
             }
         }
         echo ">";
@@ -455,9 +464,9 @@ class Results {
             echo '<img src="images/red_trend.png">';
         } else if ($rate<1.1 && $actual!=null) {
                 echo '<img src="images/yellow_trend.png">';
-            } else if ($rate >=1.1 & $past!=null){
-                echo '<img src="images/green_trend.png">';
-            }
+            } else if ($rate >=1.1 & $past!=null) {
+                    echo '<img src="images/green_trend.png">';
+                }
     }
 }
 ?>
