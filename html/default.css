@@ -150,6 +150,16 @@ a:hover {
 	background: url(images/img07.gif) repeat-x;
 }
 
+
+#colOne .content .inner_menu a {
+        text-decoration: none;
+}
+
+#colOne .content .inner_menu a:hover  {
+        text-decoration: none;
+        color: #0088FF
+}
+
 /* Column Two */
 
 #colTwo {
@@ -165,7 +175,6 @@ a:hover {
 #colTwo .content {
 	padding: 10px;
 }
-
 /* Footer */
 
 #footer {

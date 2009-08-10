@@ -19,6 +19,7 @@ include('classes/Tracking.class.php');
 include('classes/Report.class.php');
 include('classes/db_util.class.php');
 include('classes/Reminder.class.php');
+include('classes/LcKPIs.class.php');
 
 
 include_once('classes/model/generic_model.class.php');

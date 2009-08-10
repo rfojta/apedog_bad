@@ -15,7 +15,6 @@ class Results {
     protected $term_id;
     protected $quarter_id;
     protected $quarter_in_term;
-    protected $area_id;
     protected $lc_id;
     protected $this_page;
     protected $target_values;
@@ -32,10 +31,10 @@ class Results {
     protected $lc_query = 'select * from lcs';
 
 
-    function __construct( $dbutil, $term_id, $current_area, $user, $quarter_in_term ) {
+    function __construct( $dbutil, $term_id, $user, $quarter_in_term ) {
         $this->dbutil = $dbutil;
 
-        $this->area_id = $current_area;
+        
         $this->page = 'reports.php?results';
         $this->user = $user;
         $this->term_id = $term_id;
@@ -54,51 +53,21 @@ class Results {
         return $rows;
     }
 
-    protected function get_area_section( $area_list ) {
-        echo "Select area: \n";
-        echo "<select name=\"area_id\" id=\"area_id\"\n";
-        echo "onchange=\"window.location.href='".$this->page."&term_id=".$this->term_id
-            ."&lc_id=".$this->lc_id."&quarter_in_term=".$this->quarter_in_term."&area_id='+this.value\">\n";
-        echo "<option value=\"all\"";
-        if( isset($_REQUEST['area_id']) ) {
-            if('all' == $_REQUEST['area_id']) {
-                $this->area_id='all';
-                echo " selected ";
-            }
-        }
-        echo ">";
-        echo 'All';
-        echo "</option>\n";
-
-        foreach( $area_list as $area ) {
-            echo "<option value=\"".$area['id']."\"";
-            if( isset($_REQUEST['area_id']) ) {
-                if( $area['id'] == $_REQUEST['area_id']) {
-                    $this->area_id=$area['id'];
-                    echo " selected ";
-                }
-            }
-
-            echo ">";
-            echo $area['name'];
-            echo "</option>\n";
-        }
-
-        echo "</select>\n";
-    }
-
     function get_form_content() {
         $term_list = $this->get_term_list();
         $quarter_list = $this->get_quarter_list($this->term_id);
         $area_list = $this->get_area_list();
-        $kpi_list = $this->get_kpi_list($this->area_id);
         $business_perspectives_list = $this->get_bp_list();
+        echo "<p></p>";
+        echo "<p>";
         if( $_SESSION['user'] == 'MC') {
             $lc_list = $this->get_lc_list();
             $this->get_lc_section($lc_list);
         }
         $this->get_term_section($term_list);
         $this->get_quarter_section($quarter_list);
+        echo "</p>";
+        
         echo '<p>';
         echo "<table width=100%><tr><td width='50%' valign=top>";
 	$i = 0;
@@ -115,18 +84,7 @@ class Results {
             }
 	    $i++;
         }
-        echo "</td></tr></table>";
-        echo "</p>";
-
-
-        $this->get_area_section($area_list);
-        $kpi_list=$this->get_kpi_by_csf_list(null);
-        echo '<table>';
-        foreach($kpi_list as $kpi) {
-            $this->get_kpi_section($kpi);
-        }
-        echo '</table>';
-
+        echo "</table>";
     }
 
     function submit( $post ) {
@@ -158,7 +116,7 @@ class Results {
     function get_quarter_list($term_id) {
         $query = $this->quarter_query . ' where term = '.$term_id;
         $rows = $this->dbutil->process_query_assoc($query);
-        $this->quarter_id=$rows[0]['id'];
+//        $this->quarter_id=$rows[0]['id'];
         return $rows;
     }
 
@@ -200,6 +158,7 @@ class Results {
                     echo " selected ";
                 }
             } else if ($quarter['quarter_in_term']==$this->quarter_in_term) {
+                    $this->quarter_id=$quarter['id'];
                     echo " selected ";
                 }
 
@@ -209,16 +168,6 @@ class Results {
         }
 
         echo "</select>\n";
-    }
-
-    function get_kpi_list($area_id) {
-        if ($area_id!='all') {
-            $query = $this->kpi_query . " where csf = " . $this->dbutil->escape($area_id);
-        } else {
-            $query = $this->kpi_query;
-        }
-        $rows = $this->dbutil->process_query_assoc($query);
-        return $rows;
     }
 
     function get_bp_list() {
