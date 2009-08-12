@@ -26,6 +26,9 @@ include('init.php');
                             if( isset( $_POST['posted'])) {
                                 $lock_entering->submit( $_POST );
                             }
+                            echo "<hr width='30%' align='left'>";
+                            echo "</div>";
+                            echo "<p></p>";
                             $lock_entering->get_form_content();
                         } else {
                             echo "<b><a href=".$_SERVER["PHP_SELF"]."?planning>Lock planning</a></b>&nbsp;";

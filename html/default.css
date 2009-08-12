@@ -1,197 +1,276 @@
-/*
-Design by Free CSS Templates
-http://www.freecsstemplates.org
-Released for free under a Creative Commons Attribution 2.5 License
-*/
-
-/* Elements */
-
 body {
-	margin: 0;
-	padding: 0;
-	background: #FFFFFF url(images/img01.gif) repeat-x;
-	font: normal small "Trebuchet MS", Arial, Helvetica, sans-serif;
-	color: #666666;
+    margin: 0;
+    padding: 0;
+    background: #FFFFFF url(images/img01.gif) repeat-x;
+    font: normal small "Trebuchet MS", Arial, Helvetica, sans-serif;
+    color: #666666;
 }
 
 h1, h2, h3, h4, h5, h6 {
-	margin: 0;
-	padding: 0;
+    margin: 0;
+    padding: 0;
 }
 
 p, blockquote, ul, ol {
-	margin-top: 0;
-	padding-top: 0;
+    margin-top: 0;
+    padding-top: 0;
 }
 
 a {
-	color: #000000;
+    color: #000000;
 }
 
 a:hover {
-	text-decoration: none;
+    text-decoration: none;
 }
 
 /* Header */
 
 #header {
-	width: 1024px;
-	height: 30px;
-	margin: 0 auto;
+    width: 1024px;
+    height: 30px;
+    margin: 0 auto;
 }
 
 /* Logo */
 
 #logo {
-	float: left;
-	height: 50px;
+    float: left;
+    height: 50px;
 }
 
 #logo h1, #logo h2 {
-	float: left;
-	padding: 2em .25em 0 0;
-	font-size: 1em;
+    float: left;
+    padding: 2em .25em 0 0;
+    font-size: 1em;
 }
 
 #logo a {
-	text-decoration: none;
-	color: #000000;
+    text-decoration: none;
+    color: #000000;
 }
 
 /* Menu */
 
 #menu {
-	float: right;
-	height: 30px;
-	background: #B0C4DE url(images/img03.gif) repeat-x left bottom;
+    float: right;
+    height: 30px;
+    background: #B0C4DE url(images/img03.gif) repeat-x left bottom;
 }
 
 #menu ul {
-	margin: 0;
-	padding: .35em 0 0 0;
-	list-style: none;
+    margin: 0;
+    padding: .35em 0 0 0;
+    list-style: none;
 }
 
 #menu li {
-	display: inline;
+    display: inline;
 }
 
 #menu a {
-	padding: 0 1em;
-	text-decoration: none;
-	text-transform: uppercase;
-	font-size: .8em;
-	font-weight: bold;
+    padding: 0 1em;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: .8em;
+    font-weight: bold;
 }
 
 #menu a:hover {
-	color: #0088FF;
+    color: #0088FF;
 }
 
 /* Splash */
 
 #splash {
-	width: 1024px;
-	height: 140px;
-	margin: 0 auto;
+    width: 1024px;
+    height: 140px;
+    margin: 0 auto;
 }
 
 /* Content */
 
 #content {
-	width: 1024px;
-	margin: 0 auto;
+    width: 1024px;
+    margin: 0 auto;
 }
 
 #content a {
     text-decoration:none
 }
 
+
 #content h2 {
-	height: 25px;
-	padding: 6px 0 0 31px;
-	background: url(images/img06.gif) no-repeat 10px 10px;
-	text-transform: uppercase;
-	font-size: 1em;
-	color: #000000;
+    height: 25px;
+    padding: 6px 0 0 31px;
+    background: url(images/img06.gif) no-repeat 10px 10px;
+    text-transform: uppercase;
+    font-size: 1em;
+    color: #000000;
 }
 
 #content h3 {
-	font-size: 1em;
+    font-size: 1em;
 }
 
 #content ul {
-	margin: 0;
-	padding: 0;
-	list-style: none;
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }
 
 #content li {
-	padding-left: 12px;
-        padding: 6px 0 0 31px;
-	text-transform: uppercase;
-	font-size: 1em;
-	color: #000000;
+    padding-left: 12px;
+    padding: 6px 0 0 31px;
+    text-transform: uppercase;
+    font-size: 1em;
+    color: #000000;
 }
 
 #content .content {
-	padding: 10px 31px 20px 31px;
+    padding: 10px 31px 20px 31px;
 }
 
 /* Column One */
 
 #colOne {
-	float: left;
-	width: 824px;
-	background: url(images/img04.gif) repeat-x;
+    float: left;
+    width: 824px;
+    background: url(images/img04.gif) repeat-x;
 }
 
 #colOne .boxed {
-	background: url(images/img07.gif) repeat-x;
+    background: url(images/img07.gif) repeat-x;
 }
 
-
 #colOne .content .inner_menu a {
-        text-decoration: none;
+    text-decoration: none;
 }
 
 #colOne .content .inner_menu a:hover  {
-        text-decoration: none;
-        color: #0088FF
+    text-decoration: none;
+    color: #0088FF
+}
+#colone .content .bpTable{
+    text-align: left;
+}
+#colOne .content .bpTableRow{
+}
+
+#colOne .content .headTableRow{
+
+}
+#colOne .content .current{
+        background: #8A4117;
+        color: white
+}
+#colOne .content .goal{
+        background: #FDD017;
+        color: white
+}
+#colOne .content .status{
+        text-align: center;
+        background: #4AA02C;
+        color: white
+}
+#colOne .content .trend{
+        background: #151B8D;
+        color: white
+}
+
+#colOne .content .csfTableRow td{
+        border-bottom-width:thin;
+        border-bottom-color:black;
+        border-bottom-style:solid;
+        background:#FDEEF4
+}
+#colOne .content .csfStatus{
+        text-align: center
+}
+
+#colOne .content .kpi1TableRow td{
+        border-bottom-style:dotted;
+        border-bottom-width:thin;
+        border-bottom-color:black;
+}
+#colOne .content .kpi2TableRow{
+
+}
+#colOne .content .kpiName{
+
+}
+#colOne .content .currentValue{
+        background:#C9C299;
+        text-align: right
+}
+#colOne .content .goalValue{
+        background: #FFE87C;
+        text-align: right
+}
+#colOne .content .kpiStatus{
+
+        background: #B5EAAA;
+        text-align: center
+}
+#colOne .content .kpiTrend{
+
+        background: #151B8D;
+        text-align: center
+}
+#colOne .content .detailTable{
+}
+#colOne .content .kpiRow0{
+    background: #E5E5E5;
+}
+#colOne .content .kpiRow1{
+    background: #FFFFFF;
+}
+#colOne .content .kpiRow2{
+    background: #E5E5E5;
+}
+#colOne .content .kpiRow3{
+    background: #FFFFFF;
+}
+#colOne .content .kpiRow4{
+    background: #E5E5E5;
+}
+#colOne .content .kpiRow5{
+    background: #FFFFFF;
 }
 
 /* Column Two */
 
 #colTwo {
-	float: right;
-	width: 200px;
-	background: url(images/img05.gif) repeat-x;
+    float: right;
+    width: 200px;
+    background: url(images/img05.gif) repeat-x;
 }
 
 #colTwo .boxed {
-	background: url(images/img08.gif) repeat-x;
+    background: url(images/img08.gif) repeat-x;
 }
 
 #colTwo .content {
-	padding: 10px;
+    padding: 10px;
 }
 /* Footer */
 
 #footer {
-	width: 1024px;
-	height: 60px;
-	margin: 0 auto;
-	background: #FFFFFF url(images/img01.gif) repeat-x left bottom;
+    width: 1024px;
+    height: 60px;
+    margin: 0 auto;
+    background: #FFFFFF url(images/img01.gif) repeat-x left bottom;
 }
 
 #footer p {
-	margin: 0;
-	padding: 7px 0 0 0;
-	text-align: center;
-	font-size: x-small;
-	color: #666666;
+    margin: 0;
+    padding: 7px 0 0 0;
+    text-align: center;
+    font-size: x-small;
+    color: #666666;
 }
 
 #footer a {
-	color: #666666;
+    color: #666666;
 }
+

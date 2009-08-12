@@ -21,7 +21,7 @@ class Entering extends DetailPlanning {
         $this->actual_values = new DetailTracking($dbutil, 1);
     }
 
-    protected function get_kpi_input($kpi) {
+    protected function get_kpi_input($kpi, $i) {
         $quarter_id = $this->quarter_id;
         $lc_id = $this->lc_id;
         $kpi_id = $kpi['id'];
@@ -34,7 +34,7 @@ class Entering extends DetailPlanning {
             );
         };
 
-        echo "<tr> \n";
+        echo "<tr class='kpiRow".$i."'> \n";
         echo "<td> \n";
         echo '<span title="' . $kpi['description'] . '">'
             . $kpi['name'] . ':</span>';
@@ -49,7 +49,7 @@ class Entering extends DetailPlanning {
         echo "value=\"$actual\" />";
         echo "</td> \n";
         echo "<td> \n";
-        echo "Planned: ".$target;
+        echo "Goal: ".$target;
         echo "</td> \n";
         echo "</tr> \n";
         echo "</li> \n";
