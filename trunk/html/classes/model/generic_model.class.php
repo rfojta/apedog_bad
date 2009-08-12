@@ -49,10 +49,12 @@ class GenericModel {
         $this->parse_queries();
 
         // all columns are editable
-        $this->editable_fields = array();
-        $rows = $this->get_columns();
-        foreach( $rows as $row ) {
-            $this->editable_fields[] = $row[Field];
+        if(!isset($this->editable_fields)) {
+            $this->editable_fields = array();
+            $rows = $this->get_columns();
+            foreach( $rows as $row ) {
+                $this->editable_fields[] = $row[Field];
+            }
         }
 
     }
@@ -63,6 +65,9 @@ class GenericModel {
             $values = array($field, $value, $id);
             $query = $this->parse_query($query, $values);
             $this->dbutil->do_query($query);
+            return 1;
+        } else {
+            return 0;
         }
     }
 
@@ -122,7 +127,7 @@ class GenericModel {
         return $row['id'];
     }
 
-    public function delete_row($id){
+    public function delete_row($id) {
         $pre_query = $this->delete_query . " where id = " . $id;
         $query = $this->parse_table_name($pre_query);
         $this->dbutil->do_query($query);
