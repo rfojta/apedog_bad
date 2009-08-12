@@ -14,13 +14,22 @@ class Reminder {
     protected $dbutil;
     protected $lc_id;
 
-    protected $pre_query = "SELECT areas.name AS 'area_name', kpis.name, users.name AS 'user', users.email, quarters.quarter_to FROM
-                    detail_tracking JOIN quarters JOIN lcs JOIN kpis JOIN
-                    areas JOIN users WHERE quarters.quarter_to=':deadline' AND
-                    detail_tracking.lc=lcs.id AND lcs.id=:lc_id AND
-                    detail_tracking.kpi=kpis.id AND kpis.area=areas.id
-                    AND users.lc=lcs.id AND detail_tracking.quarter=quarters.id
-                    AND detail_tracking.actual IS NULL";
+    protected $pre_query = "SELECT
+            a.name AS 'area_name',
+            k.name,
+            u.name AS 'user',
+            u.email,
+            q.quarter_to
+        FROM
+            detail_tracking dt
+            JOIN quarters q on dt.quarter = q.id
+            JOIN lcs l on dt.lc = l.id
+            JOIN kpis k on dt.kpi = k.id
+            JOIN areas a on k.area = a.id
+            JOIN users u on u.lc = l.id
+        WHERE q.quarter_to = ':deadline'
+          AND l.id = :lc_id
+          AND dt.actual IS NULL";
 
     function __construct( $dbutil, $user ) {
         $this->dbutil = $dbutil;
@@ -31,16 +40,16 @@ class Reminder {
     function check_tracking() {
         $date_format='Y/m/d';
         $today= date($date_format);
-        $deadline= date ($date_format, strtotime('-25 days' . $today ));
+        $deadline= date ($date_format, strtotime('-25 days ' . $today ));
         $query = str_replace(':deadline', $deadline, $this->pre_query);
         $query = str_replace(':lc_id', $this->lc_id, $query);
         $rests=$this->dbutil->process_query_assoc($query);
-        foreach($rests as $rest){
+        foreach($rests as $rest) {
             $this->send_mail($rest);
         }
     }
 
-    function send_mail($rest){
+    function send_mail($rest) {
         $lock    = date('D, j.M Y',strtotime('+1 month' . $rest['quarter_to']));
         $to      = $rest['email'];
         $subject = 'Entering actual values into your AIESEC Performance Evaluator';
@@ -51,6 +60,7 @@ class Reminder {
             your Apedog.';
         $headers = 'From: noreply@apedog.cz';
 
+        echo "<br>Sending email to $to";
         mail($to, $subject, $message, $headers);
     }
 }
