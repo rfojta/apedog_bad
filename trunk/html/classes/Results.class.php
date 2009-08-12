@@ -73,7 +73,7 @@ class Results {
 	$i = 0;
         foreach( $business_perspectives_list as $bp ) {
             
-            echo "<table width=100% >";
+            echo "<table cellspacing='0' cellpadding='3' class='bpTable' width=100%>";
             $this->get_output($bp);
             echo "</table>";
             
@@ -184,7 +184,7 @@ class Results {
             $kpi_list = array_merge($kpi_list, $temp);
         }
         $rate = $this->get_rate($kpi_list);
-        echo '<tr bgcolor="#CCCCFF">';
+        echo '<tr class="bpTableRow">';
         echo '<th width="99%">';
         echo '<big>';
         echo '<span title="' . $bp['description'] . '">'
@@ -195,19 +195,19 @@ class Results {
         echo $rate;
         echo '</th>';
         echo '</tr>';
-        echo '<tr>';
+        echo '<tr class="headTableRow">';
         echo '<td>';
         echo '</td>';
-        echo '<td>';
-        echo 'Actual';
+        echo '<td class="current">';
+        echo 'Current';
         echo '</td>';
-        echo '<td>';
-        echo 'Target';
+        echo '<td class="goal">';
+        echo 'Goal';
         echo '</td>';
-        echo '<td>';
+        echo '<td class="status">';
         echo 'Status';
         echo '</td>';
-        echo '<td>';
+        echo '<td class="trend">';
         echo 'Trend';
         echo '</td>';
         echo '</tr>' . "\n";
@@ -242,7 +242,7 @@ class Results {
         $csf_name = $csf['name'];
         $rate = $this->get_rate($kpi_list);
 
-        echo '<tr bgcolor="#E5E5E5">';
+        echo '<tr class="csfTableRow">';
         echo '<td>';
         echo '<span title="' . $csf['description'] . '">'
             . $csf['name'] . ':</span>';
@@ -251,7 +251,7 @@ class Results {
         echo '</td>';
         echo '<td>';
         echo '</td>';
-        echo '<td align ="center">';
+        echo '<td class="csfStatus">';
         echo $this->get_status($rate);
         echo '</td>';
         echo '<td>';
@@ -272,27 +272,23 @@ class Results {
         }
         $past_values = $this->get_year_ago($kpi);
 
-        echo '<tr>';
-        echo '<td>';
+        echo '<tr class="kpi1TableRow">';
+        echo '<td class="kpiName">';
         echo '<small>';
         echo '<span title="' . $kpi['description'] . '">'
             . $kpi['name'] . ':</span>';
         echo '</small>';
         echo '</td>';
-        echo '<td align="right">';
-        echo '<small>';
+        echo '<td class="currentValue">';
         echo $actual;
-        echo '</small>';
         echo '</td>';
-        echo '<td align="right">';
-        echo '<small>';
+        echo '<td class="goalValue">';
         echo $target;
-        echo '</small>';
         echo '</td>';
-        echo '<td align="center">';
+        echo '<td class="kpiStatus">';
         echo $this->get_status($rate);
         echo '</td>';
-        echo '<td align="center">';
+        echo '<td class="kpiTrend">';
         echo $this->get_trend($actual, $past_values);
         echo '</td>';
         echo '</tr>';

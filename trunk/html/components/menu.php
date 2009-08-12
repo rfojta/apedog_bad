@@ -1,4 +1,4 @@
-<div id="header">
+<div id="header" align="right">
     <div id="menu">
         
             <?php

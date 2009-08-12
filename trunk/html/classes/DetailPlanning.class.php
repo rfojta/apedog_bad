@@ -45,7 +45,7 @@ class DetailPlanning {
         return $rows;
     }
 
-    protected function get_kpi_input($kpi) {
+    protected function get_kpi_input($kpi, $i) {
         $kpi_id = $kpi['id'];
         $quarter_id = $this->quarter_id;
         $lc_id = $this->lc_id;
@@ -54,7 +54,8 @@ class DetailPlanning {
             $value = $this->target_values
                 ->get_value($lc_id, $quarter_id, $kpi_id);
         }
-        echo "<tr> \n";
+        
+        echo "<tr class='kpiRow".$i."'> \n";
         echo "<td> \n";
         echo '<span title="' . $kpi['description'] . '">'
             . $kpi['name'] . ':</span>';
@@ -118,9 +119,14 @@ class DetailPlanning {
         $this->get_area_section($area_list);
 
         echo "<p>";
-        echo "<table>";
+        echo "<table class='detailTable'>";
+        $i=0;
         foreach( $kpi_list as $kpi ) {
-            $this->get_kpi_input( $kpi);
+            $this->get_kpi_input( $kpi, $i);
+            $i++;
+            if($i>5){
+            $i = 0;
+        }
         }
         echo "</table>";
         echo "</p>";
