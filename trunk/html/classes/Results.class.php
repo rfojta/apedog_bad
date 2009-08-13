@@ -183,7 +183,8 @@ class Results {
             $temp = $this->get_kpi_by_csf_list($csf['id']);
             $kpi_list = array_merge($kpi_list, $temp);
         }
-        $rate = $this->get_rate($kpi_list);
+        $rate = round($this->get_rate($kpi_list)*100);
+        $gom = new GoogleOMeter('50x24',$rate,null,null);
         echo '<tr class="bpTableRow">';
         echo '<th width="99%">';
         echo '<big>';
@@ -191,8 +192,8 @@ class Results {
             . $bp['name']. ':</span>';
         echo '</big>';
         echo '</th>';
-        echo '<th colspan="4" align="left">';
-        echo $rate;
+        echo '<th colspan="4" align="right">';
+        echo $gom->draw_chart();
         echo '</th>';
         echo '</tr>';
         echo '<tr class="headTableRow">';
@@ -296,7 +297,7 @@ class Results {
 
     function get_status($rate) {
         if ($rate != null) {
-            if ($rate < '0.9') {
+            if ($rate < '0.85') {
                 echo "<img src='images/red_status.png'>";
             } else if ($rate < '1') {
                     echo "<img src='images/orange_status.png'>";

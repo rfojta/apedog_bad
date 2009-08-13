@@ -24,7 +24,6 @@ class LineChart {
        *
        *Paramethers similar to other charts
        *
-       * @author Krystof
        */
 
       function __construct($data,$x_labels,$y_max,$line_labels,$line_colors,$scale) {
