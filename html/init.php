@@ -30,6 +30,11 @@ foreach( glob('classes/model/*.php') as $php_class ) {
     include_once($php_class);
 }
 
+foreach( glob('classes/charts/*.php') as $php_class ) {
+    // echo "$php_class<br>\n";
+    include_once($php_class);
+}
+
 foreach( glob('classes/controller/*.php') as $php_class ) {
     // echo "$php_class<br>\n";
     include_once($php_class);
