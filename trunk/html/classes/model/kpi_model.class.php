@@ -15,7 +15,8 @@ class KpiModel extends GenericModel {
     //put your code here
 
     protected $kpi_query = 'select * from kpis where area = ';
-    protected $editable_fields = array('name', 'description', 'area');
+    protected $editable_fields = array('name', 
+        'description', 'area', 'csf', 'kpi_unit');
 
 
     public function find_by_area( $area ) {
