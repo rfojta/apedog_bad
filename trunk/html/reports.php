@@ -24,18 +24,18 @@ include('init.php');
                             echo "<a href=".$_SERVER["PHP_SELF"]."?results>BSC Results</a>&nbsp;&nbsp;&nbsp;";
                             echo "<a href=".$_SERVER["PHP_SELF"]."?lc_kpis>LC's KPIs</a>&nbsp;&nbsp;&nbsp;";
                             echo "<b><a href=".$_SERVER["PHP_SELF"]."?graphs>Reports - Graphs</a></b>";
-                            $reports = new Graphs($dbutil, $current_term,$current_area, $_SESSION['user'], $quarter_in_term);
+                            $reports = new Graphs($dbutil, $current_term,$current_area, $_SESSION['user'], $quarter_in_term, $eot, $kpi_id);
                             
                         } else if (isset ( $_REQUEST['lc_kpis'])){
                             echo "<a href=".$_SERVER["PHP_SELF"]."?results>BSC Results</a>&nbsp;&nbsp;&nbsp;";
                             echo "<a href=".$_SERVER["PHP_SELF"]."?lc_kpis><b>LC's KPIs</b></a>&nbsp;&nbsp;&nbsp;";
                             echo "<a href=".$_SERVER["PHP_SELF"]."?graphs>Reports - Graphs</a>";
-                            $reports = new LcKPIs ($dbutil, $current_term,$current_area, $_SESSION['user'], $quarter_in_term);
+                            $reports = new LcKPIs ($dbutil, $current_term,$current_area, $_SESSION['user'], $quarter_in_term, $eot);
                         } else {
                             echo "<a href=".$_SERVER["PHP_SELF"]."?results><b>BSC Results</b></a>&nbsp;&nbsp;&nbsp;";
                             echo "<a href=".$_SERVER["PHP_SELF"]."?lc_kpis>LC's KPIs</a>&nbsp;&nbsp;&nbsp;";
                             echo "<a href=".$_SERVER["PHP_SELF"]."?graphs>Reports - Graphs</a>";
-                            $reports = new Results($dbutil, $current_term, $_SESSION['user'], $quarter_in_term);
+                            $reports = new Results($dbutil, $current_term, $_SESSION['user'], $quarter_in_term, $eot);
                             }
                             echo '<hr width="40%" align="left">';
                             echo "</div>";
