@@ -25,6 +25,7 @@ include('classes/Graphs.class.php');
 
 include_once('classes/model/generic_model.class.php');
 include_once('classes/controller/generic_controller.class.php');
+include_once('classes/view/view_controller.class.php');
 
 foreach( glob('classes/model/*.php') as $php_class ) {
     // echo "$php_class<br>\n";
@@ -37,6 +38,11 @@ foreach( glob('classes/charts/*.php') as $php_class ) {
 }
 
 foreach( glob('classes/controller/*.php') as $php_class ) {
+    // echo "$php_class<br>\n";
+    include_once($php_class);
+}
+
+foreach( glob('classes/view/*.php') as $php_class ) {
     // echo "$php_class<br>\n";
     include_once($php_class);
 }
