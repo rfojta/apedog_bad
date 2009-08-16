@@ -32,7 +32,7 @@ class Login {
         // check user exists
             $query = $this->user_count_query
                 . '\''
-                . mysql_escape_string($post['userid'])
+                . mysql_real_escape_string($post['userid'])
                 . '\'';
 
             $res = mysql_query( $query , $this->dbres );
@@ -47,7 +47,7 @@ class Login {
             if( $count == 1 ) {
                 $res = mysql_query( $this->user_query
                     . '\''
-                    . mysql_escape_string($post['userid'])
+                    . mysql_real_escape_string($post['userid'])
                     . '\'' , $this->dbres
                 );
 
