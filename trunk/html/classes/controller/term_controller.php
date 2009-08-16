@@ -12,9 +12,9 @@
 class TermController extends GenericController {
 //put your code here
 
-    protected function get_row_label( $row ) {
-        return $row['term_from'] . " - " . $row['term_to'];
-    }
+    protected $editable_fields = array('term_from', 'term_to', 'description');
+
+
 
     function  __construct($model, $quarter_model) {
         parent::__construct($model,

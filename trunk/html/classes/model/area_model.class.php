@@ -23,5 +23,9 @@ class AreaModel extends GenericModel {
         );
     }
 
+    public function get_row_label( $row  ) {
+        return $row['name'] . " - " . $row['description'];
+    }
+
 }
 ?>

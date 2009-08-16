@@ -34,7 +34,7 @@ class UserModel extends GenericModel {
     }
 
     public function get_row_label($row) {
-        return $row['login'];
+        return $row['login'] . " - " . $row['lc'];
     }
 }
 ?>

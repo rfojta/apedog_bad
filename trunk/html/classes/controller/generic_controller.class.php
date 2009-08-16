@@ -13,6 +13,9 @@ class GenericController {
 //put your code here
 
     protected $model;
+    protected $view;
+    protected $child_view;
+    protected $parent_view;
 
     // Developer can define parent controller
     protected $parent_conf;
@@ -42,6 +45,32 @@ class GenericController {
         $this->parent2_conf = $links['parent2'];
         $this->child_conf = $links['child'];
         $this->name = $links['name'];
+
+        $this->view = new ViewController($this->name, $this, null);
+        $this->child_view = new ChildView($this->name, $this->child_conf, $this);
+
+        if( isset( $this->parent_conf['name']) ) {
+            $this->parent_view =
+                new ParentView($this->name,
+                $this->parent_conf, $this);
+        }
+        elseif( is_array( $this->parent_conf ) ) {
+            $this->parent_view = array();
+            $parent_conf = $this->parent_conf;
+        // new style to set more than one parent
+            foreach( $parent_conf as $name => $p_conf ) {
+                $this->parent_view[$name] = new ParentView(
+                    $this->name, $p_conf, $this);
+            }
+        }
+    }
+
+    public function get_model() {
+        return $this->model;
+    }
+
+    public function set_view( $view ) {
+        $this->view = $view;
     }
 
     /**
@@ -70,162 +99,28 @@ class GenericController {
      * @param <type> $id row id
      */
     protected function update($field, $value, $id) {
-        if( $id == 'new') {
+        if( $field == 'id') {
+        // cannot update id
+        }
+        elseif( $id == 'new' ) {
             $this->insert_cache[$field] = $value;
         }
+        elseif( $this->model->update($field, $value, $id) ) {
+            echo "... updated $field!<br>";
+        }
         else {
-            echo "... updating $field!<br>";
-            $this->model->update($field, $value, $id);
+        // field is not editable
         }
     }
 
-    /**
-     * Generates html list of objects stored in model
-     */
-    protected function get_list() {
-        $rows = $this->model->find_all();
-        echo "<ul>";
-        foreach( $rows as $row ) {
-            $this->get_list_item($row);
-        }
-        echo "</ul>";
-    }
-
-    /**
-     * Generates html for one item in the list
-     * @param <type> $row
-     */
-    protected function get_list_item($row) {
-        echo "<li>";
-        $this->get_list_item_content($row);
-        echo "</li>";
-    }
-
-    /**
-     * Generate inner html of one item
-     * @param <type> $row
-     */
-    protected function get_list_item_content($row) {
-        $page_name = $_SERVER['PHP_SELF'];
-        echo "<a href=\"$page_name?id="
-            . $row['id'] . "\">"
-            . $this->get_row_label($row)
-            . "</a>";
-    }
-
-    /**
-     * Return label for specified row
-     * @param <type> $id row id
-     * @return <type>
-     */
-    public function get_label($id) {
-        $row = $this->model->find($id);
-        return $this->get_row_label($row);
-    }
-
-    /**
-     * Convert $row into single string
-     * @param <type> $row
-     * @return <type> string
-     */
-    protected function get_row_label( $row ) {
-        return $row['name'] . " - " . $row['description'];
-    }
-
-    /**
-     * Generates edit form for specified item and load values from db model
-     * @param <type> $id row id
-     */
-    protected function edit_item($id) {
-        if( $id == 'new') {
-            $row = $this->model->new_item_row();
-        } else {
-            $row = $this->model->find($id);
-        }
-
-        foreach( $row as $key => $value) {
-            $this->edit_item_row($id, $key, $value);
-        }
-
-        $this->get_delete_checkbox($name);
-        
-        if( $id != 'new' && isset( $this->child_conf) ) {
-            $this->child_list($id);
-        }
-
-    }
     /**
      * display html input with loaded value
      * @param $id of deleted item
      */
-     protected function delete_item($id){
+    protected function delete_item($id) {
         $this->model->delete_row($id);
-     }
-
-    /**
-     * display html input with loaded value
-     * @param <type> $id row id
-     * @param <type> $key table column
-     * @param <type> $value value
-     */
-    protected function edit_item_row($id, $key, $value) {
-        $pname = $this->parent_conf['name'];
-        $p2name = $this->parent2_conf['name'];
-
-        if( $key == $pname) {
-            $this->parent_list($id, $value);
-        } else if ($key == $p2name){
-            $this->parent2_list($id, $value);
-        }
-        else {
-            $type = $this->model->get_column_type($key);
-            echo "$key: <input name=\"$id-$key\" ";
-            if($key == 'id') {
-                echo "type=\"hidden\" ";
-            }
-            echo 'class="'.$type.'"';
-            if( isset($this->request[$key])) {
-                echo "value=\"". $this->request[$key] . "\"> ($value)<br>\n";
-            } else {
-                echo "value=\"$value\"><br>\n";
-            }
-        }
     }
 
-    /**
-     * Display link to create new item in db table
-     */
-    protected function new_item_link() {
-        $row = $this->model->new_item_row();
-        $this->get_list_item_content($row);
-        echo "<br>";
-    }
-
-    /**
-     * Generates HTML form for areas
-     * @param <type> $request http request data
-     */
-    public function get_form_content($request) {
-        echo "<table width=\"100%\"><tr><td>";
-
-        $id = $request[id];
-        $delete=$request[delete];
-        if($delete=='yes'&& $id!='new'){
-            $this->delete_item($id);
-        }
-
-        $this->new_item_link();
-        $this->get_list();
- 
-        echo "</td><td>";
-        
-        $this->request = $request;
-        if(isset($id)&&$delete!='yes' ) {
-            $this->edit_item($id);
-        }
-        echo "</td></tr></table>";
-        $this->get_submit_button();
-    }
 
     /**
      * Handles page form submit
@@ -255,6 +150,7 @@ class GenericController {
     }
 
     /**
+     * View<br>
      * Generates select tag with option according to this type
      * @param <type> $id source object id
      * @param <type> $selected current target object id
@@ -262,116 +158,81 @@ class GenericController {
     public function get_list_box($id, $selected) {
         $rows = $this->model->find_all();
         $name = $this->name;
-         echo "<select name=\"$id-$name\">";
-         echo "<option value=\"" . $row['id'] . "\"";
-            if( $row[id] == $selected ) {
-                echo "selected=\"1\"";
-            }
-            echo ">";
-         echo "NULL</option>";
+        echo "<select name=\"$id-$name\">";
+        echo "<option value=\"" . $row['id'] . "\"";
+        if( $row[id] == $selected ) {
+            echo "selected=\"1\"";
+        }
+        echo ">";
+        echo "NULL</option>";
         foreach( $rows as $row ) {
             echo "<option value=\"" . $row['id'] . "\"";
             if( $row[id] == $selected ) {
                 echo "selected=\"1\"";
             }
             echo ">";
-            echo $this->get_row_label($row)
+            echo $this->model->get_row_label($row)
                 . "</option>";
         }
         echo "</select>";
     }
 
-    /**
-     * Display list of child objects for current item
-     * @param <type> $id row id
-     */
-    protected function child_list($id) {
-        $name = $this->name;
-        $chname = $this->child_conf['name'];
-        $chlink = $this->child_conf['link'];
-        $chmodel = $this->child_conf['model'];
-        echo "<hr>";
-        echo $chname . "s for this $name:&nbsp;";
-        echo "<a href=\"$chlink&id=new&$name=$id\">Add new</a>";
-        echo "<br>";
-
-        $rows = $this->child_rows($id);
-
-        echo "<ul>\n";
-        foreach( $rows as $row ) {
-            echo "<li><a href=\"$chlink&id=" . $row[id] . "\">";
-            echo $chmodel->get_row_label($row);
-            echo "</a></li>";
-        }
-        echo "</ul>\n";
+    public function has_child() {
+        return isset( $this->child_conf);
     }
 
+    public function child_list($id) {
+        $this->child_view->child_list($id);
+    }
+
+
     /**
+     * Proxy method for view
+     * @param <type> $request
+     */
+    public function get_form_content($request) {
+        $this->view->get_form_content($request);
+    }
+
+
+    /**
+     * View<br>
      * Retrieve rows from table
      * @param <type> $id
      * @return array of db rows
      */
-    protected function child_rows($id) {
+    public function child_rows($id) {
         $name = $this->name;
         $model = $this->child_conf['model'];
         $rows = $model->find_by($name, $id);
         return $rows;
     }
 
-    /**
-     * Generates list box for editing parent object
-     * @param <type> $id
-     * @param <type> $selected
-     */
-    protected function parent_list($id, $selected) {
-        $descr = $this->parent_conf['descr'];
-        $pname = $this->parent_conf['name'];
-        $p_ctrl = $this->parent_conf['controller'];
-        $name = $this->name;
-        echo "<span title=\"select superior $pname for this $name\">$pname: </span>";
-        if( isset( $this->request[$pname]) ) {
-            $p_ctrl->get_list_box($id, $this->request[$pname]);
-            $this->get_delete_checkbox();
+    public function is_parent( $name ) {
+        if( isset ($this->parent_conf['name']) && $name == $this->parent_conf['name']
+        // || $name = $this->parent2_conf['name']
+
+        ) {
+            return true;
+        }
+        elseif( isset( $this->parent_conf[$name])) {
+            return true;
+        }
+
+    }
+
+    public function parent_list($key, $id, $selected) {
+        if( is_array( $this->parent_view )) {
+            $this->parent_view[$key]->parent_list($key, $id, $selected);
         } else {
-            $p_ctrl->get_list_box($id, $selected);
-        }
-        if( $selected > 0 ) {
-            $link = $this->parent_conf['link'];
-            echo "(<a href=\"$link&id=$selected\">"
-                . $p_ctrl->get_label($selected) ."</a>)<br>";
+            $this->parent_view->parent_list($key, $id, $selected);
         }
     }
 
-    protected function parent2_list($id, $selected) {
-        $descr = $this->parent2_conf['descr'];
-        $p2name = $this->parent2_conf['name'];
-        $p_ctrl = $this->parent2_conf['controller'];
-        $name = $this->name;
-        echo "<span title=\"select superior $p2name for this $name\">$p2name: </span>";
-        if( isset( $this->request[$p2name]) ) {
-            $p_ctrl->get_list_box($id, $this->request[$p2name]);
-            $this->get_delete_checkbox();
-        } else {
-            $p_ctrl->get_list_box($id, $selected);
-        }
-        if( $selected > 0 ) {
-            $link = $this->parent2_conf['link'];
-            echo "(<a href=\"$link&id=$selected\">"
-                . $p_ctrl->get_label($selected) ."</a>)";
-        }
+    public function get_label($id) {
+        $this->view->get_label($id );
     }
 
-    protected function get_delete_checkbox(){
-        echo "<br><input type='checkbox' name='delete' value='yes'/>";
-        echo "<b>Permanently delete this ".$this->name." and all related history</b>";
-    }
 
-    function get_submit_button(){
-        echo '<p>';
-        echo '<input type="hidden" name="posted" value="1" />';
-        echo '<input type=submit';
-        echo ' value="Save" />';
-        echo '</p>';
-    }
 }
 ?>
