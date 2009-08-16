@@ -31,7 +31,8 @@ class KpiModel extends GenericModel {
         'name' => 'new',
         'description' => 'create new item',
         'area' => '',
-        'csf' => ''
+        'csf' => '',
+        'kpi_unit' => ''
         );
     }
 
