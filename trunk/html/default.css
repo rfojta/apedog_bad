@@ -127,6 +127,11 @@ a:hover {
     color: #000000;
 }
 
+#content li.selected {
+    font-size : 110%;
+    color: red;
+}
+
 #content .content {
     padding: 10px 31px 20px 31px;
 }

@@ -18,6 +18,7 @@ class ViewController {
     protected $controller;
     protected $name;
     protected $model;
+    protected $request;
 
 
     /**
@@ -36,12 +37,14 @@ class ViewController {
 
     /**
      * Generates html list of objects stored in model
+     *
+     * @param <number> $selected id of selected item for highlighting
      */
-    protected function get_list() {
+    protected function get_list($selected) {
         $rows = $this->model->find_all();
         echo "<ul>";
         foreach( $rows as $row ) {
-            $this->get_list_item($row);
+            $this->get_list_item($row, $selected);
         }
         echo "</ul>";
     }
@@ -50,8 +53,12 @@ class ViewController {
      * Generates html for one item in the list
      * @param <type> $row
      */
-    protected function get_list_item($row) {
-        echo "<li>";
+    protected function get_list_item($row, $selected) {
+        echo "<li ";
+        if( $row['id'] == $selected ) {
+            echo 'class="selected"';
+        }
+        echo ">";
         $this->get_list_item_content($row);
         echo "</li>";
     }
@@ -161,7 +168,7 @@ class ViewController {
         }
 
         $this->new_item_link();
-        $this->get_list();
+        $this->get_list($id);
 
         echo "</td><td>";
 

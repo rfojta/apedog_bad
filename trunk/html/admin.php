@@ -22,6 +22,7 @@ $admin = new Admin($dbutil);
 
 
 $conf_items = array('area', 'kpi', 'term', 'quarter', 'user', 'lc', 'business_perspective', 'csf');
+$conf_items[] = 'kpi_unit';
 
 echo "<div style=\"float:left\">";
 foreach( $conf_items as $c ) {
