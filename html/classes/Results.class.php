@@ -21,6 +21,7 @@ class Results {
     protected $actual_values;
     protected $locking;
     protected $user;
+    protected $eot; //end of a term
 
     protected $area_query = 'select * from areas';
     protected $quarter_query = 'select * from quarters';
@@ -31,14 +32,15 @@ class Results {
     protected $lc_query = 'select * from lcs';
 
 
-    function __construct( $dbutil, $term_id, $user, $quarter_in_term ) {
+    function __construct( $dbutil, $term_id, $user, $quarter_in_term, $eot) {
         $this->dbutil = $dbutil;
 
-        
+
         $this->page = 'reports.php?results';
         $this->user = $user;
         $this->term_id = $term_id;
         $this->quarter_in_term = $quarter_in_term;
+        $this->eot = $eot;
 
         $lc = new LC($dbutil->dbres);
         $this->lc_id = $lc->get_lc_by_user($user);
@@ -66,23 +68,24 @@ class Results {
         }
         $this->get_term_section($term_list);
         $this->get_quarter_section($quarter_list);
+        $this->get_eot_checkbox();
         echo "</p>";
-        
+
         echo '<p>';
         echo "<table width=100%><tr><td width='50%' valign=top>";
-	$i = 0;
+        $i = 0;
         foreach( $business_perspectives_list as $bp ) {
-            
+
             echo "<table cellspacing='0' cellpadding='3' class='bpTable' width=100%>";
             $this->get_output($bp);
             echo "</table>";
-            
+
             if( ( $i % 2 ) == 0 ) {
                 echo "</td>\n<td valign=top>";
             } else {
                 echo "</td></tr>\n<tr><td width='50%' valign=top>";
             }
-	    $i++;
+            $i++;
         }
         echo "</table>";
     }
@@ -114,16 +117,22 @@ class Results {
     }
 
     function get_quarter_list($term_id) {
-        $query = $this->quarter_query . ' where term = '.$term_id;
+        if ($term_id==null){
+            $query = $this->quarter_query;
+        } else {
+            $query = $this->quarter_query . ' where term = '.$term_id;
+        }
         $rows = $this->dbutil->process_query_assoc($query);
-//        $this->quarter_id=$rows[0]['id'];
+        //        $this->quarter_id=$rows[0]['id'];
         return $rows;
     }
 
     function get_term_section($term_list) {
         echo "Select term: \n";
         echo "<select name=\"term_id\" id=\"term_id\"\n";
-        echo "onchange=\"window.location.href='".$this->page."&lc_id=".$this->lc_id."&area_id=".$this->area_id."&quarter_in_term=".$this->quarter_in_term."&term_id='+this.value\">\n";
+        echo "onchange=\"window.location.href='".$this->page."&lc_id=".$this->lc_id.
+            "&area_id=".$this->area_id."&quarter_in_term=".$this->quarter_in_term.
+            "&eot=".$this->eot."&term_id='+this.value\">\n";
 
         foreach( $term_list as $term ) {
             echo "<option value=\"".$term['id']."\"";
@@ -276,8 +285,8 @@ class Results {
         echo '<tr class="kpi1TableRow">';
         echo '<td class="kpiName">';
         echo '<small>';
-        echo '<span title="' . $kpi['description'] . '">'
-            . $kpi['name'] . ':</span>';
+        echo '<a href="reports.php?graphs&kpi_id='.$kpi['id'].'&lc_id='.$this->lc_id.
+        '&eot='.$this->eot.'" title="' . $kpi['description'] . '">'. $kpi['name'] . ':</a>';
         echo '</small>';
         echo '</td>';
         echo '<td class="currentValue">';
@@ -350,7 +359,9 @@ class Results {
         echo "Select LC: \n";
         echo "<select name=\"lc_id\" id=\"lc_id\"\n";
         echo "onchange=\"window.location.href='".$this->page."&area_id="
-            .$this->area_id."&lc_id=".$this->lc_id."&term_id=".$this->term_id."&quarter_in_term=".$this->quarter_in_term."&lc_id='+this.value\">\n";
+            .$this->area_id."&kpi_id=".$this->kpi_id."&term_id=".$this->term_id.
+            "&quarter_in_term=".$this->quarter_in_term.
+            "&eot=".$this->eot."&lc_id='+this.value\">\n";
         echo "<option value='all'";
         if( isset($_REQUEST['lc_id']) ) {
             if( $lc['id'] == $_REQUEST['lc_id']) {
@@ -414,6 +425,24 @@ class Results {
             } else if ($rate >=1.1 & $past!=null) {
                     echo '<img src="images/green_trend.png">';
                 }
+    }
+
+    function get_eot_checkbox() {
+        echo '<input type="checkbox" name="eot" value="1" ';
+        echo "onchange=if(this.checked){\"window.location.href='".$this->page."&area_id="
+            .$this->area_id."&lc_id=".$this->lc_id."&term_id=".$this->term_id.
+            "&eot='+this.value\"}";
+//        echo "onchange=\"window.location.href='".$this->page."&area_id="
+//            .$this->area_id."&lc_id=".$this->lc_id."&term_id=".$this->term_id.
+//            "&eot='+this.value\"";
+        if( isset($_REQUEST['eot']) ) {
+            if( 1 == $_REQUEST['eot']) {
+                $this->eot=$_REQUEST['eot'];
+                echo ' checked';
+            }
+        }
+        echo ">";
+        echo "End of a term";
     }
 }
 ?>

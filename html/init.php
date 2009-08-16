@@ -20,6 +20,7 @@ include('classes/Report.class.php');
 include('classes/db_util.class.php');
 include('classes/Reminder.class.php');
 include('classes/LcKPIs.class.php');
+include('classes/Graphs.class.php');
 
 
 include_once('classes/model/generic_model.class.php');
@@ -61,9 +62,20 @@ if( isset($_REQUEST['quarter_in_term']) ) {
     $quarter_in_term = $_REQUEST['quarter_in_term'];
 }
 
+//end of a term
+$eot = null;
+if( isset($_REQUEST['eot']) ) {
+    $eot = $_REQUEST['eot'];
+}
+
 $current_area = 'all';
 if( isset($_REQUEST['area_id']) ) {
     $current_area = $_REQUEST['area_id'];
+}
+
+$kpi_id = null;
+if (isset($_REQUEST['kpi_id'])){
+    $kpi_id = $_REQUEST['kpi_id'];
 }
 
 $terms = $term->get_term_labels();

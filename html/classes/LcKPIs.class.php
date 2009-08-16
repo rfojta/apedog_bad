@@ -7,8 +7,8 @@ class LcKPIs extends Results {
 
     protected $area_id;
 
-    function __construct( $dbutil, $term_id, $current_area, $user, $quarter_in_term ) {
-        parent::__construct( $dbutil, $term_id, $user, $quarter_in_term );
+    function __construct( $dbutil, $term_id, $current_area, $user, $quarter_in_term, $eot) {
+        parent::__construct( $dbutil, $term_id, $user, $quarter_in_term, $eot );
         $this->area_id = $current_area;
         $this->page='reports.php?lc_kpis';
     }
@@ -27,7 +27,9 @@ class LcKPIs extends Results {
         }
         $this->get_term_section($term_list);
         $this->get_quarter_section($quarter_list);
+        $this->get_eot_checkbox();
         $this->get_area_section($area_list);
+        $term_list = $this->get_term_list();
 
         echo '<table>';
         foreach($kpi_list as $kpi) {
@@ -38,6 +40,7 @@ class LcKPIs extends Results {
     }
 
      protected function get_area_section( $area_list ) {
+        echo "<p>";
         echo "Select area: \n";
         echo "<select name=\"area_id\" id=\"area_id\"\n";
         echo "onchange=\"window.location.href='".$this->page."&term_id=".$this->term_id
@@ -68,6 +71,7 @@ class LcKPIs extends Results {
         }
 
         echo "</select>\n";
+        echo "</p>";
     }
 
     function get_kpi_list($area_id) {

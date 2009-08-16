@@ -6,7 +6,7 @@
 
 /**
  * Prepared "Line" chart
- * Possibility up to 10 lines when multiple data series inserted in constructor
+ * Possibility of multiple data series inserted in constructor
  *
  * @author Krystof
  */
@@ -39,8 +39,8 @@ class LineChart {
       function draw_chart(){
 
         $chxlx = '0:';
-        foreach ($this->x_labels as $row){
-          $chxlx .= '|' .$row['ID'];
+        foreach ($this->x_labels as $label){
+          $chxlx .= '|' .$label;
         }
 
         $chls= '';
