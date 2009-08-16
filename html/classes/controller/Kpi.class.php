@@ -12,7 +12,7 @@
 class KpiController extends GenericController {
 //put your code here
 
-    function  __construct($model, $area, $csf) {
+    function  __construct($model, $area, $csf, $kpi_unit) {
         parent::__construct($model, array(
             'name' => 'kpi',
             'parent' => array(
@@ -26,6 +26,12 @@ class KpiController extends GenericController {
                     'name' => 'csf',
                     'description' => 'Critical Success Factor',
                     'link' => 'admin.php?what=csf'
+                ),
+                'kpi_unit' => array(
+                    'controller' => $kpi_unit,
+                    'name' => 'kpi_unit',
+                    'description' => 'units',
+                    'link' => 'admin.php?what=kpi_unit'
                 )
             )
         ));

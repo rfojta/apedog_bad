@@ -44,7 +44,8 @@ class Admin {
         $business_perspectiveController = new Business_PerspectiveController($business_perspectiveModel,$model);
         $csf = new CsfController($model, $business_perspectiveController, $kpi_model);
         
-        $this->controller = new KpiController($kpi_model, $area, $csf);
+        $this->controller = new KpiController($kpi_model, $area, $csf,
+            $this->kpi_unit_controller());
 
         $this->page_title = 'Apedog: KPI Configuration';
         $this->page_help = '
@@ -137,6 +138,23 @@ class Admin {
         <p>you can add, modify, remove Business Perspective or Critical Success Factors</p>
         <p>Each CSF belongs to one Business Perspective</p>
             ";
+    }
+
+    private function kpi_unit_controller() {
+        $model = new KpiUnitModel($this->dbutil);
+        $kpi_model = new KpiModel($this->dbutil);
+        return new KpiUnitController($model, $kpi_model);
+    }
+
+    function kpi_unit() {
+        $this->controller = $this->kpi_unit_controller();
+        $this->page_title = "Apedog: KPI Units configuration";
+        $this->page_help = "
+        <h3>$this->page_title</h3>
+        <p>you can add, modify, remove KPI unit</p>
+        <p>Each KPI belongs to one KPI unit</p>
+            ";
+
     }
 }
 ?>
