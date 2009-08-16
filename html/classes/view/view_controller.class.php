@@ -127,11 +127,27 @@ class ViewController {
 	    # todo parents should be asociative array
 	    # with names as keys
        
+        $type = $this->model->get_column_type($key);
+        // $value = $this->request[$key];
+
         if( $this->controller->is_parent( $key ) ) {
             $this->controller->parent_list($key, $id, $value);
         } 
+        elseif( strtolower( substr($type, 0, 6) ) == 'int(1)') {
+            echo "$key: <select name=\"$id-$key\" >\n";
+            echo "<option value=\"1\" ";
+            if( $value != 0 ) {
+                echo "selected=\"true\"";
+            }
+            echo ">Ano</option>\n";
+            echo "<option value=\"0\"";
+            if( $value == 0 ) {
+                echo "selected=\"true\"";
+            }
+            echo ">Ne</option>\n";
+            echo "</select>\n($value)<br>\n";
+        }
         else {
-            $type = $this->model->get_column_type($key);
             echo "$key: <input name=\"$id-$key\" ";
             if($key == 'id') {
                 echo "type=\"hidden\" ";
