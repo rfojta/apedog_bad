@@ -84,7 +84,7 @@ class DB_Util {
      * @param <type> $query 
      */
     function do_query($query) {
-        if( $this->debug ) {
+        if( $this->debug || 1 ) {
             echo "<pre>$query</pre>";
         }
         $res = mysql_query( $query, $this->dbres );
@@ -108,8 +108,16 @@ class DB_Util {
      * @param <type> $item
      * @return <type> 
      */
-    function escape($item) {
-        return mysql_real_escape_string($item, $this->dbres);
+    function escape($item, $type) {
+        error_log("escape('$item', '$type')");
+        $escaped = '';
+        if( strtolower($type) == 'double') {
+            $escaped = str_replace(',','.', $item);
+        }
+        elseif( substr(strtolower($type), 1, 6) == 'varchar' ) {
+            $escaped = mysql_real_escape_string($item, $this->dbres);
+        }
+        return $escaped;
     }
 
 }
