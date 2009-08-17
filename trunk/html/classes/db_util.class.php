@@ -14,16 +14,30 @@ class DB_Util {
     public $dbres;
     protected $debug;
 
+    /**
+     * Initialize DB utility class for mysql database
+     * @param <type> $dbres mysql db resourse
+     * @param <boolean> $debug true or false for debugging
+     */
     function  __construct( $dbres, $debug = 0 ) {
         $this->dbres = $dbres;
         $this->debug = $debug;
     }
 
+    /**
+     * shows an error on screen
+     * @param <type> $query source query of error
+     */
     function error($query) {
         echo( 'Invalid query: ' . $query . ' ' . mysql_error($this->dbres) );
     }
 
 
+    /**
+     * return associative array for all rows returned by query
+     * @param <type> $query
+     * @return <type> array of rows
+     */
     function process_query_assoc($query) {
         if( $this->debug ) {
             echo "<pre>$query</pre>";
@@ -42,6 +56,11 @@ class DB_Util {
         return $out_array;
     }
 
+    /**
+     * return number indexed array for all rows returned by query
+     * @param <type> $query
+     * @return <type> 
+     */
     function process_query_array($query) {
         if( $this->debug ) {
             echo "<pre>$query</pre>";
@@ -60,6 +79,10 @@ class DB_Util {
         return $out_array;
     }
 
+    /**
+     * Call insert, update or delete query, no results expected
+     * @param <type> $query 
+     */
     function do_query($query) {
         if( $this->debug ) {
             echo "<pre>$query</pre>";
@@ -70,11 +93,21 @@ class DB_Util {
         }
     }
 
+    /**
+     * return list of columns for specified table
+     * @param <type> $table
+     * @return <type> 
+     */
     function get_columns($table) {
         $query = "show columns from $table";
         return $this->process_query_assoc($query);
     }
 
+    /**
+     * escape string parameter
+     * @param <type> $item
+     * @return <type> 
+     */
     function escape($item) {
         return mysql_real_escape_string($item, $this->dbres);
     }
