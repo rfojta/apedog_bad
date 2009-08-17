@@ -111,7 +111,7 @@ class Results {
     }
 
     function get_term_list() {
-        $query = $this->term_query . ' ORDER BY `id`';
+        $query = $this->term_query . ' ORDER BY `number_of_term`';
         $rows = $this->dbutil->process_query_assoc($query);
         return $rows;
     }
@@ -324,14 +324,20 @@ class Results {
     }
 
     function get_rate($kpi_list) {
-        foreach ($kpi_list as $kpi) {
-            $actual = $this->get_actual($this->lc_id, $this->quarter_id, $kpi['id']);
-            $target = $this->get_target($this->lc_id, $this->quarter_id, $kpi['id']);
 
+        foreach ($kpi_list as $kpi) {
+            if ($this->eot==1) {
+                $actual = $this->get_year_actual($kpi, $this->term_id);
+                $target = $this->get_year_target($kpi, $this->term_id);
+            } else {
+                $actual = $this->get_actual($this->lc_id, $this->quarter_id, $kpi['id']);
+                $target = $this->get_target($this->lc_id, $this->quarter_id, $kpi['id']);
+            }
             if ($target!=null && $target != 0) {
                 $rates[]= $actual/$target;
             }
         }
+        
         if ($rates!=null) {
             $rate = array_sum($rates)/count($rates);
         }
