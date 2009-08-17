@@ -8,6 +8,8 @@ class Graphs extends Results {
     protected $area_id;
     protected $eot;
     protected $kpi_id;
+    protected $y_max=100;
+    protected $y_min=0;
 
     function __construct( $dbutil, $term_id, $current_area, $user, $quarter_in_term, $eot, $kpi_id ) {
         parent::__construct( $dbutil, $term_id, $user, $quarter_in_term, $eot);
@@ -44,19 +46,21 @@ class Graphs extends Results {
         $kpi = $rows[0];
         $quarter_list = $this->get_quarter_list(null);
         $term_list = $this->get_term_list();
+        
         if ($this->eot==1) {
             $data=$this->get_values($term_list, $kpi);
             $x_labels = $this->get_xlabels($term_list);
         } else {
             $data=$this->get_values($quarter_list, $kpi);
             $x_labels = $this->get_xlabels($quarter_list);
+            $x2_labels = $this->get_x2_labels($term_list);
         }
         $y_max = 100;
         $line_labels=array('Current','Goal');
         $line_colors=array('4AA02C','151B8D');
         $scale='800x300';
 
-        $chart=$this->draw_chart($kpi, $data, $x_labels, $y_max, $line_labels, $line_colors, $scale);
+        $chart=$this->draw_chart($kpi, $data, $x_labels, $x2_labels,$this->y_min, $this->y_max, $line_labels, $line_colors, $scale);
 
     }
 
@@ -67,6 +71,7 @@ class Graphs extends Results {
             foreach ($list as $quarter) {
                 $actuals[] = $this->get_actual($this->lc_id, $quarter['id'], $kpi['id']);
                 $targets[] = $this->get_target($this->lc_id, $quarter['id'], $kpi['id']);
+
             }
         } else {
             foreach($list as $term) {
@@ -74,6 +79,24 @@ class Graphs extends Results {
                 $targets[] = $this->get_year_target($kpi, $term['id']);
             }
         }
+
+        $a_max = max($actuals);
+        $t_max = max($targets);
+        $a_min = min($actuals);
+        $t_min = min($actuals);
+        if ($a_max>100 && $a_max>$t_max){
+            $this->y_max=$a_max;
+        } else if ($t_max>100){
+            $this->y_max = $t_max;
+        }
+        if ($a_min<0 && $a_min>$t_min){
+            $this->y_min=$t_min;
+        } else if ($t_min<0){
+            $this->y_min = $a_min;
+        }
+        $this->y_max = round(1.1*ceil($this->y_max), -1);
+        $this->y_min = round(1.1*floor($this->y_min), -1);
+
         $data=array();
 
         $data[]=$actuals;
@@ -101,7 +124,7 @@ class Graphs extends Results {
         return $xlabels;
     }
 
-    function draw_chart($kpi, $data, $x_labels, $y_max, $line_labels, $line_colors, $scale) {
+    function draw_chart($kpi, $data, $x_labels, $x2_labels, $y_min, $y_max, $line_labels, $line_colors, $scale) {
         echo "<p><b>".$kpi['name'].':</b></p>';
         switch ($kpi['graphs']) {
             case 1: {
@@ -109,7 +132,7 @@ class Graphs extends Results {
                     $chart->draw_chart();
                 };break;
             case 2: {
-                    $chart=new BarChart($data, $x_labels, $y_max, $line_labels, $line_colors, $scale);
+                    $chart=new BarChart($data, $x_labels, $x2_labels, $y_min, $y_max, $line_labels, $line_colors, $scale);
                     $chart->draw_chart();
 
                 };break;
@@ -164,6 +187,14 @@ class Graphs extends Results {
         }
 
 
+    }
+
+    function get_x2_labels($term_list){
+        $labels = array();
+        foreach($term_list as $term){
+            $labels[]=date('Y', strtotime($term['term_from'])).'/'.date('Y', strtotime($term['term_to']));
+        }
+        return $labels;
     }
 }
 
