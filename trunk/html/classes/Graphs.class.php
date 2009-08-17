@@ -17,6 +17,8 @@ class Graphs extends Results {
         $this->area_id = $current_area;
         $this->page='reports.php?graphs';
         $this->kpi_id = $kpi_id;
+        $this->help="<h3>Graphs</h3><p>If you have chosen KPI, you can see graph
+         asigned to it. It is for the ends of terms or for quarters.</p>";
     }
 
     function get_form_content() {

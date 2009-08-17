@@ -11,6 +11,11 @@ class LcKPIs extends Results {
         parent::__construct( $dbutil, $term_id, $user, $quarter_in_term, $eot );
         $this->area_id = $current_area;
         $this->page='reports.php?lc_kpis';
+
+        $this->help="<h3>LC's KPIs</h3><p>You can see KPIs specially assigned by MC to
+        your LC here.</p> <p>If you put your KPIs in a group, you can see it here.
+        There are also your KPIs that aren't in groups.<p>Click on KPI to see a graph.
+        Select your area, term and quarter. Check your values at the end of term!</p>";
     }
 
     function get_form_content() {
