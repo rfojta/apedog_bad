@@ -498,3 +498,6 @@ INSERT INTO `users` (`id`, `name`, `surname`, `lc`, `pass`, `login`, `created`, 
 --
 ALTER TABLE `kpis`
   ADD CONSTRAINT `kpis_ibfk_1` FOREIGN KEY (`quarter`) REFERENCES `kpis` (`quarter`);
+
+ALTER TABLE `detail_tracking` CHANGE `actual` `actual` DOUBLE NOT NULL ,
+CHANGE `target` `target` DOUBLE NOT NULL ;

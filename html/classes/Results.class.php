@@ -48,9 +48,9 @@ class Results {
         $this->target_values = new DetailTracking($dbutil);
         $this->actual_values = new DetailTracking($dbutil, 1);
 
-        $this->help = "<h3>BSC Results</h3><p>You can see here output of all your
-        Business Perspectives. Every LC has the same KPIs here.<p>Choose term and quarter
-        or check values in the end of term.</p><p>You can see graphs by clicking on KPI.</p>";
+        $this->help = "<h3>BSC Results</h3><p>You can see output of all your
+        Business Perspectives here. Every LC has the same KPIs here.<p>You can choose term and quarter.
+        Check your values at the end of term!</p><p>You can see graphs by clicking on KPI.</p>";
 
     }
 

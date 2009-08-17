@@ -156,7 +156,7 @@ class DetailPlanning {
 
             if( preg_match('/^kpi-(\d+)$/', $key, $tokens) ) {
 
-                if( $value > 0 && $quarter!=null ) {
+                if( $quarter!=null ) {
                     $kpi=$tokens;
                     $this->set_values($kpi,$quarter,$value);
                 }
