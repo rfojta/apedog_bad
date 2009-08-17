@@ -87,7 +87,8 @@ class GenericModel {
     public function update($field, $value, $id) {
         if( in_array($field, $this->editable_fields)) {
             $query = $this->update_query;
-            $values = array($field, $value, $id);
+            $type = $this->get_column_type($field);
+            $values = array($field, $this->dbutil->escape($value, $type), $id);
             $query = $this->parse_query($query, $values);
             $this->dbutil->do_query($query);
             return 1;
@@ -115,10 +116,25 @@ class GenericModel {
      */
     public function insert($columns, $values ) {
         $pre_query = $this->insert_query;
+        $this->escape_values_before_insert($columns, $values);
         $cs = join(', ', $columns);
-        $vs = "'" . join("', '", $values) . "'";
+        $vs = "'" . join("', '", $values ) . "'";
         $query = $this->parse_insert_query($pre_query, array($cs, $vs));
         $this->dbutil->do_query($query);
+    }
+
+    private function escape_values_before_insert( $columns, $values ) {
+        $col_length = count($columns);
+        $val_length = count($values);
+        $length = $val_length > $col_length ? $col_length : $val_length;
+
+        // echo "delka je $length<br>";
+
+        for( $i = 0; $i < $length; $i++ ) {
+            $type = $this->get_column_type($columns[$i]);
+            // echo "parsing " . $values[$i] . "<br>";
+            $values[$i] = $this->dbutil->escape($values[$i], $type);
+        }
     }
 
     /**
