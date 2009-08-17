@@ -55,9 +55,9 @@ class Graphs extends Results {
         $line_labels=array('Current','Goal');
         $line_colors=array('4AA02C','151B8D');
         $scale='800x300';
-        $chart=new BarChart($data, $x_labels, $y_max, $line_labels, $line_colors, $scale);
-        echo "<p>".$kpi['name'].':</p>';
-        $chart->draw_chart();
+
+        $chart=$this->draw_chart($kpi, $data, $x_labels, $y_max, $line_labels, $line_colors, $scale);
+
     }
 
     function get_values($list, $kpi) {
@@ -69,9 +69,9 @@ class Graphs extends Results {
                 $targets[] = $this->get_target($this->lc_id, $quarter['id'], $kpi['id']);
             }
         } else {
-            foreach($list as $term){
-            $actuals[] = $this->get_year_actual($kpi, $term['id']);
-            $targets[] = $this->get_year_target($kpi, $term['id']);
+            foreach($list as $term) {
+                $actuals[] = $this->get_year_actual($kpi, $term['id']);
+                $targets[] = $this->get_year_target($kpi, $term['id']);
             }
         }
         $data=array();
@@ -99,6 +99,71 @@ class Graphs extends Results {
             }
         }
         return $xlabels;
+    }
+
+    function draw_chart($kpi, $data, $x_labels, $y_max, $line_labels, $line_colors, $scale) {
+        echo "<p><b>".$kpi['name'].':</b></p>';
+        switch ($kpi['graphs']) {
+            case 1: {
+                    $chart=new LineChart($data, $x_labels, $y_max, $line_labels, $line_colors, $scale);
+                    $chart->draw_chart();
+                };break;
+            case 2: {
+                    $chart=new BarChart($data, $x_labels, $y_max, $line_labels, $line_colors, $scale);
+                    $chart->draw_chart();
+
+                };break;
+            case 3: {
+                    $i=0;
+                    foreach($x_labels as $title) {
+                        $scale = '250x86';
+                        $line_colors=array('4AA02C','B5EAAA');
+                        $percentile = $data[0][$i];
+                        $label = $line_labels[0].' '.$percentile.'%';
+                        if ($percentile>100) {
+                            $percentile=100;
+                        }
+                        $chart = new PieChart($percentile,$label,$line_colors,$title,$scale);
+                        $chart->draw_chart();
+                        $i++;
+                    }
+
+                };break;
+            case 4: {
+                    $i=0;
+                    foreach($x_labels as $title) {
+                        $scale = '300x100';
+                        if ($data[1][$i]!=0) {
+                            $percentile = $data[0][$i]/$data[1][$i]*100;
+                            $lab=$data[0][$i];
+                        } else {
+                            $percentile=100;
+                            $lab=$data[0][$i];
+                        }
+                        if ($data[0][$i]==null){
+                            $percentile=0;
+                            $lab=0;
+                        }
+                        $percentile=round($percentile);
+                        $label = $line_labels[0].' '.$lab.' ('.$percentile.'%)';
+                        $chart = new GoogleOMeter($scale,$percentile, $label, $title);
+                        
+                        $chart->draw_chart();
+                        
+                        $i++;
+                    }
+
+                };break;
+            case 5: {
+                    $chart=new LineOnBarChart($data, $x_labels, $y_max, $line_labels, $line_colors, $scale);
+                    $chart->draw_chart();
+                };break;
+            default : {
+                    echo "<p>You haven't assigned any type of chart to this KPI. Please contact your MC to fix it.</p>";
+                }
+        }
+
+
     }
 }
 

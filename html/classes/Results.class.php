@@ -118,9 +118,9 @@ class Results {
 
     function get_quarter_list($term_id) {
         if ($term_id==null) {
-            $query = $this->quarter_query . ' ORDER BY `quarter_in_term`';
+            $query = $this->quarter_query . ' ORDER BY `id`';
         } else {
-            $query = $this->quarter_query . ' where term = '.$term_id . ' ORDER BY `quarter_in_term`';
+            $query = $this->quarter_query . ' where term = '.$term_id . ' ORDER BY `id`';
         }
         $rows = $this->dbutil->process_query_assoc($query);
         //        $this->quarter_id=$rows[0]['id'];
@@ -462,7 +462,7 @@ class Results {
                     };
                 };break;
             case 3: {
-                    $query = $this->quarter_query . ' WHERE `quarter_in_term` = 4';
+                    $query = $this->quarter_query . ' WHERE `term` = '.$term_id.' and `quarter_in_term` = 4';
                     $rows = $this->dbutil->process_query_assoc($query);
                     $quarter = $rows[0];
                     $actual=$this->get_actual($this->lc_id, $quarter['id'], $kpi['id']);
@@ -501,7 +501,7 @@ class Results {
                     };
                 };break;
             case 3: {
-                    $query = $this->quarter_query . ' WHERE `quarter_in_term` = 4';
+                    $query = $this->quarter_query . ' WHERE `term` = '.$term_id.' and `quarter_in_term` = 4';
                     $rows = $this->dbutil->process_query_assoc($query);
                     $quarter = $rows[0];
                     $target=$this->get_target($this->lc_id, $quarter['id'], $kpi['id']);

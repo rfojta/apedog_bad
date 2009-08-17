@@ -119,6 +119,7 @@ class DetailPlanning {
         $this->get_area_section($area_list);
 
         echo "<p>";
+        $this->get_locked_echo();
         echo "<table class='detailTable'>";
         $i=0;
         foreach( $kpi_list as $kpi ) {
@@ -241,6 +242,12 @@ class DetailPlanning {
         }
         echo ' value="Save" />';
         echo '</p>';
+    }
+
+    function get_locked_echo(){
+        if ($this->locking->get_count($this->lc_id, 'NULL', $this->term_id)) {
+            echo '<p><b>Your planning for this period has been locked by MC.</b></p>';
+        }
     }
 }
 
