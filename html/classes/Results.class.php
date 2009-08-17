@@ -22,6 +22,7 @@ class Results {
     protected $locking;
     protected $user;
     protected $eot; //end of a term
+    protected $help;
 
     protected $area_query = 'select * from areas';
     protected $quarter_query = 'select * from quarters';
@@ -46,6 +47,10 @@ class Results {
         $this->lc_id = $lc->get_lc_by_user($user);
         $this->target_values = new DetailTracking($dbutil);
         $this->actual_values = new DetailTracking($dbutil, 1);
+
+        $this->help = "<h3>BSC Results</h3><p>You can see here output of all your
+        Business Perspectives. Every LC has the same KPIs here.<p>Choose term and quarter
+        or check values in the end of term.</p><p>You can see graphs by clicking on KPI.</p>";
 
     }
 
@@ -232,7 +237,7 @@ class Results {
 
     function get_csf_list($bp_id) {
         if ($bp_id==null) {
-            $query = $this->csf_query.'IS NULL';
+            $query = $this->csf_query.'= 0';
         } else {
             $query = $this->csf_query.'='.$bp_id;
         }
@@ -277,38 +282,40 @@ class Results {
     }
 
     function get_kpi_section($kpi) {
-        if ($this->eot==1) {
-            $actual = $this->get_year_actual($kpi, $this->term_id);
-            $target = $this->get_year_target($kpi, $this->term_id);
-        } else {
-            $actual = $this->get_actual($this->lc_id, $this->quarter_id, $kpi['id']);
-            $target = $this->get_target($this->lc_id, $this->quarter_id, $kpi['id']);
-        }
-        if ($target!=null && $target != 0) {
-            $rate = $actual/$target;
-        }
-        $past_values = $this->get_year_ago($kpi);
+        if ($this->area_id==$kpi['area']|| $this->area_id=='all' || $this->area_id==null) {
+            if ($this->eot==1) {
+                $actual = $this->get_year_actual($kpi, $this->term_id);
+                $target = $this->get_year_target($kpi, $this->term_id);
+            } else {
+                $actual = $this->get_actual($this->lc_id, $this->quarter_id, $kpi['id']);
+                $target = $this->get_target($this->lc_id, $this->quarter_id, $kpi['id']);
+            }
+            if ($target!=null && $target != 0) {
+                $rate = $actual/$target;
+            }
+            $past_values = $this->get_year_ago($kpi);
 
-        echo '<tr class="kpi1TableRow">';
-        echo '<td class="kpiName">';
-        echo '<small>';
-        echo '<a href="reports.php?graphs&kpi_id='.$kpi['id'].'&lc_id='.$this->lc_id.
-            '&eot='.$this->eot.'" title="' . $kpi['description'] . '">'. $kpi['name'] . ':</a>';
-        echo '</small>';
-        echo '</td>';
-        echo '<td class="currentValue">';
-        echo $actual;
-        echo '</td>';
-        echo '<td class="goalValue">';
-        echo $target;
-        echo '</td>';
-        echo '<td class="kpiStatus">';
-        echo $this->get_status($rate);
-        echo '</td>';
-        echo '<td class="kpiTrend">';
-        echo $this->get_trend($actual, $past_values);
-        echo '</td>';
-        echo '</tr>';
+            echo '<tr class="kpi1TableRow">';
+            echo '<td class="kpiName">';
+            echo '<small>';
+            echo '<a href="reports.php?graphs&kpi_id='.$kpi['id'].'&lc_id='.$this->lc_id.
+                '&eot='.$this->eot.'" title="' . $kpi['description'] . '">'. $kpi['name'] . ':</a>';
+            echo '</small>';
+            echo '</td>';
+            echo '<td class="currentValue">';
+            echo $actual;
+            echo '</td>';
+            echo '<td class="goalValue">';
+            echo $target;
+            echo '</td>';
+            echo '<td class="kpiStatus">';
+            echo $this->get_status($rate);
+            echo '</td>';
+            echo '<td class="kpiTrend">';
+            echo $this->get_trend($actual, $past_values);
+            echo '</td>';
+            echo '</tr>';
+        }
     }
 
     function get_status($rate) {
@@ -337,7 +344,7 @@ class Results {
                 $rates[]= $actual/$target;
             }
         }
-        
+
         if ($rates!=null) {
             $rate = array_sum($rates)/count($rates);
         }
@@ -521,6 +528,10 @@ class Results {
                 };break;
         }
         return $target;
+    }
+
+    function get_help(){
+        echo $this->help;
     }
 }
 ?>

@@ -55,9 +55,7 @@ include('init.php');
             <div id="colTwo">
                 <h2 class="section">Help</h2>
                 <div class="content">
-                    <h3>Reports</h3>
-                    <p>TBD</p>
-
+                    <?php $reports->get_help() ?>
                 </div>
             </div>
             <div style="clear: both;">&nbsp;</div>
