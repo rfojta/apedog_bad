@@ -15,6 +15,12 @@ class ParentView {
     protected $name;
     protected $controller;
 
+    /**
+     * Initialize parent view for n..1 multiplication between 2 db tables
+     * @param <type> $name
+     * @param <type> $conf contains name, description and parent controller
+     * @param <type> $controller 
+     */
     function  __construct($name, $conf, $controller) {
         $this->name = $name;
         $this->parent_conf = $conf;
@@ -38,6 +44,7 @@ class ParentView {
         echo "<span title=\"select superior $pname for this $name\">$pname: </span>";
         if( isset( $this->request[$pname]) ) {
             $p_ctrl->get_list_box($id, $this->request[$pname]);
+            // TODO write wrapper for get_delete_checkbox()
             $this->get_delete_checkbox();
         } else {
             $p_ctrl->get_list_box($id, $selected);
