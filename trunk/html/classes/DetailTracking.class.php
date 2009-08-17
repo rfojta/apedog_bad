@@ -99,6 +99,7 @@ class DetailTracking {
     }
 
     function insert_value($lc_id, $quarter_id, $kpi_id, $value) {
+        $value = str_replace(",", ".", $value);
         $values = array( $lc_id, $quarter_id, $kpi_id, $value );
         $pre_query = $this->insert_query;
         $query = $this->parse_query( $pre_query, $values );
