@@ -50,6 +50,7 @@ if( $code == 1 ) {
                 <h2 class="section">Welcome to AEISEC CR LC Performance Monitor</h2>
                 <div class="content">
                     <p>Apedog is a tool, which helps LCs in the Czech Republic to track their plans. It was developed to ensure sustainable growth, improving KPIs and improving AIESEC experience.</p>
+                    <p>We recommend to use Mozilla Firefox for best look and performance.</p>
                     <b><?php echo $info1; ?></b>
 
                     <form action="index.php" method="post"><div style="text-align: left;" >

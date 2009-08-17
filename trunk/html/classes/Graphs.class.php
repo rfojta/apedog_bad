@@ -10,6 +10,7 @@ class Graphs extends Results {
     protected $kpi_id;
     protected $y_max=100;
     protected $y_min=0;
+    protected $term_list;
 
     function __construct( $dbutil, $term_id, $current_area, $user, $quarter_in_term, $eot, $kpi_id ) {
         parent::__construct( $dbutil, $term_id, $user, $quarter_in_term, $eot);
@@ -31,7 +32,7 @@ class Graphs extends Results {
         $this->get_eot_checkbox();
 
         echo '<table>';
-        if(isset($_REQUEST['kpi_id'])) {
+        if(isset($_REQUEST['kpi_id'])&&$_REQUEST['kpi_id']!=null) {
             $this->kpi_id=$_REQUEST['kpi_id'];
             $this->get_graph($_REQUEST['kpi_id']);
         } else {
@@ -45,15 +46,15 @@ class Graphs extends Results {
         $rows = $this->dbutil->process_query_assoc($query);
         $kpi = $rows[0];
         $quarter_list = $this->get_quarter_list(null);
-        $term_list = $this->get_term_list();
-        
+        $this->term_list = $this->get_term_list();
+
         if ($this->eot==1) {
-            $data=$this->get_values($term_list, $kpi);
-            $x_labels = $this->get_xlabels($term_list);
+            $data=$this->get_values($this->term_list, $kpi);
+            $x_labels = $this->get_xlabels($this->term_list);
         } else {
             $data=$this->get_values($quarter_list, $kpi);
             $x_labels = $this->get_xlabels($quarter_list);
-            $x2_labels = $this->get_x2_labels($term_list);
+            $x2_labels = $this->get_x2_labels($this->term_list);
         }
         $y_max = 100;
         $line_labels=array('Current','Goal');
@@ -84,16 +85,16 @@ class Graphs extends Results {
         $t_max = max($targets);
         $a_min = min($actuals);
         $t_min = min($actuals);
-        if ($a_max>100 && $a_max>$t_max){
+        if ($a_max>100 && $a_max>$t_max) {
             $this->y_max=$a_max;
-        } else if ($t_max>100){
-            $this->y_max = $t_max;
-        }
-        if ($a_min<0 && $a_min>$t_min){
+        } else if ($t_max>100) {
+                $this->y_max = $t_max;
+            }
+        if ($a_min<0 && $a_min>$t_min) {
             $this->y_min=$t_min;
-        } else if ($t_min<0){
-            $this->y_min = $a_min;
-        }
+        } else if ($t_min<0) {
+                $this->y_min = $a_min;
+            }
         $this->y_max = round(1.1*ceil($this->y_max), -1);
         $this->y_min = round(1.1*floor($this->y_min), -1);
 
@@ -137,20 +138,7 @@ class Graphs extends Results {
 
                 };break;
             case 3: {
-                    $i=0;
-                    foreach($x_labels as $title) {
-                        $scale = '250x86';
-                        $line_colors=array('4AA02C','B5EAAA');
-                        $percentile = $data[0][$i];
-                        $label = $line_labels[0].' '.$percentile.'%';
-                        if ($percentile>100) {
-                            $percentile=100;
-                        }
-                        $chart = new PieChart($percentile,$label,$line_colors,$title,$scale);
-                        $chart->draw_chart();
-                        $i++;
-                    }
-
+                    $this->get_pie_chart($kpi, $data, $x_labels, $x2_labels, $y_min, $y_max, $line_labels, $line_colors, $scale);
                 };break;
             case 4: {
                     $i=0;
@@ -163,16 +151,16 @@ class Graphs extends Results {
                             $percentile=100;
                             $lab=$data[0][$i];
                         }
-                        if ($data[0][$i]==null){
+                        if ($data[0][$i]==null) {
                             $percentile=0;
                             $lab=0;
                         }
                         $percentile=round($percentile);
                         $label = $line_labels[0].' '.$lab.' ('.$percentile.'%)';
                         $chart = new GoogleOMeter($scale,$percentile, $label, $title);
-                        
+
                         $chart->draw_chart();
-                        
+
                         $i++;
                     }
 
@@ -189,12 +177,50 @@ class Graphs extends Results {
 
     }
 
-    function get_x2_labels($term_list){
+    function get_x2_labels($term_list) {
         $labels = array();
-        foreach($term_list as $term){
+        foreach($term_list as $term) {
             $labels[]=date('Y', strtotime($term['term_from'])).'/'.date('Y', strtotime($term['term_to']));
         }
         return $labels;
+    }
+
+    function get_pie_chart($kpi, $data, $x_labels, $x2_labels, $y_min, $y_max, $line_labels, $line_colors, $scale){
+        if($this->eot!=1){
+                    foreach ($this->term_list as $term) {
+                        echo "<b>".date('Y', strtotime($term['term_from'])).'/'.date('Y', strtotime($term['term_to']))."</b><p>";
+                        $i=0;
+                        $quarter_list = $this->get_quarter_list($term['id']);
+                        $x_labels = $this->get_xlabels($quarter_list);
+                        foreach($x_labels as $title) {
+                            $scale = '300x86';
+                            $line_colors=array('4AA02C','B5EAAA');
+                            $percentile = $data[0][$i];
+                            $label = $line_labels[0].' '.$percentile.'%';
+                            if ($percentile>100) {
+                                $percentile=100;
+                            }
+                            $chart = new PieChart($percentile,$label,$line_colors,$title,$scale);
+                            $chart->draw_chart();
+                            $i++;
+                        }
+                        echo '</p><hr />';
+                    }
+                    } else {
+                        $i=0;
+                        foreach($x_labels as $title) {
+                            $scale = '300x86';
+                            $line_colors=array('4AA02C','B5EAAA');
+                            $percentile = $data[0][$i];
+                            $label = $line_labels[0].' '.$percentile.'%';
+                            if ($percentile>100) {
+                                $percentile=100;
+                            }
+                            $chart = new PieChart($percentile,$label,$line_colors,$title,$scale);
+                            $chart->draw_chart();
+                            $i++;
+                        }
+                    }
     }
 }
 

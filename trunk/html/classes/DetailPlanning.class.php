@@ -165,7 +165,7 @@ class DetailPlanning {
     }
 
     function get_term_list() {
-        $query = $this->term_query . ' ORDER BY `id`';
+        $query = $this->term_query . ' ORDER BY `number_of_term`';
         $rows = $this->dbutil->process_query_assoc($query);
         return $rows;
     }
