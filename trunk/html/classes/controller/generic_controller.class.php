@@ -7,6 +7,8 @@
 /**
  * Description of GenericController
  *
+ * Latest changes: added multiple parent, view functionality moved to ViewController
+ *
  * @author Richard
  */
 class GenericController {
@@ -19,8 +21,6 @@ class GenericController {
 
     // Developer can define parent controller
     protected $parent_conf;
-
-    protected $parent2_conf;
 
     // Developer can define child model
     protected $child_conf;
@@ -49,15 +49,18 @@ class GenericController {
         $this->view = new ViewController($this->name, $this, null);
         $this->child_view = new ChildView($this->name, $this->child_conf, $this);
 
+        // detect one or more parent
         if( isset( $this->parent_conf['name']) ) {
+            // one parent
             $this->parent_view =
                 new ParentView($this->name,
                 $this->parent_conf, $this);
         }
         elseif( is_array( $this->parent_conf ) ) {
+            // more parents
             $this->parent_view = array();
             $parent_conf = $this->parent_conf;
-        // new style to set more than one parent
+            // new style to set more than one parent
             foreach( $parent_conf as $name => $p_conf ) {
                 $this->parent_view[$name] = new ParentView(
                     $this->name, $p_conf, $this);
@@ -65,10 +68,18 @@ class GenericController {
         }
     }
 
+    /**
+     * model getter
+     * @return <type> 
+     */
     public function get_model() {
         return $this->model;
     }
 
+    /**
+     * view setter
+     * @param <type> $view 
+     */
     public function set_view( $view ) {
         $this->view = $view;
     }
@@ -177,10 +188,18 @@ class GenericController {
         echo "</select>";
     }
 
+    /**
+     * detect if another table references this model
+     * @return <type> 
+     */
     public function has_child() {
         return isset( $this->child_conf);
     }
 
+    /**
+     * generate html list using child_view
+     * @param <type> $id 
+     */
     public function child_list($id) {
         $this->child_view->child_list($id);
     }
@@ -208,11 +227,14 @@ class GenericController {
         return $rows;
     }
 
+    /**
+     * detect whether column with name referenced another table
+     * @param <type> $name column definition
+     * @return <boolean> true or false
+     */
     public function is_parent( $name ) {
-        if( isset ($this->parent_conf['name']) && $name == $this->parent_conf['name']
-        // || $name = $this->parent2_conf['name']
-
-        ) {
+        if( isset ($this->parent_conf['name'])
+            && $name == $this->parent_conf['name']    ) {
             return true;
         }
         elseif( isset( $this->parent_conf[$name])) {
@@ -221,6 +243,12 @@ class GenericController {
 
     }
 
+    /**
+     * generates html for specified $key, using parent_view
+     * @param <type> $key
+     * @param <type> $id
+     * @param <type> $selected 
+     */
     public function parent_list($key, $id, $selected) {
         if( is_array( $this->parent_view )) {
             $this->parent_view[$key]->parent_list($key, $id, $selected);
@@ -229,6 +257,10 @@ class GenericController {
         }
     }
 
+    /**
+     * wrapper for view get_label function for specified row
+     * @param <type> $id 
+     */
     public function get_label($id) {
         $this->view->get_label($id );
     }
