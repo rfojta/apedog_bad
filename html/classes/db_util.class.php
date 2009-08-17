@@ -84,7 +84,7 @@ class DB_Util {
      * @param <type> $query 
      */
     function do_query($query) {
-        if( $this->debug || 1 ) {
+        if( $this->debug ) {
             echo "<pre>$query</pre>";
         }
         $res = mysql_query( $query, $this->dbres );
