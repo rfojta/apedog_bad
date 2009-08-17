@@ -38,7 +38,7 @@ class Graphs extends Results {
             $this->kpi_id=$_REQUEST['kpi_id'];
             $this->get_graph($_REQUEST['kpi_id']);
         } else {
-            echo "<p> There is no KPI selected! Go to previous tabs and select KPI.</p>";
+            echo "<p> There is no KPI selected! Go to previous tabs and click on KPI.</p>";
         }
         echo '</table>';
     }
