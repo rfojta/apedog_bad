@@ -80,5 +80,11 @@ class Entering extends DetailPlanning {
         echo ' value="Save" />';
         echo '</p>';
     }
+
+    function get_locked_echo(){
+        if ($this->locking->get_count($this->lc_id, $this->quarter_id, 'NULL')) {
+            echo "<p><b>You can't enter values for this quarter as it has been locked by MC for you.</b></p>";
+        }
+    }
 }
 ?>
