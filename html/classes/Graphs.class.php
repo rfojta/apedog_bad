@@ -31,7 +31,7 @@ class Graphs extends Results {
         echo '<table>';
         if(isset($_REQUEST['kpi_id'])) {
             $this->kpi_id=$_REQUEST['kpi_id'];
-            $this->get_graph($_REQUEST['kpi_id']);            
+            $this->get_graph($_REQUEST['kpi_id']);
         } else {
             echo "<p> There is no KPI selected! Go to previous tabs and select KPI.</p>";
         }
@@ -43,8 +43,14 @@ class Graphs extends Results {
         $rows = $this->dbutil->process_query_assoc($query);
         $kpi = $rows[0];
         $quarter_list = $this->get_quarter_list(null);
-        $data=$this->get_values($quarter_list, $kpi);
-        $x_labels = $this->get_xlabels($quarter_list);
+        $term_list = $this->get_term_list();
+        if ($this->eot==1) {
+            $data=$this->get_values($term_list, $kpi);
+            $x_labels = $this->get_xlabels($term_list);
+        } else {
+            $data=$this->get_values($quarter_list, $kpi);
+            $x_labels = $this->get_xlabels($quarter_list);
+        }
         $y_max = 100;
         $line_labels=array('Current','Goal');
         $line_colors=array('4AA02C','151B8D');
@@ -54,29 +60,42 @@ class Graphs extends Results {
         $chart->draw_chart();
     }
 
-    function get_values($quarter_list, $kpi) {
+    function get_values($list, $kpi) {
         $actuals=array();
         $targets=array();
-        foreach ($quarter_list as $quarter) {
-            $actuals[] = $this->get_actual($this->lc_id, $quarter['id'], $kpi['id']);
-            $targets[] = $this->get_target($this->lc_id, $quarter['id'], $kpi['id']);
+        if($this->eot!=1) {
+            foreach ($list as $quarter) {
+                $actuals[] = $this->get_actual($this->lc_id, $quarter['id'], $kpi['id']);
+                $targets[] = $this->get_target($this->lc_id, $quarter['id'], $kpi['id']);
+            }
+        } else {
+            foreach($list as $term){
+            $actuals[] = $this->get_year_actual($kpi, $term['id']);
+            $targets[] = $this->get_year_target($kpi, $term['id']);
+            }
         }
         $data=array();
 
         $data[]=$actuals;
         $data[]=$targets;
-        
+
         return $data;
     }
 
-    function get_xlabels($quarter_list) {
+    function get_xlabels($list) {
         $xlabels = array();
         $j=3;
-        foreach ($quarter_list as $quarter) {
-            $xlabels[]='Q'.$j;
-            $j++;
-            if ($j>4) {
-                $j=1;
+        if ($this->eot!=1) {
+            foreach ($list as $quarter) {
+                $xlabels[]='Q'.$j;
+                $j++;
+                if ($j>4) {
+                    $j=1;
+                }
+            }
+        } else {
+            foreach ($list as $term) {
+                $xlabels[]=date('Y', strtotime($term['term_from'])).'/'.date('Y', strtotime($term['term_to']));
             }
         }
         return $xlabels;
