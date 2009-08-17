@@ -55,8 +55,8 @@ include('init.php');
             <div id="colTwo">
                 <h2 class="section">Help</h2>
                 <div class="content">
-                    <h3>Entering values</h3>
-                    <p>Firstly choose period for which you want to enter value. Past and future periods are locked. Then choose your area. Enter the value you achieved in KPI and save it. You will be able to change the value until the end of actual time interval.</p>
+                    <h3>Reports</h3>
+                    <p>TBD</p>
 
                 </div>
             </div>

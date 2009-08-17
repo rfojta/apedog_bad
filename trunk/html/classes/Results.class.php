@@ -30,7 +30,7 @@ class Results {
     protected $business_perspective_query = 'select * from business_perspectives';
     protected $csf_query = 'select * from csfs where business_perspective ';
     protected $lc_query = 'select * from lcs';
-
+    protected $end_of_term_query = 'select * from end_of_term WHERE `id` = ';
 
     function __construct( $dbutil, $term_id, $user, $quarter_in_term, $eot) {
         $this->dbutil = $dbutil;
@@ -111,16 +111,16 @@ class Results {
     }
 
     function get_term_list() {
-        $query = $this->term_query;
+        $query = $this->term_query . ' ORDER BY `id`';
         $rows = $this->dbutil->process_query_assoc($query);
         return $rows;
     }
 
     function get_quarter_list($term_id) {
-        if ($term_id==null){
-            $query = $this->quarter_query;
+        if ($term_id==null) {
+            $query = $this->quarter_query . ' ORDER BY `quarter_in_term`';
         } else {
-            $query = $this->quarter_query . ' where term = '.$term_id;
+            $query = $this->quarter_query . ' where term = '.$term_id . ' ORDER BY `quarter_in_term`';
         }
         $rows = $this->dbutil->process_query_assoc($query);
         //        $this->quarter_id=$rows[0]['id'];
@@ -180,7 +180,7 @@ class Results {
     }
 
     function get_bp_list() {
-        $query = $this->business_perspective_query;
+        $query = $this->business_perspective_query . ' ORDER BY `id`';
         $rows = $this->dbutil->process_query_assoc($query);
         return $rows;
     }
@@ -193,6 +193,9 @@ class Results {
             $kpi_list = array_merge($kpi_list, $temp);
         }
         $rate = round($this->get_rate($kpi_list)*100);
+        if ($rate>100) {
+            $rate=100;
+        }
         $gom = new GoogleOMeter('50x24',$rate,null,null);
         echo '<tr class="bpTableRow">';
         echo '<th width="99%">';
@@ -274,9 +277,13 @@ class Results {
     }
 
     function get_kpi_section($kpi) {
-        $actual = $this->get_actual($this->lc_id, $this->quarter_id, $kpi['id']);
-        $target = $this->get_target($this->lc_id, $this->quarter_id, $kpi['id']);
-
+        if ($this->eot==1) {
+            $actual = $this->get_year_actual($kpi);
+            $target = $this->get_year_target($kpi);
+        } else {
+            $actual = $this->get_actual($this->lc_id, $this->quarter_id, $kpi['id']);
+            $target = $this->get_target($this->lc_id, $this->quarter_id, $kpi['id']);
+        }
         if ($target!=null && $target != 0) {
             $rate = $actual/$target;
         }
@@ -286,7 +293,7 @@ class Results {
         echo '<td class="kpiName">';
         echo '<small>';
         echo '<a href="reports.php?graphs&kpi_id='.$kpi['id'].'&lc_id='.$this->lc_id.
-        '&eot='.$this->eot.'" title="' . $kpi['description'] . '">'. $kpi['name'] . ':</a>';
+            '&eot='.$this->eot.'" title="' . $kpi['description'] . '">'. $kpi['name'] . ':</a>';
         echo '</small>';
         echo '</td>';
         echo '<td class="currentValue">';
@@ -362,19 +369,6 @@ class Results {
             .$this->area_id."&kpi_id=".$this->kpi_id."&term_id=".$this->term_id.
             "&quarter_in_term=".$this->quarter_in_term.
             "&eot=".$this->eot."&lc_id='+this.value\">\n";
-        echo "<option value='all'";
-        if( isset($_REQUEST['lc_id']) ) {
-            if( $lc['id'] == $_REQUEST['lc_id']) {
-
-                $this->lc_id=$lc['id'];
-                echo " selected ";
-
-            }
-        }
-        echo ">";
-        echo 'All';
-        echo "</option>\n";
-
         foreach( $lc_list as $lc ) {
             echo "<option value=\"".$lc['id']."\"";
             if( isset($_REQUEST['lc_id']) ) {
@@ -429,12 +423,12 @@ class Results {
 
     function get_eot_checkbox() {
         echo '<input type="checkbox" name="eot" value="1" ';
-        echo "onchange=if(this.checked){\"window.location.href='".$this->page."&area_id="
+        //        echo "onchange=if(this.checked){\"window.location.href='".$this->page."&area_id="
+        //            .$this->area_id."&lc_id=".$this->lc_id."&term_id=".$this->term_id.
+        //            "&eot='+this.value\"}";
+        echo "onchange=\"window.location.href='".$this->page."&area_id="
             .$this->area_id."&lc_id=".$this->lc_id."&term_id=".$this->term_id.
-            "&eot='+this.value\"}";
-//        echo "onchange=\"window.location.href='".$this->page."&area_id="
-//            .$this->area_id."&lc_id=".$this->lc_id."&term_id=".$this->term_id.
-//            "&eot='+this.value\"";
+            "&eot='+this.value\"";
         if( isset($_REQUEST['eot']) ) {
             if( 1 == $_REQUEST['eot']) {
                 $this->eot=$_REQUEST['eot'];
@@ -443,6 +437,84 @@ class Results {
         }
         echo ">";
         echo "End of a term";
+    }
+
+    function get_year_actual($kpi) {
+        $query = $this->end_of_term_query . $kpi['end_of_term'];
+        $rows = $this->dbutil->process_query_assoc($query);
+        $eot = $rows[0];
+        $quarter_list = $this->get_quarter_list($this->term_id);
+        $actual;
+        switch ($eot['id']) {
+            case 1:
+                foreach ($quarter_list as $quarter) {
+                    $actual+=$this->get_actual($this->lc_id, $quarter['id'], $kpi['id']);
+                };break;
+            case 2: {
+                    $i=0;
+                    foreach ($quarter_list as $quarter) {
+                        $actual+=$this->get_actual($this->lc_id, $quarter['id'], $kpi['id']);
+                        $i++;
+                    };
+
+                    if($i!=0) {
+                        $actual= $actual/$i;
+                    };
+                };break;
+            case 3: {
+                    $query = $this->quarter_query . ' WHERE `quarter_in_term` = 4';
+                    $rows = $this->dbutil->process_query_assoc($query);
+                    $quarter = $rows[0];
+                    $actual=$this->get_actual($this->lc_id, $quarter['id'], $kpi['id']);
+                };break;
+
+            case 4:
+                foreach ($quarter_list as $quarter) {
+                    $act = $this->get_actual($this->lc_id, $quarter['id'], $kpi['id']);
+                    if ($act ==1) {
+                        $actual=1;
+                    }
+                };break;
+        }
+        return $actual;
+    }
+
+    function get_year_target($kpi) {
+        $query = $this->end_of_term_query . $kpi['end_of_term'];
+        $rows = $this->dbutil->process_query_assoc($query);
+        $eot = $rows[0];
+        $quarter_list = $this->get_quarter_list($this->term_id);
+        $target;
+        switch ($eot['id']) {
+            case 1:
+                foreach ($quarter_list as $quarter) {
+                    $target+=$this->get_target($this->lc_id, $quarter['id'], $kpi['id']);
+                };break;
+            case 2: {
+                    $i=0;
+                    foreach ($quarter_list as $quarter) {
+                        $target+=$this->get_target($this->lc_id, $quarter['id'], $kpi['id']);
+                        $i++;
+                    };
+                    if($i!=0) {
+                        $target= $target/$i;
+                    };
+                };break;
+            case 3: {
+                    $query = $this->quarter_query . ' WHERE `quarter_in_term` = 4';
+                    $rows = $this->dbutil->process_query_assoc($query);
+                    $quarter = $rows[0];
+                    $target=$this->get_target($this->lc_id, $quarter['id'], $kpi['id']);
+                };break;
+            case 4:
+                foreach ($quarter_list as $quarter) {
+                    $act = $this->get_target($this->lc_id, $quarter['id'], $kpi['id']);
+                    if ($act ==1) {
+                        $target=1;
+                    }
+                };break;
+        }
+        return $target;
     }
 }
 ?>

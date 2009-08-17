@@ -96,7 +96,7 @@ a:hover {
 }
 
 #content a {
-    text-decoration:none
+    text-decoration:none;
 }
 
 
@@ -150,11 +150,11 @@ a:hover {
 
 #colOne .content .inner_menu a {
     text-decoration: none;
+        color: #000000
 }
 
 #colOne .content .inner_menu a:hover  {
     text-decoration: none;
-    color: #0088FF
 }
 #colone .content .bpTable{
     text-align: left;
@@ -166,20 +166,20 @@ a:hover {
 
 }
 #colOne .content .current{
-        background: #8A4117;
+        background: #4AA02C;
         color: white
 }
 #colOne .content .goal{
-        background: #FDD017;
+        background: #151B8D;
         color: white
 }
 #colOne .content .status{
         text-align: center;
-        background: #4AA02C;
+        background: #8A4117;
         color: white
 }
 #colOne .content .trend{
-        background: #151B8D;
+        background: #FDD017;
         color: white
 }
 
@@ -205,21 +205,21 @@ a:hover {
 
 }
 #colOne .content .currentValue{
-        background:#C9C299;
+        background:#B5EAAA;
         text-align: right
 }
 #colOne .content .goalValue{
-        background: #FFE87C;
+        background: #79BAEC;
         text-align: right
 }
 #colOne .content .kpiStatus{
 
-        background: #B5EAAA;
+        background: #C9C299;
         text-align: center
 }
 #colOne .content .kpiTrend{
 
-        background: #151B8D;
+        background: #FFE87C;
         text-align: center
 }
 #colOne .content .detailTable{
@@ -241,6 +241,9 @@ a:hover {
 }
 #colOne .content .kpiRow5{
     background: #FFFFFF;
+}
+#colOne .content a{
+        color: #666666;
 }
 
 /* Column Two */
