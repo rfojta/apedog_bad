@@ -3,8 +3,8 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Aug 09, 2009 at 09:41 PM
--- Server version: 5.1.33
+-- Generation Time: Aug 16, 2009 at 10:26 PM
+-- Server version: 5.0.45
 -- PHP Version: 5.2.9
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
@@ -21,12 +21,12 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
 DROP TABLE IF EXISTS `areas`;
 CREATE TABLE `areas` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
-  `description` varchar(45) CHARACTER SET latin1 COLLATE latin1_general_ci DEFAULT NULL,
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `name` varchar(45) character set latin1 collate latin1_general_ci NOT NULL,
+  `description` varchar(45) character set latin1 collate latin1_general_ci default NULL,
   `created` datetime NOT NULL,
   `updated` datetime NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=8 ;
 
 --
@@ -34,7 +34,7 @@ CREATE TABLE `areas` (
 --
 
 INSERT INTO `areas` (`id`, `name`, `description`, `created`, `updated`) VALUES
-(1, 'PR', 'public relations', '0000-00-00 00:00:00', '2009-07-28 12:16:45'),
+(1, 'PR', 'public relation', '0000-00-00 00:00:00', '2009-08-16 19:54:14'),
 (2, 'ICX', 'incoming exchange', '0000-00-00 00:00:00', '2009-07-27 01:45:26'),
 (3, 'OGX', 'outgoing exchange', '0000-00-00 00:00:00', '2009-07-28 12:18:34'),
 (4, 'TM', 'talent management', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
@@ -50,12 +50,12 @@ INSERT INTO `areas` (`id`, `name`, `description`, `created`, `updated`) VALUES
 
 DROP TABLE IF EXISTS `business_perspectives`;
 CREATE TABLE `business_perspectives` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL auto_increment,
   `name` varchar(45) NOT NULL,
-  `description` varchar(45) DEFAULT NULL,
+  `description` varchar(45) default NULL,
   `created` datetime NOT NULL,
   `updated` datetime NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=14 ;
 
 --
@@ -77,14 +77,14 @@ INSERT INTO `business_perspectives` (`id`, `name`, `description`, `created`, `up
 
 DROP TABLE IF EXISTS `csfs`;
 CREATE TABLE `csfs` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) NOT NULL,
-  `description` varchar(45) NOT NULL,
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(45) character set latin1 NOT NULL,
+  `description` varchar(45) character set latin1 NOT NULL,
   `created` datetime NOT NULL,
   `updated` datetime NOT NULL,
   `business_perspective` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=18 ;
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Critical succes factor ' AUTO_INCREMENT=18 ;
 
 --
 -- Dumping data for table `csfs`
@@ -116,7 +116,7 @@ INSERT INTO `csfs` (`id`, `name`, `description`, `created`, `updated`, `business
 
 DROP TABLE IF EXISTS `detail_tracking`;
 CREATE TABLE `detail_tracking` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int(10) unsigned NOT NULL auto_increment,
   `kpi` int(10) unsigned NOT NULL,
   `lc` int(10) unsigned NOT NULL,
   `actual` int(10) unsigned NOT NULL,
@@ -124,13 +124,16 @@ CREATE TABLE `detail_tracking` (
   `created` datetime NOT NULL,
   `updated` datetime NOT NULL,
   `quarter` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`id`),
+  PRIMARY KEY  (`id`),
   UNIQUE KEY `kpi-lc-quarter` (`kpi`,`lc`,`quarter`),
   KEY `kpi` (`kpi`),
   KEY `quarter` (`quarter`),
   KEY `lc` (`lc`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=35 ;
 
+--
+-- Dumping data for table `detail_tracking`
+--
 
 
 -- --------------------------------------------------------
@@ -141,32 +144,64 @@ CREATE TABLE `detail_tracking` (
 
 DROP TABLE IF EXISTS `kpis`;
 CREATE TABLE `kpis` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
-  `description` varchar(100) CHARACTER SET latin1 COLLATE latin1_general_ci DEFAULT NULL,
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `name` varchar(100) character set latin1 collate latin1_general_ci NOT NULL,
+  `description` varchar(100) character set latin1 collate latin1_general_ci default NULL,
   `created` datetime NOT NULL,
   `updated` datetime NOT NULL,
-  `area` int(10) unsigned DEFAULT NULL,
-  `csf` int(10) unsigned DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
+  `area` int(10) unsigned default NULL,
+  `csf` int(10) unsigned default NULL,
+  `quarter` int(10) unsigned default NULL,
+  `lc` int(10) unsigned default NULL,
+  `kpi_unit` int(10) NOT NULL COMMENT 'odkaz na jednotku',
+  PRIMARY KEY  (`id`),
+  KEY `quarter` (`quarter`,`lc`),
+  KEY `kpi_unit` (`kpi_unit`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=14 ;
 
 --
 -- Dumping data for table `kpis`
 --
 
-INSERT INTO `kpis` (`id`, `name`, `description`, `created`, `updated`, `area`, `csf`) VALUES
-(2, 'Quality index performance', 'Number of stars -  Quality Of the Experiences z myaiesec.net', '2009-08-08 23:48:00', '2009-08-08 23:50:38', 3, 2),
-(3, 'Number of members that finished both X & LR experiences', 'create new item', '2009-08-08 23:48:41', '2009-08-09 00:11:51', 3, 2),
-(4, 'Number of members with leadership experience finished', 'create new item', '2009-08-09 00:06:41', '2009-08-09 00:12:06', 4, 3),
-(5, 'Number of TN realized', 'create new item', '2009-08-09 00:07:04', '0000-00-00 00:00:00', 2, 4),
-(6, 'Number of EP realized', 'create new item', '2009-08-09 00:07:25', '0000-00-00 00:00:00', 3, 4),
-(7, 'Real state of finance (cash + receivables - liabilities)', 'create new item', '2009-08-09 00:10:20', '2009-08-09 00:12:23', 6, 5),
-(8, 'Number of months of reserve = (cash + receivables - liabilities)/average monthly outflow', 'create new item', '2009-08-09 00:10:41', '2009-08-09 00:12:48', 6, 5),
-(9, 'Number of EP Raised', 'create new item', '2009-08-09 00:13:29', '0000-00-00 00:00:00', 3, 6),
-(10, 'Number of TN Raised', 'create new item', '2009-08-09 00:13:54', '0000-00-00 00:00:00', 2, 7),
-(11, 'How often do you run a competitive analysis? ', 'create new item', '2009-08-09 00:14:19', '0000-00-00 00:00:00', 2, 9),
-(12, 'did you run a competitive analysis?', 'Yes/no', '2009-08-09 12:46:02', '0000-00-00 00:00:00', 0, 0);
+INSERT INTO `kpis` (`id`, `name`, `description`, `created`, `updated`, `area`, `csf`, `quarter`, `lc`, `kpi_unit`) VALUES
+(2, 'Quality index performance', 'Number of stars -  Quality Of the Experiences z myaiesec.net', '2009-08-08 23:48:00', '2009-08-16 20:27:55', 3, 2, NULL, NULL, 4),
+(3, 'Number of members that finished both X & LR experiences', 'create new item', '2009-08-08 23:48:41', '2009-08-09 00:11:51', 3, 2, NULL, NULL, 0),
+(4, 'Number of members with leadership experience finished', 'create new item', '2009-08-09 00:06:41', '2009-08-09 00:12:06', 4, 3, NULL, NULL, 0),
+(5, 'Number of TN realized', 'create new item', '2009-08-09 00:07:04', '0000-00-00 00:00:00', 2, 4, NULL, NULL, 0),
+(6, 'Number of EP realized', 'create new item', '2009-08-09 00:07:25', '0000-00-00 00:00:00', 3, 4, NULL, NULL, 0),
+(7, 'Real state of finance (cash + receivables - liabilities)', 'create new item', '2009-08-09 00:10:20', '2009-08-09 00:12:23', 6, 5, NULL, NULL, 0),
+(8, 'Number of months of reserve = (cash + receivables - liabilities)/average monthly outflow', 'create new item', '2009-08-09 00:10:41', '2009-08-09 00:12:48', 6, 5, NULL, NULL, 0),
+(9, 'Number of EP Raised', 'create new item', '2009-08-09 00:13:29', '0000-00-00 00:00:00', 3, 6, NULL, NULL, 0),
+(10, 'Number of TN Raised', 'create new item', '2009-08-09 00:13:54', '0000-00-00 00:00:00', 2, 7, NULL, NULL, 0),
+(11, 'How often do you run a competitive analysis? ', 'create new item', '2009-08-09 00:14:19', '0000-00-00 00:00:00', 2, 9, NULL, NULL, 0),
+(12, 'did you run a competitive analysis?', 'Yes/no', '2009-08-09 12:46:02', '0000-00-00 00:00:00', 0, 0, NULL, NULL, 0),
+(13, 'new', 'create new item', '2009-08-16 19:54:37', '2009-08-16 19:54:50', 1, 15, NULL, NULL, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `kpi_units`
+--
+
+DROP TABLE IF EXISTS `kpi_units`;
+CREATE TABLE `kpi_units` (
+  `id` int(10) NOT NULL auto_increment COMMENT 'PK',
+  `name` varchar(50) collate utf8_bin NOT NULL COMMENT 'jmeno jednotky',
+  `description` varchar(100) collate utf8_bin NOT NULL COMMENT 'popis jednotky',
+  `spec` varchar(100) collate utf8_bin NOT NULL COMMENT 'specifikace prace s jednotky',
+  `created` timestamp NOT NULL default CURRENT_TIMESTAMP COMMENT 'vytvoreno',
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='jednotky ke kpi' AUTO_INCREMENT=5 ;
+
+--
+-- Dumping data for table `kpi_units`
+--
+
+INSERT INTO `kpi_units` (`id`, `name`, `description`, `spec`, `created`) VALUES
+(1, 'days', 'represents count of days', '', '2009-08-16 17:52:05'),
+(2, '%', 'represents percentage of something', '', '2009-08-16 17:52:25'),
+(3, 'floating point number', 'represents real numbers', '', '2009-08-16 17:53:06'),
+(4, 'CZK', 'currency', '', '2009-08-16 18:02:30');
 
 -- --------------------------------------------------------
 
@@ -176,12 +211,12 @@ INSERT INTO `kpis` (`id`, `name`, `description`, `created`, `updated`, `area`, `
 
 DROP TABLE IF EXISTS `lcs`;
 CREATE TABLE `lcs` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `description` varchar(45) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `name` varchar(45) character set utf8 collate utf8_bin NOT NULL,
+  `description` varchar(45) character set utf8 collate utf8_bin NOT NULL,
   `created` datetime NOT NULL,
   `updated` datetime NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
 
 --
@@ -208,11 +243,11 @@ INSERT INTO `lcs` (`id`, `name`, `description`, `created`, `updated`) VALUES
 
 DROP TABLE IF EXISTS `locking`;
 CREATE TABLE `locking` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int(10) unsigned NOT NULL auto_increment,
   `lc` int(11) NOT NULL,
-  `quarter` int(11) DEFAULT NULL,
-  `term` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `quarter` int(11) default NULL,
+  `term` int(11) default NULL,
+  PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
@@ -228,7 +263,7 @@ CREATE TABLE `locking` (
 
 DROP TABLE IF EXISTS `quarters`;
 CREATE TABLE `quarters` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int(10) unsigned NOT NULL auto_increment,
   `quarter_from` date NOT NULL,
   `quarter_to` date NOT NULL,
   `description` datetime NOT NULL,
@@ -236,7 +271,7 @@ CREATE TABLE `quarters` (
   `updated` datetime NOT NULL,
   `term` int(10) unsigned NOT NULL,
   `quarter_in_term` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
 
 --
@@ -261,10 +296,10 @@ INSERT INTO `quarters` (`id`, `quarter_from`, `quarter_to`, `description`, `crea
 
 DROP TABLE IF EXISTS `roles`;
 CREATE TABLE `roles` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `name` varchar(45) character set latin1 collate latin1_general_ci NOT NULL,
   `level` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
@@ -280,14 +315,14 @@ CREATE TABLE `roles` (
 
 DROP TABLE IF EXISTS `terms`;
 CREATE TABLE `terms` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int(10) unsigned NOT NULL auto_increment,
   `term_from` date NOT NULL,
   `term_to` date NOT NULL,
-  `description` varchar(255) CHARACTER SET latin2 COLLATE latin2_czech_cs NOT NULL,
+  `description` varchar(255) character set latin2 collate latin2_czech_cs NOT NULL,
   `created` datetime NOT NULL,
   `updated` datetime NOT NULL,
   `number_of_term` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
+  PRIMARY KEY  (`id`),
   UNIQUE KEY `term_from` (`term_from`,`term_to`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
 
@@ -307,15 +342,15 @@ INSERT INTO `terms` (`id`, `term_from`, `term_to`, `description`, `created`, `up
 
 DROP TABLE IF EXISTS `tracking`;
 CREATE TABLE `tracking` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int(10) unsigned NOT NULL auto_increment,
   `area` int(10) unsigned NOT NULL,
   `lc` int(10) unsigned NOT NULL,
   `actual` int(10) unsigned NOT NULL,
   `target` int(10) unsigned NOT NULL,
   `created` datetime NOT NULL,
   `updated` datetime NOT NULL,
-  `term` int(10) unsigned DEFAULT NULL,
-  PRIMARY KEY (`id`),
+  `term` int(10) unsigned default NULL,
+  PRIMARY KEY  (`id`),
   UNIQUE KEY `area-lc-term` (`area`,`lc`,`term`),
   KEY `term` (`term`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=19 ;
@@ -352,17 +387,17 @@ INSERT INTO `tracking` (`id`, `area`, `lc`, `actual`, `target`, `created`, `upda
 
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
-  `surname` varchar(45) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `name` varchar(45) collate utf8_bin NOT NULL,
+  `surname` varchar(45) collate utf8_bin NOT NULL,
   `lc` int(10) unsigned NOT NULL,
-  `pass` varchar(45) CHARACTER SET latin1 COLLATE latin1_general_ci DEFAULT NULL,
-  `login` varchar(45) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
+  `pass` varchar(45) collate utf8_bin default NULL,
+  `login` varchar(45) collate utf8_bin NOT NULL,
   `created` datetime NOT NULL,
   `updated` datetime NOT NULL,
-  PRIMARY KEY (`id`),
+  PRIMARY KEY  (`id`),
   UNIQUE KEY `users-lc` (`lc`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=11 ;
 
 --
 -- Dumping data for table `users`
@@ -379,3 +414,62 @@ INSERT INTO `users` (`id`, `name`, `surname`, `lc`, `pass`, `login`, `created`, 
 (8, '', '', 5, 'brucelee', 'Zlin', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 (9, '', '', 4, 'brucelee', 'Olomouc', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 (10, '', '', 10, 'brucelee', 'MC', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
+
+--
+-- Explains how to determine value of KPI at the end of term
+--
+CREATE TABLE `apedog`.`end_of_term` (
+`id` INT NOT NULL AUTO_INCREMENT ,
+`equals` VARCHAR( 50 ) NOT NULL ,
+PRIMARY KEY ( `id` )
+) ENGINE = InnoDB;
+
+INSERT INTO `apedog`.`end_of_term` (
+`id` ,
+`equals`
+)
+VALUES (
+'1', 'Sum of quarters'
+), (
+'2', 'Average of quarters'
+), (
+'3', '4th quarter'
+), (
+'4', 'if at least 1 yes=>yes'
+);
+
+
+CREATE TABLE `apedog`.`graphs` (
+`id` INT NOT NULL AUTO_INCREMENT ,
+`name` VARCHAR( 48 ) NOT NULL ,
+`description` VARCHAR( 48 ) NOT NULL ,
+PRIMARY KEY ( `id` )
+) ENGINE = MYISAM ;
+
+INSERT INTO `apedog`.`graphs` (
+`id` ,
+`name` ,
+`description`
+)
+VALUES (
+'1', 'Line Chart', ''
+), (
+'2', 'Bar Chart', ''
+), (
+'3', 'Pie Chart', ''
+), (
+'4', 'Google-o-meter', ''
+);
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `kpis`
+--
+ALTER TABLE `kpis`
+  ADD CONSTRAINT `kpis_ibfk_1` FOREIGN KEY (`quarter`) REFERENCES `kpis` (`quarter`);
+
+ALTER TABLE `kpis` ADD `graphs` INT( 1 ) NOT NULL ,
+ADD `end_of_term` INT( 1 ) NOT NULL;

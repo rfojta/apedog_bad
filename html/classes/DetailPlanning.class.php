@@ -164,13 +164,13 @@ class DetailPlanning {
     }
 
     function get_term_list() {
-        $query = $this->term_query;
+        $query = $this->term_query . ' ORDER BY `id`';
         $rows = $this->dbutil->process_query_assoc($query);
         return $rows;
     }
 
     function get_quarter_list($term_id) {
-        $query = $this->quarter_query . $term_id;
+        $query = $this->quarter_query . $term_id . ' ORDER BY `quarter_in_term`';
         $rows = $this->dbutil->process_query_assoc($query);
         $this->quarter_id=$rows[0]['id'];
         return $rows;

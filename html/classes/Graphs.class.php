@@ -47,7 +47,7 @@ class Graphs extends Results {
         $x_labels = $this->get_xlabels($quarter_list);
         $y_max = 100;
         $line_labels=array('Current','Goal');
-        $line_colors=array('FF0000','00FF00');
+        $line_colors=array('4AA02C','151B8D');
         $scale='800x300';
         $chart=new BarChart($data, $x_labels, $y_max, $line_labels, $line_colors, $scale);
         echo "<p>".$kpi['name'].':</p>';
