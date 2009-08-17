@@ -19,13 +19,21 @@ class KpiModel extends GenericModel {
         'description', 'area', 'csf', 'kpi_unit',
         'graphs', 'end_of_term');
 
-
+    /**
+     * Call query to find kpis by area. Deprecated, use find_by instead
+     * @param <type> $area area id
+     * @return <type> rows
+     */
     public function find_by_area( $area ) {
         $query = $this->kpi_query . $area;
         $rows = $this->dbutil->process_query_assoc($query);
         return $rows;
     }
 
+    /**
+     * Generates associative array with default values for each item
+     * @return <type>
+     */
     public function new_item_row() {
         return array(
         'id' => 'new',
@@ -37,6 +45,11 @@ class KpiModel extends GenericModel {
         );
     }
 
+    /**
+     * Return string for specified row
+     * @param <type> $row
+     * @return <type> 
+     */
     public function get_row_label( $row ) {
         return $row['name'];
     }
