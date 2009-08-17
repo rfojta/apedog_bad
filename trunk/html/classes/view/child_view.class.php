@@ -16,15 +16,21 @@ class ChildView {
     protected $name;
     protected $controller;
 
+    /**
+     * Initialize child view for 1..n multiplication between 2 db tables
+     * @param <type> $name view name
+     * @param <type> $conf configuration of child contains, name, link ur and Model
+     * @param <type> $controller referenced controller
+     */
     function  __construct($name, $conf, $controller) {
         $this->name = $name;
         $this->child_conf = $conf;
         $this->controller = $controller;
     }
 
-      /**
+     /**
      * View<br>
-     * Display list of child objects for current item
+     * Display html list of child objects for current item
      * @param <type> $id row id
      */
     public function child_list($id) {
