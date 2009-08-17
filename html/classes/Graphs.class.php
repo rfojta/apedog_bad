@@ -86,7 +86,7 @@ class Graphs extends Results {
         $a_max = max($actuals);
         $t_max = max($targets);
         $a_min = min($actuals);
-        $t_min = min($actuals);
+        $t_min = min($targets);
         if ($a_max>100 && $a_max>$t_max) {
             $this->y_max=$a_max;
         } else if ($t_max>100) {
