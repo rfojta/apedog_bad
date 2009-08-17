@@ -278,8 +278,8 @@ class Results {
 
     function get_kpi_section($kpi) {
         if ($this->eot==1) {
-            $actual = $this->get_year_actual($kpi);
-            $target = $this->get_year_target($kpi);
+            $actual = $this->get_year_actual($kpi, $this->term_id);
+            $target = $this->get_year_target($kpi, $this->term_id);
         } else {
             $actual = $this->get_actual($this->lc_id, $this->quarter_id, $kpi['id']);
             $target = $this->get_target($this->lc_id, $this->quarter_id, $kpi['id']);
@@ -439,12 +439,12 @@ class Results {
         echo "End of a term";
     }
 
-    function get_year_actual($kpi) {
+    function get_year_actual($kpi, $term_id) {
         $query = $this->end_of_term_query . $kpi['end_of_term'];
         $rows = $this->dbutil->process_query_assoc($query);
         $eot = $rows[0];
-        $quarter_list = $this->get_quarter_list($this->term_id);
-        $actual;
+        $quarter_list = $this->get_quarter_list($term_id);
+        $actual=0;
         switch ($eot['id']) {
             case 1:
                 foreach ($quarter_list as $quarter) {
@@ -479,11 +479,11 @@ class Results {
         return $actual;
     }
 
-    function get_year_target($kpi) {
+    function get_year_target($kpi, $term_id) {
         $query = $this->end_of_term_query . $kpi['end_of_term'];
         $rows = $this->dbutil->process_query_assoc($query);
         $eot = $rows[0];
-        $quarter_list = $this->get_quarter_list($this->term_id);
+        $quarter_list = $this->get_quarter_list($term_id);
         $target;
         switch ($eot['id']) {
             case 1:
