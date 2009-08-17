@@ -283,7 +283,7 @@ class Results {
 
     function get_kpi_section($kpi) {
         if ($this->area_id==$kpi['area']|| $this->area_id=='all' || $this->area_id==null) {
-            if ($this->eot==1) {
+            if ($this->eot=='true') {
                 $actual = $this->get_year_actual($kpi, $this->term_id);
                 $target = $this->get_year_target($kpi, $this->term_id);
             } else {
@@ -333,7 +333,7 @@ class Results {
     function get_rate($kpi_list) {
 
         foreach ($kpi_list as $kpi) {
-            if ($this->eot==1) {
+            if ($this->eot=='true') {
                 $actual = $this->get_year_actual($kpi, $this->term_id);
                 $target = $this->get_year_target($kpi, $this->term_id);
             } else {
@@ -438,12 +438,12 @@ class Results {
         echo '<input type="checkbox" name="eot" value="1" ';
         //        echo "onchange=if(this.checked){\"window.location.href='".$this->page."&area_id="
         //            .$this->area_id."&lc_id=".$this->lc_id."&term_id=".$this->term_id.
-        //            "&eot='+this.value\"}";
+        //            "&eot='+this.checked\"}";
         echo "onchange=\"window.location.href='".$this->page."&area_id="
-            .$this->area_id."&lc_id=".$this->lc_id."&term_id=".$this->term_id.
-            "&eot='+this.value\"";
+            .$this->area_id."&lc_id=".$this->lc_id."&kpi_id=".$this->kpi_id."&term_id=".$this->term_id.
+            "&eot='+this.checked\"";
         if( isset($_REQUEST['eot']) ) {
-            if( 1 == $_REQUEST['eot']) {
+            if( 'true' == $_REQUEST['eot']) {
                 $this->eot=$_REQUEST['eot'];
                 echo ' checked';
             }
