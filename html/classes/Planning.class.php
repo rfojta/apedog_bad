@@ -20,6 +20,13 @@ class Planning {
     protected $area_query = 'select * from areas';
     protected $kpi_query = 'select * from kpis where area = ';
 
+    /**
+     *
+     * @param <type> $dbutil
+     * @param <type> $term_id
+     * @param <type> $area_id
+     * @param <type> $user 
+     */
     function __construct( $dbutil, $term_id, $area_id, $user ) {
         $this->dbutil = $dbutil;
         $this->term_id = $term_id;
@@ -32,12 +39,21 @@ class Planning {
 
     }
 
+    /**
+     *
+     * @return <type>
+     */
     function get_area_list() {
         $query = $this->area_query;
 	$rows = $this->dbutil->process_query_assoc($query);
         return $rows;
     }
 
+    /**
+     *
+     * @param <type> $area_id
+     * @return <type> 
+     */
     function get_kpis ($area_id ) {
         $query = $this->kpi_query
             . $this->dbutil->escape($area_id);
@@ -45,6 +61,12 @@ class Planning {
         return $rows;
     }
 
+    /**
+     *
+     * @param <type> $area_id
+     * @param <type> $area_name
+     * @param <type> $area_desc 
+     */
     protected function get_form_content_row( $area_id, $area_name, $area_desc ) {
         echo '<li>';
         echo "\n";
@@ -62,6 +84,9 @@ class Planning {
         echo "\n";
     }
 
+    /**
+     * generates html form content for Use Case Planning
+     */
     function get_form_content() {
         $area_list = $this->get_area_list();
 
@@ -75,12 +100,21 @@ class Planning {
         echo "</ul>\n";
     }
 
+    /**
+     *
+     * @param <type> $tokens
+     * @param <type> $value 
+     */
     protected function set_values($tokens, $value ) {
         $this->target_values->set_actual(
             $tokens[1], $tokens[2],
             $tokens[3], $value);
     }
 
+    /**
+     * parse values and insert/update rows in Tracking table
+     * @param <type> $post HTTP POST request
+     */
     function submit( $post ) {
         foreach( $post as $key => $value ) {
         // $tokens = array();
