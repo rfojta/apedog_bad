@@ -211,7 +211,7 @@ class Results {
         echo '</big>';
         echo '</th>';
         echo '<th colspan="4" align="right">';
-        echo $gom->draw_chart();
+        echo $rate;
         echo '</th>';
         echo '</tr>';
         echo '<tr class="headTableRow">';
@@ -271,7 +271,7 @@ class Results {
         echo '<td>';
         echo '</td>';
         echo '<td class="csfStatus">';
-        echo $this->get_status($rate);
+        echo $rate;
         echo '</td>';
         echo '<td>';
         echo '</td>';
@@ -291,9 +291,9 @@ class Results {
                 $actual = $this->get_actual($this->lc_id, $this->quarter_id, $kpi['id']);
                 $target = $this->get_target($this->lc_id, $this->quarter_id, $kpi['id']);
             }
-            if ($target!=null && $target != 0) {
-                $rate = $actual/$target;
-            }
+            
+            $rate = $this->get_rate(array($kpi));
+            
             $past_values = $this->get_year_ago($kpi);
             $unit=$this->get_kpi_unit($kpi['kpi_unit']);
 
@@ -305,13 +305,31 @@ class Results {
             echo '</small>';
             echo '</td>';
             echo '<td class="currentValue">';
-            echo $actual.' '.$unit['name'];
+            if($unit['spec']=='boolean') {
+                if ($actual == '1') {
+                    echo 'Yes';
+                } else if($actual == '0'){
+                    echo 'No';
+                }
+            } else if($target!=null) {
+                echo $actual.' '.$unit['name'];
+            }
             echo '</td>';
             echo '<td class="goalValue">';
-            echo $target.' '.$unit['name'];
+            if($unit['spec']=='boolean') {
+                if ($target == '1') {
+                    echo 'Yes';
+                } else if($target == '0'){
+                    echo 'No';
+                }
+            } else if($target!=null) {
+                    echo $target.' '.$unit['name'];
+                }
+                
+
             echo '</td>';
             echo '<td class="kpiStatus">';
-            echo $this->get_status($rate);
+            echo $rate;
             echo '</td>';
             echo '<td class="kpiTrend">';
             echo $this->get_trend($actual, $past_values);
@@ -321,7 +339,6 @@ class Results {
     }
 
     function get_status($rate) {
-        if ($rate != null) {
             if ($rate < '0.85') {
                 echo "<img src='images/red_status.png'>";
             } else if ($rate < '1') {
@@ -329,7 +346,7 @@ class Results {
                 } else {
                     echo "<img src='images/green_status.png'>";
                 }
-        }
+        
     }
 
     function get_rate($kpi_list) {
@@ -344,6 +361,14 @@ class Results {
             }
             if ($target!=null && $target != 0) {
                 $rates[]= $actual/$target;
+            } else if ($target==0){
+                if ($actual<0){
+                    $rates[]=0;
+                } else if ($actual==1){
+                    $rates[]=1;
+                } else {
+                    $rates[]=2;
+                }
             }
         }
 
@@ -424,6 +449,8 @@ class Results {
             $rate = $actual/$past;
         } else if ($actual > 0) {
                 $rate = 2;
+            } else if ($actual == 0){
+                $rate = 1;
             } else {
                 $rate = 0;
             }
@@ -532,11 +559,11 @@ class Results {
         return $target;
     }
 
-    function get_help(){
+    function get_help() {
         echo $this->help;
     }
 
-    function get_kpi_unit($unit_id){
+    function get_kpi_unit($unit_id) {
         $query = $this->kpi_unit_query . ' WHERE `id` = '.$unit_id;
         $rows = $this->dbutil->process_query_assoc($query);
         return $rows[0];
