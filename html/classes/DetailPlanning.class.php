@@ -62,7 +62,7 @@ class DetailPlanning {
             . $kpi['name'] . ':</span>';
         echo "</td> \n";
         echo "<td> \n";
-        $unit = $this->get_kpi_unit($kpi_id);
+        $unit = $this->get_kpi_unit_rf($kpi_id);
         if( $unit == 'boolean') {
             $this->get_boolean_input($kpi_id, $value);
         } else {
@@ -80,7 +80,7 @@ class DetailPlanning {
         echo "</li> \n";
     }
     
-    protected function get_kpi_unit( $kpi ) {
+    protected function get_kpi_unit_rf( $kpi ) {
         $query = "select spec 
             from kpi_units ku join kpis k on k.kpi_unit = ku.id
             where k.id = $kpi";
