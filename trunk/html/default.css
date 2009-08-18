@@ -166,21 +166,26 @@ a:hover {
 
 }
 #colOne .content .current{
+        text-align: center;
         background: #4AA02C;
-        color: white
+        color: white;
 }
 #colOne .content .goal{
+        text-align: center;
         background: #151B8D;
-        color: white
+        color: white;
 }
 #colOne .content .status{
         text-align: center;
         background: #8A4117;
-        color: white
+        color: white;
+        width: 1%;
 }
 #colOne .content .trend{
+        text-align: center;
         background: #FDD017;
-        color: white
+        color: white;
+        width: 1%;
 }
 
 #colOne .content .csfTableRow td{

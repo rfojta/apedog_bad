@@ -32,6 +32,7 @@ class Results {
     protected $csf_query = 'select * from csfs where business_perspective ';
     protected $lc_query = 'select * from lcs';
     protected $end_of_term_query = 'select * from end_of_term WHERE `id` = ';
+    protected $kpi_unit_query = 'select * from kpi_units';
 
     function __construct( $dbutil, $term_id, $user, $quarter_in_term, $eot) {
         $this->dbutil = $dbutil;
@@ -203,7 +204,7 @@ class Results {
         }
         $gom = new GoogleOMeter('50x24',$rate,null,null);
         echo '<tr class="bpTableRow">';
-        echo '<th width="99%">';
+        echo '<th width="48%">';
         echo '<big>';
         echo '<span title="' . $bp['description'] . '">'
             . $bp['name']. ':</span>';
@@ -294,6 +295,7 @@ class Results {
                 $rate = $actual/$target;
             }
             $past_values = $this->get_year_ago($kpi);
+            $unit=$this->get_kpi_unit($kpi['kpi_unit']);
 
             echo '<tr class="kpi1TableRow">';
             echo '<td class="kpiName">';
@@ -303,10 +305,10 @@ class Results {
             echo '</small>';
             echo '</td>';
             echo '<td class="currentValue">';
-            echo $actual;
+            echo $actual.' '.$unit['name'];
             echo '</td>';
             echo '<td class="goalValue">';
-            echo $target;
+            echo $target.' '.$unit['name'];
             echo '</td>';
             echo '<td class="kpiStatus">';
             echo $this->get_status($rate);
@@ -532,6 +534,12 @@ class Results {
 
     function get_help(){
         echo $this->help;
+    }
+
+    function get_kpi_unit($unit_id){
+        $query = $this->kpi_unit_query . ' WHERE `id` = '.$unit_id;
+        $rows = $this->dbutil->process_query_assoc($query);
+        return $rows[0];
     }
 }
 ?>

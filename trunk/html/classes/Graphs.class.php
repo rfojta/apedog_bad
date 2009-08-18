@@ -63,7 +63,9 @@ class Graphs extends Results {
         $line_colors=array('4AA02C','151B8D');
         $scale='800x300';
 
-        $chart=$this->draw_chart($kpi, $data, $x_labels, $x2_labels,$this->y_min, $this->y_max, $line_labels, $line_colors, $scale);
+        $unit = $this->get_kpi_unit($kpi['kpi_unit']);
+
+        $chart=$this->draw_chart($kpi, $data, $x_labels, $x2_labels,$this->y_min, $this->y_max, $line_labels, $line_colors, $scale, $unit);
 
     }
 
@@ -127,8 +129,11 @@ class Graphs extends Results {
         return $xlabels;
     }
 
-    function draw_chart($kpi, $data, $x_labels, $x2_labels, $y_min, $y_max, $line_labels, $line_colors, $scale) {
-        echo "<p><b>".$kpi['name'].':</b></p>';
+    function draw_chart($kpi, $data, $x_labels, $x2_labels, $y_min, $y_max, $line_labels, $line_colors, $scale,$unit) {
+        if ($unit['name']!=''){
+            $un="[".$unit['name']."]";
+        }
+        echo "<p><b><span title='".$kpi['description']."'>".$kpi['name'].' '.$un.':</span></b></p>';
         switch ($kpi['graphs']) {
             case 1: {
                     $chart=new LineChart($data, $x_labels, $y_max, $line_labels, $line_colors, $scale);

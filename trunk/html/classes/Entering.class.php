@@ -33,23 +33,25 @@ class Entering extends DetailPlanning {
                 $lc_id, $quarter_id, $kpi_id
             );
         };
+        $unit=$this->get_kpi_unit($kpi['kpi_unit']);
 
         echo "<tr class='kpiRow".$i."'> \n";
-        echo "<td> \n";
+        echo "<td  width='60%'> \n";
         echo '<span title="' . $kpi['description'] . '">'
             . $kpi['name'] . ':</span>';
         echo "</td> \n";
         echo "<td> \n";
-        echo "<input name=\"kpi-$kpi_id\"";
+        echo "<input name=\"kpi-$kpi_id\" style='text-align:right'";
         if ($quarter_id!=null) {
             if ($this->locking->get_count($lc_id, $quarter_id, 'NULL')!=0) {
                 echo ' disabled ';
             }
         }
         echo "value=\"$actual\" />";
+        echo ' '.$unit['name'];
         echo "</td> \n";
-        echo "<td> \n";
-        echo "Goal: ".$target;
+        echo "<td width='15%' align='left' style='background-color: #FFFFFF'> \n";
+        echo "Goal: ".$target.' '.$unit['name'];
         echo "</td> \n";
         echo "</tr> \n";
         echo "</li> \n";
