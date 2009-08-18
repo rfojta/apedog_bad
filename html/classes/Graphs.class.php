@@ -74,8 +74,16 @@ class Graphs extends Results {
         $targets=array();
         if($this->eot!='true') {
             foreach ($list as $quarter) {
-                $actuals[] = $this->get_actual($this->lc_id, $quarter['id'], $kpi['id']);
-                $targets[] = $this->get_target($this->lc_id, $quarter['id'], $kpi['id']);
+                $a=$this->get_actual($this->lc_id, $quarter['id'], $kpi['id']);
+                $t=$this->get_target($this->lc_id, $quarter['id'], $kpi['id']);
+                if ($a==null){
+                    $a=0;
+                }
+                if ($t==null){
+                    $t=0;
+                }
+                $actuals[] = $a;
+                $targets[] = $t;
 
             }
         } else {
@@ -89,9 +97,10 @@ class Graphs extends Results {
         $t_max = max($targets);
         $a_min = min($actuals);
         $t_min = min($targets);
-        if ($a_max>100 && $a_max>$t_max) {
+        
+        if ($a_max>$t_max) {
             $this->y_max=$a_max;
-        } else if ($t_max>100) {
+        } else {
                 $this->y_max = $t_max;
             }
         if ($a_min<0 && $a_min<$t_min) {
@@ -99,8 +108,9 @@ class Graphs extends Results {
         } else if ($t_min<0) {
                 $this->y_min = $t_min;
             }
-        $this->y_max = round(1.1*ceil($this->y_max), -1);
-        $this->y_min = round(1.1*floor($this->y_min), -1);
+
+        $this->y_max = round(1.2*ceil($this->y_max), -1);
+        $this->y_min = round(1.2*floor($this->y_min), -1);
 
         $data=array();
 
@@ -130,17 +140,14 @@ class Graphs extends Results {
     }
 
     function draw_chart($kpi, $data, $x_labels, $x2_labels, $y_min, $y_max, $line_labels, $line_colors, $scale,$unit) {
-        if ($unit['name']!=''){
-            $un="[".$unit['name']."]";
-        }
-        echo "<p><b><span title='".$kpi['description']."'>".$kpi['name'].' '.$un.':</span></b></p>';
+        echo "<p><b><span title='".$kpi['description']."'>".$kpi['name'].':</span></b></p>';
         switch ($kpi['graphs']) {
             case 1: {
-                    $chart=new LineChart($data, $x_labels, $y_max, $line_labels, $line_colors, $scale);
+                    $chart=new LineChart($data, $x_labels, $x2_labels, $y_min, $y_max, $line_labels, $line_colors, $scale, $unit);
                     $chart->draw_chart();
                 };break;
             case 2: {
-                    $chart=new BarChart($data, $x_labels, $x2_labels, $y_min, $y_max, $line_labels, $line_colors, $scale);
+                    $chart=new BarChart($data, $x_labels, $x2_labels, $y_min, $y_max, $line_labels, $line_colors, $scale, $unit);
                     $chart->draw_chart();
 
                 };break;
@@ -163,7 +170,7 @@ class Graphs extends Results {
                             $lab=0;
                         }
                         $percentile=round($percentile);
-                        $label = $line_labels[0].' '.$lab.' ('.$percentile.'%)';
+                        $label = $line_labels[0].' '.$lab.$unit['name'].' ('.$percentile.'%)';
                         $chart = new GoogleOMeter($scale,$percentile, $label, $title);
 
                         $chart->draw_chart();

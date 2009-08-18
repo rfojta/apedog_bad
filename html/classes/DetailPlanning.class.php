@@ -62,8 +62,9 @@ class DetailPlanning {
             . $kpi['name'] . ':</span>';
         echo "</td> \n";
         echo "<td> \n";
-        $unit = $this->get_kpi_unit_rf($kpi_id);
-        if( $unit == 'boolean') {
+        $unit_spec = $this->get_kpi_unit_rf($kpi_id);
+        $unit=$this->get_kpi_unit($kpi['kpi_unit']);
+        if( $unit_spec == 'boolean') {
             $this->get_boolean_input($kpi_id, $value);
         } else {
             echo "<input name=\"kpi-$kpi_id\"";
@@ -93,16 +94,16 @@ class DetailPlanning {
     protected function get_boolean_input( $id, $value ) {
         echo "<select name=\"kpi-$id\" >\n";
         echo "<option value=\"1\" ";
-        if( $value != 0 ) {
+        if( $value == '1' ) {
             echo "selected=\"true\"";
         }
-        echo ">Ano</option>\n";
+        echo ">Yes</option>\n";
         echo "<option value=\"0\"";
-        if( $value == 0 ) {
+        if( $value != '1' ) {
             echo "selected=\"true\"";
         }
-        echo ">Ne</option>\n";
-        echo "</select>\n($value)<br>\n";
+        echo ">No</option>\n";
+        echo "</select>\n<br>\n";
     }
 
     protected function get_area_section( $area_list ) {

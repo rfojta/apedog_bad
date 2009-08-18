@@ -20,6 +20,7 @@ class BarChart {
     private $bar_labels;
     private $bar_colors;
     private $scale;
+    private $unit;
 
     /**
      * Constructor
@@ -28,7 +29,7 @@ class BarChart {
      *
      */
 
-    function __construct($data,$x_labels,$x2_labels, $y_min, $y_max,$bar_labels,$bar_colors,$scale) {
+    function __construct($data,$x_labels,$x2_labels, $y_min, $y_max,$bar_labels,$bar_colors,$scale,$unit) {
 
         $this->data = $data;
         $this->x_labels = $x_labels;
@@ -38,6 +39,7 @@ class BarChart {
         $this->bar_labels= $bar_labels;
         $this->bar_colors = $bar_colors;
         $this->scale = $scale;
+        $this->unit = $unit;
     }
 
     function draw_chart() {
@@ -54,8 +56,9 @@ class BarChart {
         }
         $chls= '';
         $chd = 't:';
+        $i = 0;
         foreach($this->data as $serie) {
-
+            
             if (!empty($serie)) {
                 foreach ($serie as $value) {
                     $chd.= $value/1 . ',';
@@ -63,11 +66,15 @@ class BarChart {
                 $chd = substr($chd, 0, -1);
                 $chd .= '|';
                 $chls .= '6,1,0|';
+                $chm .= 'N*f1*'.$this->unit['name'].',000000,'.$i.',-1,7,1|';
+                $i++;
             }
         }
+
         $chd = substr($chd, 0, -1);
         $chls = substr($chls, 0, -1);
-
+        $chm = substr($chm,0,-1);
+        
         $chco = '';
         foreach($this->bar_colors as $color) {
             if($color!=null) {
@@ -94,7 +101,7 @@ class BarChart {
         }
 
         $chds=$this->y_min.','.$this->y_max;
-        
+
         $keys = array();
         $keys[]='cht';
         $keys[]='chs';
@@ -107,6 +114,7 @@ class BarChart {
         $keys[]='chdl';
         $keys[]='chxr';
         $keys[]='chds';
+        $keys[]='chm';
 
         $values = array();
         $values[] = 'bvg';
@@ -120,6 +128,7 @@ class BarChart {
         $values[] = $chdl;
         $values[] = $chxr;
         $values[] = $chds;
+        $values[] = $chm;
 
         $parameters=array();
         for($i=0;$i<sizeof($values);$i++) {
