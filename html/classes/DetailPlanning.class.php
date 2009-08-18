@@ -24,6 +24,7 @@ class DetailPlanning {
     protected $quarter_query = 'select * from quarters where term = ';
     protected $kpi_query = 'select * from kpis';
     protected $term_query = 'select * from terms';
+    protected $kpi_unit_query = 'select * from kpi_units';
 
     function __construct( $dbutil, $term_id, $current_area, $user, $locking ) {
         $this->dbutil = $dbutil;
@@ -54,18 +55,23 @@ class DetailPlanning {
             $value = $this->target_values
                 ->get_value($lc_id, $quarter_id, $kpi_id);
         }
+
+        $unit=$this->get_kpi_unit($kpi['kpi_unit']);
         
         echo "<tr class='kpiRow".$i."'> \n";
-        echo "<td> \n";
+        echo "<td width='99%'> \n";
         echo '<span title="' . $kpi['description'] . '">'
             . $kpi['name'] . ':</span>';
         echo "</td> \n";
         echo "<td> \n";
-        echo "<input name=\"kpi-$kpi_id\"";
+        echo "<input name=\"kpi-$kpi_id\" style='text-align:right'";
         if ($this->locking->get_count($this->lc_id, 'NULL', $this->term_id)) {
             echo ' disabled ';
         }
         echo "value=\"$value\" />";
+        echo "<td style='background-color: #FFFFFF'>";
+        echo $unit['name'];
+        echo "</td>";
         echo "</td> \n";
         echo "</tr> \n";
         echo "</li> \n";
@@ -248,6 +254,12 @@ class DetailPlanning {
         if ($this->locking->get_count($this->lc_id, 'NULL', $this->term_id)) {
             echo '<p><b>Your planning for this period has been locked by MC.</b></p>';
         }
+    }
+
+    function get_kpi_unit($unit_id){
+        $query = $this->kpi_unit_query . ' WHERE `id` = '.$unit_id;
+        $rows = $this->dbutil->process_query_assoc($query);
+        return $rows[0];
     }
 }
 
