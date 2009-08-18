@@ -108,14 +108,20 @@ class DB_Util {
      * @param <type> $item
      * @return <type> 
      */
-    function escape($item, $type) {
+    function escape($item, $type = null) {
+        if( $type == null ) {
+            return mysql_real_escape_string($item, $this->dbres);
+        }
         error_log("escape('$item', '$type')");
         $escaped = '';
         if( strtolower($type) == 'double') {
             $escaped = str_replace(',','.', $item);
         }
-        elseif( substr(strtolower($type), 1, 6) == 'varchar' ) {
+        elseif( substr(strtolower($type), 0, 7) == 'varchar' ) {
             $escaped = mysql_real_escape_string($item, $this->dbres);
+        }
+        else {
+            $escaped = $item;
         }
         return $escaped;
     }
