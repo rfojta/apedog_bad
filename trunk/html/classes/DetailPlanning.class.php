@@ -56,25 +56,53 @@ class DetailPlanning {
                 ->get_value($lc_id, $quarter_id, $kpi_id);
         }
 
-        $unit=$this->get_kpi_unit($kpi['kpi_unit']);
-        
         echo "<tr class='kpiRow".$i."'> \n";
         echo "<td width='99%'> \n";
         echo '<span title="' . $kpi['description'] . '">'
             . $kpi['name'] . ':</span>';
         echo "</td> \n";
         echo "<td> \n";
-        echo "<input name=\"kpi-$kpi_id\" style='text-align:right'";
-        if ($this->locking->get_count($this->lc_id, 'NULL', $this->term_id)) {
-            echo ' disabled ';
+        $unit = $this->get_kpi_unit($kpi_id);
+        if( $unit == 'boolean') {
+            $this->get_boolean_input($kpi_id, $value);
+        } else {
+            echo "<input name=\"kpi-$kpi_id\"";
+            if ($this->locking->get_count($this->lc_id, 'NULL', $this->term_id)) {
+                echo ' disabled ';
+            }
+            echo "value=\"$value\" />";
         }
-        echo "value=\"$value\" />";
         echo "<td style='background-color: #FFFFFF'>";
         echo $unit['name'];
         echo "</td>";
         echo "</td> \n";
         echo "</tr> \n";
         echo "</li> \n";
+    }
+    
+    protected function get_kpi_unit( $kpi ) {
+        $query = "select spec 
+            from kpi_units ku join kpis k on k.kpi_unit = ku.id
+            where k.id = $kpi";
+        
+        $rows = $this->dbutil->process_query_assoc( $query );
+
+        return $rows[0]['spec'];
+    }
+
+    protected function get_boolean_input( $id, $value ) {
+        echo "<select name=\"kpi-$id\" >\n";
+        echo "<option value=\"1\" ";
+        if( $value != 0 ) {
+            echo "selected=\"true\"";
+        }
+        echo ">Ano</option>\n";
+        echo "<option value=\"0\"";
+        if( $value == 0 ) {
+            echo "selected=\"true\"";
+        }
+        echo ">Ne</option>\n";
+        echo "</select>\n($value)<br>\n";
     }
 
     protected function get_area_section( $area_list ) {
@@ -131,9 +159,9 @@ class DetailPlanning {
         foreach( $kpi_list as $kpi ) {
             $this->get_kpi_input( $kpi, $i);
             $i++;
-            if($i>5){
-            $i = 0;
-        }
+            if($i>5) {
+                $i = 0;
+            }
         }
         echo "</table>";
         echo "</p>";
@@ -250,7 +278,7 @@ class DetailPlanning {
         echo '</p>';
     }
 
-    function get_locked_echo(){
+    function get_locked_echo() {
         if ($this->locking->get_count($this->lc_id, 'NULL', $this->term_id)) {
             echo '<p><b>Your planning for this period has been locked by MC.</b></p>';
         }
