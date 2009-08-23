@@ -43,9 +43,13 @@ class Admin {
         $business_perspectiveModel = new Business_PerspectiveModel($this->dbutil);
         $business_perspectiveController = new Business_PerspectiveController($business_perspectiveModel,$model);
         $csf = new CsfController($model, $business_perspectiveController, $kpi_model);
-        
+
+        // multi link
+        $lckpi = new LcKpiModel($this->dbutil);
+        $lc_model = new LcModel($this->dbutil);
+
         $this->controller = new KpiController($kpi_model, $area, $csf,
-            $this->kpi_unit_controller());
+            $this->kpi_unit_controller(), $lckpi, $lc_model);
 
         $this->page_title = 'Apedog: KPI Configuration';
         $this->page_help = '
@@ -144,6 +148,13 @@ class Admin {
         $model = new KpiUnitModel($this->dbutil);
         $kpi_model = new KpiModel($this->dbutil);
         return new KpiUnitController($model, $kpi_model);
+    }
+
+    private function get_bp_controller() {
+        $model = new Business_PerspectiveModel($this->dbutil);
+        $csf_model = new CsfModel($this->dbutil);
+        $controller = new Business_PerspectiveController($model, $csf_model);
+        return $controller;
     }
 
     function kpi_unit() {

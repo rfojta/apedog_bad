@@ -111,9 +111,7 @@ class ViewController {
 
         $this->get_delete_checkbox($name);
 
-        if( $id != 'new' && $this->controller->has_child() )  {
-            $this->controller->child_list($id);
-        }
+
 
     }
 
@@ -192,6 +190,15 @@ class ViewController {
         if(isset($id) && $delete!='yes' ) {
             $this->edit_item($id);
         }
+
+        if( $id != 'new' && $this->controller->has_child() )  {
+            $this->controller->child_list($id);
+        }
+
+        if( $id != 'new' && $this->controller->has_multi() ) {
+            $this->controller->multi_list($id);
+        }
+
         echo "</td></tr></table>";
         $this->get_submit_button();
     }

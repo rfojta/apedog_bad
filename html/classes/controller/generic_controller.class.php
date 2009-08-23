@@ -24,6 +24,7 @@ class GenericController {
 
     // Developer can define child model
     protected $child_conf;
+    protected $multi_conf; // other model with name
 
     // This entinty name
     protected $name;
@@ -42,8 +43,9 @@ class GenericController {
         $this->model = $model;
 
         $this->parent_conf = $links['parent'];
-        $this->parent2_conf = $links['parent2'];
         $this->child_conf = $links['child'];
+        $this->multi_conf = $links['multi'];
+
         $this->name = $links['name'];
 
         $this->view = new ViewController($this->name, $this, null);
@@ -51,13 +53,13 @@ class GenericController {
 
         // detect one or more parent
         if( isset( $this->parent_conf['name']) ) {
-            // one parent
+        // one parent
             $this->parent_view =
                 new ParentView($this->name,
                 $this->parent_conf, $this);
         }
         elseif( is_array( $this->parent_conf ) ) {
-            // more parents
+        // more parents
             $this->parent_view = array();
             $parent_conf = $this->parent_conf;
             // new style to set more than one parent
@@ -66,11 +68,16 @@ class GenericController {
                     $this->name, $p_conf, $this);
             }
         }
+
+        $this->multi_view = new multi_link_view(
+            $this->multi_conf['link_model'],
+            $this->multi_conf['models']
+        );
     }
 
     /**
      * model getter
-     * @return <type> 
+     * @return <type>
      */
     public function get_model() {
         return $this->model;
@@ -78,7 +85,7 @@ class GenericController {
 
     /**
      * view setter
-     * @param <type> $view 
+     * @param <type> $view
      */
     public function set_view( $view ) {
         $this->view = $view;
@@ -116,6 +123,9 @@ class GenericController {
         elseif( $id == 'new' ) {
             $this->insert_cache[$field] = $value;
         }
+        elseif( $this->is_multi_field($field) ) {
+
+        }
         elseif( $this->model->update($field, $value, $id) ) {
             echo "... updated $field!<br>";
         }
@@ -143,6 +153,7 @@ class GenericController {
 
         foreach($post as $key => $value) {
         // $tokens = array();
+        // parsing id, field
             if( preg_match('/^(\w+)-(\w+)$/', $key, $tokens) ) {
                 $this->set_values($tokens, $value);
             }
@@ -190,7 +201,7 @@ class GenericController {
 
     /**
      * detect if another table references this model
-     * @return <type> 
+     * @return <type>
      */
     public function has_child() {
         return isset( $this->child_conf);
@@ -198,7 +209,7 @@ class GenericController {
 
     /**
      * generate html list using child_view
-     * @param <type> $id 
+     * @param <type> $id
      */
     public function child_list($id) {
         $this->child_view->child_list($id);
@@ -247,7 +258,7 @@ class GenericController {
      * generates html for specified $key, using parent_view
      * @param <type> $key
      * @param <type> $id
-     * @param <type> $selected 
+     * @param <type> $selected
      */
     public function parent_list($key, $id, $selected) {
         if( is_array( $this->parent_view )) {
@@ -259,10 +270,23 @@ class GenericController {
 
     /**
      * wrapper for view get_label function for specified row
-     * @param <type> $id 
+     * @param <type> $id
      */
     public function get_label($id) {
         $this->view->get_label($id );
+    }
+
+    /**
+     * detects whether there is table m to n with other object
+     * @param <type> $name
+     * @return <type>
+     */
+    public function has_multi() {
+        return isset( $this->multi_conf);
+    }
+
+    public function multi_list($id) {
+        $this->multi_view->get_select_multi_for($id, $this->name, 0);
     }
 
 
