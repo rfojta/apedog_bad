@@ -42,20 +42,39 @@ class multi_link_view {
      */
     public function get_select_multi_for( $from_key, $from_name, $default ) {
 
-        $rows = $this->link_model->find_by( $from_name, $from_key );
-        $model = $this->models[$from_name];
+        // load all rows from link table for from_key
+        $selected_rows = $this->link_model->find_by( $from_name, $from_key );
+        $selected_hash = array();
 
         $other_name = $this->get_other_name( $from_name );
+        foreach( $selected_rows as $row ) {
+           $selected_hash[$row[$other_name]] = 1; // mark selected
+        }
+
+        $model = $this->models[$from_name];
+
         $other_model = $this->models[$other_name];
 
+        $rows = $other_model->find_all();
 
-        echo "<select multi name=\"$from_name\">";
+        echo "<br>$other_name: ";
+        echo "<select size=" . count($rows)
+            . " multiple name=\"$from_key-$other_name\">";
         foreach( $rows as $row ) {
-            $target_row = $other_model->find( $row[$other_name] );
+//            echo "<pre>";
+//            print_r($row);
+//            echo "</pre>";
             echo '<option value="';
-            echo $row[$other_name];
-            echo '">';
-            echo $model->get_label( $target_row );
+            echo $row['id'];
+            echo '"';
+            // detect selected rows
+            if( key_exists($row['id'], $selected_hash)) {
+                echo 'selected="1"';
+            }
+            
+            echo '>';
+            echo $other_model->get_row_label($row);
+            // echo $model->get_label( $target_row );
             echo "</option>";
         }
         echo "</select>";

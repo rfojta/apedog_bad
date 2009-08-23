@@ -12,7 +12,7 @@
 class KpiController extends GenericController {
 //put your code here
 
-    function  __construct($model, $area, $csf, $kpi_unit) {
+    function  __construct($model, $area, $csf, $kpi_unit, $lckpi, $lc_model) {
         parent::__construct($model, array(
             'name' => 'kpi',
             'parent' => array(
@@ -32,6 +32,14 @@ class KpiController extends GenericController {
                     'name' => 'kpi_unit',
                     'description' => 'units',
                     'link' => 'admin.php?what=kpi_unit'
+                )
+            ),
+            'multi' => array(
+                'link_model' => $lckpi,
+                'target' => 'lc',
+                'models' => array(
+                    'kpi' => $model,
+                    'lc' => $lc_model
                 )
             )
         ));
