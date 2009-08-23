@@ -74,8 +74,10 @@ class Graphs extends Results {
         $targets=array();
         if($this->eot!='true') {
             foreach ($list as $quarter) {
-                $a=$this->get_actual($this->lc_id, $quarter['id'], $kpi['id']);
-                $t=$this->get_target($this->lc_id, $quarter['id'], $kpi['id']);
+
+                $a=$this->get_actual($this->lc_id, $quarter['id'], $this->term['id'], $kpi);
+                $t=$this->get_target($this->lc_id, $quarter['id'], $this->term['id'], $kpi);
+                
                 if ($a==null){
                     $a=0;
                 }
@@ -88,8 +90,8 @@ class Graphs extends Results {
             }
         } else {
             foreach($list as $term) {
-                $actuals[] = $this->get_year_actual($kpi, $term['id']);
-                $targets[] = $this->get_year_target($kpi, $term['id']);
+                $actuals[] = $this->get_actual($this->lc_id, '0', $term['id'], $kpi);
+                $targets[] = $this->get_target($this->lc_id, '0', $term['id'], $kpi);
             }
         }
 
@@ -109,8 +111,8 @@ class Graphs extends Results {
                 $this->y_min = $t_min;
             }
 
-        $this->y_max = round(1.2*ceil($this->y_max), -1);
-        $this->y_min = round(1.2*floor($this->y_min), -1);
+        $this->y_max = round(1.5*ceil($this->y_max), -1);
+        $this->y_min = round(1.5*floor($this->y_min), -1);
 
         $data=array();
 

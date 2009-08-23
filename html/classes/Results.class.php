@@ -124,7 +124,7 @@ class Results {
 
     function get_quarter_list($term_id) {
         if ($term_id==null) {
-            $query = $this->quarter_query . ' ORDER BY `quarter_in_term`';
+            $query = $this->quarter_query . ' ORDER BY `id`';
         } else {
             $query = $this->quarter_query . ' where term = '.$term_id . ' ORDER BY `quarter_in_term`';
         }
