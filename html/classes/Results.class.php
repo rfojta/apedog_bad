@@ -31,7 +31,7 @@ class Results {
     protected $business_perspective_query = 'select * from business_perspectives';
     protected $csf_query = 'select * from csfs where business_perspective ';
     protected $lc_query = 'select * from lcs';
-    protected $end_of_term_query = 'select * from end_of_term WHERE `id` = ';
+    protected $end_of_term_query = 'select * from logic WHERE `id` = ';
     protected $kpi_unit_query = 'select * from kpi_units';
 
     function __construct( $dbutil, $term_id, $user, $quarter_in_term, $eot) {
@@ -124,9 +124,9 @@ class Results {
 
     function get_quarter_list($term_id) {
         if ($term_id==null) {
-            $query = $this->quarter_query . ' ORDER BY `id`';
+            $query = $this->quarter_query . ' ORDER BY `quarter_in_term`';
         } else {
-            $query = $this->quarter_query . ' where term = '.$term_id . ' ORDER BY `id`';
+            $query = $this->quarter_query . ' where term = '.$term_id . ' ORDER BY `quarter_in_term`';
         }
         $rows = $this->dbutil->process_query_assoc($query);
         //        $this->quarter_id=$rows[0]['id'];
@@ -288,12 +288,12 @@ class Results {
                 $actual = $this->get_year_actual($kpi, $this->term_id);
                 $target = $this->get_year_target($kpi, $this->term_id);
             } else {
-                $actual = $this->get_actual($this->lc_id, $this->quarter_id, $kpi['id']);
-                $target = $this->get_target($this->lc_id, $this->quarter_id, $kpi['id']);
+                $actual = $this->get_actual($this->lc_id, $this->quarter_id, $kpi);
+                $target = $this->get_target($this->lc_id, $this->quarter_id, $kpi);
             }
-            
+
             $rate = $this->get_rate(array($kpi));
-            
+
             $past_values = $this->get_year_ago($kpi);
             $unit=$this->get_kpi_unit($kpi['kpi_unit']);
 
@@ -308,24 +308,24 @@ class Results {
             if($unit['spec']=='boolean') {
                 if ($actual == '1') {
                     echo 'Yes';
-                } else if($actual == '0'){
-                    echo 'No';
+                } else if($actual == '0') {
+                        echo 'No';
+                    }
+            } else if($actual!=null) {
+                    echo $actual.' '.$unit['name'];
                 }
-            } else if($target!=null) {
-                echo $actual.' '.$unit['name'];
-            }
             echo '</td>';
             echo '<td class="goalValue">';
             if($unit['spec']=='boolean') {
                 if ($target == '1') {
                     echo 'Yes';
-                } else if($target == '0'){
-                    echo 'No';
-                }
+                } else if($target == '0') {
+                        echo 'No';
+                    }
             } else if($target!=null) {
                     echo $target.' '.$unit['name'];
                 }
-                
+
 
             echo '</td>';
             echo '<td class="kpiStatus">';
@@ -339,14 +339,14 @@ class Results {
     }
 
     function get_status($rate) {
-            if ($rate < '0.85') {
-                echo "<img src='images/red_status.png'>";
-            } else if ($rate < '1') {
-                    echo "<img src='images/orange_status.png'>";
-                } else {
-                    echo "<img src='images/green_status.png'>";
-                }
-        
+        if ($rate < '0.85') {
+            echo "<img src='images/red_status.png'>";
+        } else if ($rate < '1') {
+                echo "<img src='images/orange_status.png'>";
+            } else {
+                echo "<img src='images/green_status.png'>";
+            }
+
     }
 
     function get_rate($kpi_list) {
@@ -356,20 +356,20 @@ class Results {
                 $actual = $this->get_year_actual($kpi, $this->term_id);
                 $target = $this->get_year_target($kpi, $this->term_id);
             } else {
-                $actual = $this->get_actual($this->lc_id, $this->quarter_id, $kpi['id']);
-                $target = $this->get_target($this->lc_id, $this->quarter_id, $kpi['id']);
+                $actual = $this->get_actual($this->lc_id, $this->quarter_id, $kpi);
+                $target = $this->get_target($this->lc_id, $this->quarter_id, $kpi);
             }
             if ($target!=null && $target != 0) {
                 $rates[]= $actual/$target;
-            } else if ($target==0){
-                if ($actual<0){
-                    $rates[]=0;
-                } else if ($actual==1){
-                    $rates[]=1;
-                } else {
-                    $rates[]=2;
+            } else if ($target==0) {
+                    if ($actual<0) {
+                        $rates[]=0;
+                    } else if ($actual==1) {
+                            $rates[]=1;
+                        } else {
+                            $rates[]=2;
+                        }
                 }
-            }
         }
 
         if ($rates!=null) {
@@ -378,20 +378,44 @@ class Results {
         return $rate;
     }
 
-    function get_actual($lc_id, $quarter_id, $kpi_id) {
-        if($quarter_id!=null && $kpi_id!=null) {
-            $actual=$this->actual_values->get_value(
-                $lc_id, $quarter_id, $kpi_id
-            );
+    function get_actual($lc_id, $quarter_id, $kpi) {
+        if($quarter_id!=null && $kpi!=null) {
+            if ($lc_id=='all' && $this->user='MC') {
+                $actuals=array();
+                $lc_list=$this->get_lc_list();
+                foreach ($lc_list as $lc) {
+                    $actuals[]=$this->actual_values->get_value(
+                        $lc['id'], $quarter_id, $kpi['id']);
+                }
+                $sumLogic=new SumLogic($actuals, $kpi['all_lcs']);
+                $actual = $sumLogic->get_sum();
+
+            } else {
+                $actual=$this->actual_values->get_value(
+                    $lc_id, $quarter_id, $kpi['id']
+                );
+            }
         }
         return $actual;
     }
 
-    function get_target($lc_id, $quarter_id, $kpi_id) {
-        if($quarter_id!=null && $kpi_id!=null) {
-            $target=$this->target_values->get_value(
-                $lc_id, $quarter_id, $kpi_id
-            );
+    function get_target($lc_id, $quarter_id, $kpi) {
+        if($quarter_id!=null && $kpi!=null) {
+            if ($lc_id=='all' && $this->user='MC') {
+                $targets=array();
+                $lc_list=$this->get_lc_list();
+                foreach ($lc_list as $lc) {
+                    $targets[]=$this->target_values->get_value(
+                        $lc['id'], $quarter_id, $kpi['id']);
+                }
+                $sumLogic=new SumLogic($targets, $kpi['all_lcs']);
+                $target=$sumLogic->get_sum();
+
+            } else {  
+                $target=$this->target_values->get_value(
+                    $lc_id, $quarter_id, $kpi['id']
+                );
+            }
         }
         return $target;
     }
@@ -409,6 +433,22 @@ class Results {
             .$this->area_id."&kpi_id=".$this->kpi_id."&term_id=".$this->term_id.
             "&quarter_in_term=".$this->quarter_in_term.
             "&eot=".$this->eot."&lc_id='+this.value\">\n";
+
+            echo "<option value='all'";
+            if( isset($_REQUEST['lc_id']) ) {
+                if( 'all' == $_REQUEST['lc_id']) {
+                    $this->lc_id='all';
+                    echo " selected ";
+                }
+            } else if ('all'==$this->lc_id) {
+                    echo " selected ";
+                }
+
+            echo ">";
+            echo 'All';
+            echo "</option>\n";
+
+
         foreach( $lc_list as $lc ) {
             echo "<option value=\"".$lc['id']."\"";
             if( isset($_REQUEST['lc_id']) ) {
@@ -440,7 +480,7 @@ class Results {
         $rows = $this->dbutil->process_query_assoc($query);
         $quarter_term_ago = $rows[0];
 
-        $past_actual = $this->get_actual($this->lc_id, $quarter_term_ago['id'], $kpi['id']);
+        $past_actual = $this->get_actual($this->lc_id, $quarter_term_ago['id'], $kpi);
         return $past_actual;
     }
 
@@ -449,11 +489,11 @@ class Results {
             $rate = $actual/$past;
         } else if ($actual > 0) {
                 $rate = 2;
-            } else if ($actual == 0){
-                $rate = 1;
-            } else {
-                $rate = 0;
-            }
+            } else if ($actual == 0) {
+                    $rate = 1;
+                } else {
+                    $rate = 0;
+                }
         if ($rate<0.9 && $actual!=null) {
             echo '<img src="images/red_trend.png">';
         } else if ($rate<1.1 && $actual!=null) {
@@ -486,38 +526,15 @@ class Results {
         $rows = $this->dbutil->process_query_assoc($query);
         $eot = $rows[0];
         $quarter_list = $this->get_quarter_list($term_id);
-        $actual=0;
-        switch ($eot['id']) {
-            case 1:
-                foreach ($quarter_list as $quarter) {
-                    $actual+=$this->get_actual($this->lc_id, $quarter['id'], $kpi['id']);
-                };break;
-            case 2: {
-                    $i=0;
-                    foreach ($quarter_list as $quarter) {
-                        $actual+=$this->get_actual($this->lc_id, $quarter['id'], $kpi['id']);
-                        $i++;
-                    };
-
-                    if($i!=0) {
-                        $actual= $actual/$i;
-                    };
-                };break;
-            case 3: {
-                    $query = $this->quarter_query . ' WHERE `term` = '.$term_id.' and `quarter_in_term` = 4';
-                    $rows = $this->dbutil->process_query_assoc($query);
-                    $quarter = $rows[0];
-                    $actual=$this->get_actual($this->lc_id, $quarter['id'], $kpi['id']);
-                };break;
-
-            case 4:
-                foreach ($quarter_list as $quarter) {
-                    $act = $this->get_actual($this->lc_id, $quarter['id'], $kpi['id']);
-                    if ($act ==1) {
-                        $actual=1;
-                    }
-                };break;
+        $actuals=array();
+        $actual;
+        foreach ($quarter_list as $quarter){
+            $actuals[]=$this->get_actual($this->lc_id, $quarter['id'], $kpi);
         }
+        $sumLogic=new SumLogic($actuals, $eot['id']);
+        $actual=$sumLogic->get_sum();
+        
+        
         return $actual;
     }
 
@@ -526,36 +543,14 @@ class Results {
         $rows = $this->dbutil->process_query_assoc($query);
         $eot = $rows[0];
         $quarter_list = $this->get_quarter_list($term_id);
+        $targets=array();
         $target;
-        switch ($eot['id']) {
-            case 1:
-                foreach ($quarter_list as $quarter) {
-                    $target+=$this->get_target($this->lc_id, $quarter['id'], $kpi['id']);
-                };break;
-            case 2: {
-                    $i=0;
-                    foreach ($quarter_list as $quarter) {
-                        $target+=$this->get_target($this->lc_id, $quarter['id'], $kpi['id']);
-                        $i++;
-                    };
-                    if($i!=0) {
-                        $target= $target/$i;
-                    };
-                };break;
-            case 3: {
-                    $query = $this->quarter_query . ' WHERE `term` = '.$term_id.' and `quarter_in_term` = 4';
-                    $rows = $this->dbutil->process_query_assoc($query);
-                    $quarter = $rows[0];
-                    $target=$this->get_target($this->lc_id, $quarter['id'], $kpi['id']);
-                };break;
-            case 4:
-                foreach ($quarter_list as $quarter) {
-                    $act = $this->get_target($this->lc_id, $quarter['id'], $kpi['id']);
-                    if ($act ==1) {
-                        $target=1;
-                    }
-                };break;
+        foreach ($quarter_list as $quarter){
+            $targets[]=$this->get_target($this->lc_id, $quarter['id'], $kpi);
         }
+        $sumLogic=new SumLogic($targets, $eot['id']);
+        $target=$sumLogic->get_sum();
+
         return $target;
     }
 

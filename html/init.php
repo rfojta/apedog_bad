@@ -21,7 +21,7 @@ include('classes/db_util.class.php');
 include('classes/Reminder.class.php');
 include('classes/LcKPIs.class.php');
 include('classes/Graphs.class.php');
-
+include('classes/SumLogic.class.php');
 
 include_once('classes/model/generic_model.class.php');
 include_once('classes/controller/generic_controller.class.php');
