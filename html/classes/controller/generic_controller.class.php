@@ -125,6 +125,24 @@ class GenericController {
         }
         elseif( $this->is_multi_field($field) ) {
 
+        // pre init
+            $link_model = $this->multi_conf['link_model'];
+            $target = $this->multi_conf['target'];
+
+
+            // create new
+            if( is_array($value) ) {
+                foreach( $value as $v ) {
+                    $columns = array( $this->name, $target );
+                    $values = array( $id, $v );
+                    $link_model->insert($columns, $values);
+                }
+            }
+            else {
+                $columns = array( $this->name, $target );
+                $values = array( $id, $value );
+                $link_model->insert($columns, $values);
+            }
         }
         elseif( $this->model->update($field, $value, $id) ) {
             echo "... updated $field!<br>";
@@ -132,6 +150,14 @@ class GenericController {
         else {
         // field is not editable
         }
+    }
+
+    protected function delete_multi($id) {
+        $link_model = $this->multi_conf['link_model'];
+        $target = $this->multi_conf['target'];
+
+        // delete old links
+        $link_model->delete_by( $this->name, $id );
     }
 
     /**
@@ -150,6 +176,9 @@ class GenericController {
     public function submit($post) {
 
         $this->clear_cache();
+        if( $this->has_multi() ) {
+            $this->delete_multi($post['id']);
+        }
 
         foreach($post as $key => $value) {
         // $tokens = array();
@@ -285,8 +314,26 @@ class GenericController {
         return isset( $this->multi_conf);
     }
 
+    /**
+     * Show <select multiple> for related db table
+     * @param <type> $id
+     */
     public function multi_list($id) {
-        $this->multi_view->get_select_multi_for($id, $this->name, 0);
+        if( is_numeric( $id ) ) {
+            $this->multi_view->get_select_multi_for($id, $this->name, 0);
+        }
+    }
+
+    /**
+     * check if specified field is related in multi_link table
+     * @param <type> $field
+     * @return <boolean>
+     */
+    protected function is_multi_field( $field ) {
+        if( $this->has_multi() ) {
+            return $this->multi_conf['target'] == $field;
+        }
+        return false;
     }
 
 
