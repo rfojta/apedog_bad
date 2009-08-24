@@ -59,7 +59,7 @@ class multi_link_view {
 
         echo "<br>$other_name: ";
         echo "<select size=" . count($rows)
-            . " multiple name=\"$from_key-$other_name\">";
+            . " multiple=\"1\" name=\"$from_key-$other_name"."[]\">";
         foreach( $rows as $row ) {
 //            echo "<pre>";
 //            print_r($row);

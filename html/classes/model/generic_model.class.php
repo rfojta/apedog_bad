@@ -120,9 +120,9 @@ class GenericModel {
         $cs = join(', ', $columns);
         $vs = "'" . join("', '", $values ) . "'";
         $query = $this->parse_insert_query($pre_query, array($cs, $vs));
-        echo "<pre>";
-        echo $query;
-        echo "</pre>";
+//        echo "<pre>";
+//        echo $query;
+//        echo "</pre>";
         $this->dbutil->do_query($query);
     }
 
