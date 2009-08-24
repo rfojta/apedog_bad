@@ -129,6 +129,7 @@ class GenericController {
             $link_model = $this->multi_conf['link_model'];
             $target = $this->multi_conf['target'];
 
+            $this->delete_multi($id);
 
             // create new
             if( is_array($value) ) {
@@ -175,14 +176,18 @@ class GenericController {
      */
     public function submit($post) {
 
+//        echo "<pre>";
+//        print_r ( $post );
+//        echo "</pre>";
+
         $this->clear_cache();
         if( $this->has_multi() ) {
-            $this->delete_multi($post['id']);
+
         }
 
         foreach($post as $key => $value) {
         // $tokens = array();
-        // parsing id, field
+        // parsing id-field
             if( preg_match('/^(\w+)-(\w+)$/', $key, $tokens) ) {
                 $this->set_values($tokens, $value);
             }
