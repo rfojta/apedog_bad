@@ -120,6 +120,9 @@ class GenericModel {
         $cs = join(', ', $columns);
         $vs = "'" . join("', '", $values ) . "'";
         $query = $this->parse_insert_query($pre_query, array($cs, $vs));
+        echo "<pre>";
+        echo $query;
+        echo "</pre>";
         $this->dbutil->do_query($query);
     }
 
@@ -225,5 +228,15 @@ class GenericModel {
         $this->dbutil->do_query($query);
     }
 
+    /**
+     * delete all rows with specifield $field = $value
+     * @param <type> $field
+     * @param <type> $value 
+     */
+    public function delete_by($field, $value) {
+        $pre_query = $this->delete_query . " where $field = " . $value;
+        $query = $this->parse_table_name($pre_query);
+        $this->dbutil->do_query($query);
+    }
 }
 ?>
