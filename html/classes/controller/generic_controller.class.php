@@ -153,6 +153,10 @@ class GenericController {
         }
     }
 
+    /**
+     *
+     * @param <type> $id
+     */
     protected function delete_multi($id) {
         $link_model = $this->multi_conf['link_model'];
         $target = $this->multi_conf['target'];
