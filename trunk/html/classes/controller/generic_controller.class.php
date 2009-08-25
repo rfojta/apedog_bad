@@ -250,7 +250,9 @@ class GenericController {
      * @param <type> $id
      */
     public function child_list($id) {
-        $this->child_view->child_list($id);
+        if( is_numeric($id)) {
+            $this->child_view->child_list($id);
+        }
     }
 
 
