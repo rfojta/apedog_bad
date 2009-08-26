@@ -188,7 +188,7 @@ class GenericController {
      * display html input with loaded value
      * @param $id of deleted item
      */
-    protected function delete_item($id) {
+    public function delete_item($id) {
         $this->model->delete_row($id);
     }
 

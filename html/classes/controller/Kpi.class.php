@@ -57,8 +57,15 @@ class KpiController extends GenericController {
         );
 
         $this->add_parent('all_lcs', $conf);
-        $conf['name'] = 'end_of_term';
         $this->add_parent('end_of_term', $conf);
+
+        $graph_model = new GraphModel($dbutil);
+        $graph_controller = new GraphController($graph_model);
+        $graph_conf = array(
+            'controller' => $graph_controller,
+            'name' => 'graphs'
+        );
+        $this->add_parent('graphs', $graph_conf);
 
     }
 
