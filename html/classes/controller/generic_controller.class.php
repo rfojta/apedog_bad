@@ -75,6 +75,25 @@ class GenericController {
         );
     }
 
+    public function add_parent( $name, $p_conf ) {
+        // should be the same name as indexed by
+        $p_conf['name'] = $name;
+        if( is_array($this->parent_view) ) {
+            $this->parent_view[$name] = new ParentView(
+                    $this->name, $p_conf, $this);
+            $this->parent_conf[$name] = $p_conf;
+        } else {
+            $tmp_name = $this->parent_view->get_name();
+            $this->parent_view = array(
+                $tmp_name => $this->parent_view
+            );
+            $this->parent_conf = array(
+                $tmp_name => $this->parent_conf
+            );
+            $this->add_parent($name, $p_conf); // should not cycle
+        }
+    }
+
     /**
      * model getter
      * @return <type>
