@@ -109,7 +109,7 @@ class ViewController {
             $this->edit_item_row($id, $key, $value);
         }
 
-        $this->get_delete_checkbox($name);
+    
 
 
 
@@ -199,16 +199,10 @@ class ViewController {
             $this->controller->multi_list($id);
         }
 
+        $this->get_delete_checkbox($name);
+
         echo "</td></tr></table>";
         $this->get_submit_button();
-    }
-
-    /**
-     * Handles page form submit
-     * @param <type> $post HTTP POST data
-     */
-    public function submit($post) {
-	    $this->controller->submit($post);
     }
 
     /**

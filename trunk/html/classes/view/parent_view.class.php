@@ -27,6 +27,14 @@ class ParentView {
         $this->controller = $controller;
     }
 
+    /**
+     * name getter
+     * @return <type> name
+     */
+    public function get_name() {
+        return $this->name;
+    }
+
 
       /**
      * View<br>
@@ -52,8 +60,9 @@ class ParentView {
         if( $selected > 0 ) {
             $link = $this->parent_conf['link'];
             echo "(<a href=\"$link&id=$selected\">"
-                . $p_ctrl->get_label($selected) ."</a>)<br>";
+                . $p_ctrl->get_label($selected) ."</a>)";
         }
+        echo "<br>";
     }
 }
 ?>

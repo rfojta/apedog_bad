@@ -13,6 +13,9 @@ class KpiController extends GenericController {
 //put your code here
 
     function  __construct($model, $area, $csf, $kpi_unit, $lckpi, $lc_model) {
+
+        // fast coded parents for eot and graphs
+
         parent::__construct($model, array(
             'name' => 'kpi',
             'parent' => array(
@@ -43,6 +46,20 @@ class KpiController extends GenericController {
                 )
             )
         ));
+
+        $dbutil = $model->get_dbutil();
+        $logic_model = new LogicModel($dbutil);
+        $logic_ctrl = new LogicController($logic_model);
+        $conf = array(
+                'controller' => $logic_ctrl,
+                'link' => 'admin.php?what=logic',
+                'name' => 'all_lcs'
+        );
+
+        $this->add_parent('all_lcs', $conf);
+        $conf['name'] = 'end_of_term';
+        $this->add_parent('end_of_term', $conf);
+
     }
 
     function get_row_label( $row ) {

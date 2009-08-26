@@ -27,6 +27,10 @@ class GenericModel {
     protected $dbutil;
     protected $id;
 
+    public function get_dbutil() {
+        return $this->dbutil;
+    }
+
     /**
      * call parse_table_name for each of $this->queries
      */
