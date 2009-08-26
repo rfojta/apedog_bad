@@ -35,6 +35,15 @@ class KpiModel extends GenericModel {
      * @return <type>
      */
     public function new_item_row() {
+        $column_names = $this->get_column_names();
+        $new_row = array();
+        foreach( $column_names as $name) {
+            $new_row[$name] = '';
+        }
+        $new_row['name'] = 'new';
+        $new_row['id'] = 'new';
+        return $new_row;
+        // old stupid way, sucks.
         return array(
         'id' => 'new',
         'name' => 'new',
