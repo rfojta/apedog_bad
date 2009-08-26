@@ -199,6 +199,15 @@ class GenericModel {
         return $this->dbutil->get_columns($this->table_name);
     }
 
+    public function get_column_names() {
+        $columns = $this->get_columns();
+        $names = array();
+        foreach( $columns as $col ) {
+            $names[] = $col['Field'];
+        }
+        return $names;
+    }
+
     /**
      * return db type of specified column
      * @param <type> $column
