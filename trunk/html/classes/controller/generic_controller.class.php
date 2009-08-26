@@ -76,11 +76,11 @@ class GenericController {
     }
 
     public function add_parent( $name, $p_conf ) {
-        // should be the same name as indexed by
+    // should be the same name as indexed by
         $p_conf['name'] = $name;
         if( is_array($this->parent_view) ) {
             $this->parent_view[$name] = new ParentView(
-                    $this->name, $p_conf, $this);
+                $this->name, $p_conf, $this);
             $this->parent_conf[$name] = $p_conf;
         } else {
             $tmp_name = $this->parent_view->get_name();
@@ -199,9 +199,9 @@ class GenericController {
      */
     public function submit($post) {
 
-//        echo "<pre>";
-//        print_r ( $post );
-//        echo "</pre>";
+    //        echo "<pre>";
+    //        print_r ( $post );
+    //        echo "</pre>";
 
         $this->clear_cache();
         if( $this->has_multi() ) {
@@ -303,14 +303,13 @@ class GenericController {
      * @return <boolean> true or false
      */
     public function is_parent( $name ) {
-        if( isset ($this->parent_conf['name'])
-            && $name == $this->parent_conf['name']    ) {
-            return true;
+        if( array_key_exists('name', $this->parent_conf) ) {
+            return $name == $this->parent_conf['name'] ;
         }
         elseif( isset( $this->parent_conf[$name])) {
             return true;
         }
-
+        return false;
     }
 
     /**
