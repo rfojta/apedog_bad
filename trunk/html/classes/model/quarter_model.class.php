@@ -20,7 +20,8 @@ class QuarterModel extends GenericModel {
         'quarter_from' => 'new',
         'quarter_to' => 'create new quarter',
         'description' => '',
-        'term' => ''
+        'term' => '',
+        'quarter_in_term'=>''
         );
     }
 

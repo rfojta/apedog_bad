@@ -12,7 +12,7 @@
 class TermController extends GenericController {
 //put your code here
 
-    protected $editable_fields = array('term_from', 'term_to', 'description');
+    protected $editable_fields = array('term_from', 'term_to', 'description', 'number_of_term');
 
 
 

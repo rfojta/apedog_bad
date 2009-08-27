@@ -21,7 +21,8 @@ class TermModel extends GenericModel {
         'id' => 'new',
         'term_from' => 'new',
         'term_to' => 'create new term',
-        'description' => 'create new item'
+        'description' => 'create new item',
+        'number_of_term' => ''
         );
     }
 

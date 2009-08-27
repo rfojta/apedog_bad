@@ -27,6 +27,7 @@ class UserModel extends GenericModel {
         'id' => 'new',
         'name' => '',
         'surname' => '',
+        'email' => '',
         'pass' => '',
         'login' => 'new',
         'lc'=>'create new user'
