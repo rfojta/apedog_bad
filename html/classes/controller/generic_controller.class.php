@@ -303,6 +303,9 @@ class GenericController {
      * @return <boolean> true or false
      */
     public function is_parent( $name ) {
+        if( ! is_array($this->parent_conf)) {
+            return false;
+        }
         if( array_key_exists('name', $this->parent_conf) ) {
             return $name == $this->parent_conf['name'] ;
         }
