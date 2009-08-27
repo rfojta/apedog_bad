@@ -23,6 +23,7 @@ class KpiUnitModel extends GenericModel {
         return array(
         'id' => 'new',
         'name' => 'new',
+        'spec' => '',
         'description' => 'create new item'
         );
     }

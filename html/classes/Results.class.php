@@ -26,7 +26,7 @@ class Results {
 
     protected $area_query = 'select * from areas';
     protected $quarter_query = 'select * from quarters';
-    protected $kpi_query = 'select * from kpis';
+    protected $kpi_query = 'select distinct k.* from lc_kpi l join kpis k on l.kpi = k.id';
     protected $term_query = 'select * from terms';
     protected $business_perspective_query = 'select * from business_perspectives';
     protected $csf_query = 'select * from csfs where business_perspective ';
@@ -51,7 +51,8 @@ class Results {
 
         $this->help = "<h3>BSC Results</h3><p>You can see output of all your
         Business Perspectives here. Every LC has the same KPIs here.<p>You can choose term and quarter.
-        Check your values at the end of term!</p><p>You can see graphs by clicking on KPI.</p>";
+        Check your values at the end of term!</p><p>You can see graphs by clicking on KPI.</p>
+        <p>For more info about KPI, CSF or BP roll over it with mouse.</p>";
 
     }
 
@@ -248,10 +249,16 @@ class Results {
 
     function get_kpi_by_csf_list($csf_id) {
         if ($csf_id==null) {
-            $query = $this->kpi_query.' WHERE csf = 0';
+            $query = $this->kpi_query.' WHERE k.csf = 0';
         } else {
-            $query = $this->kpi_query.' WHERE csf ='.$csf_id;
+            $query = $this->kpi_query.' WHERE k.csf ='.$csf_id;
         }
+
+        if ($this->lc_id!='all') {
+            $query.=' and l.lc = '.$this->lc_id;
+        }
+        $query.=' order by `id`';
+        
         $rows = $this->dbutil->process_query_assoc($query);
         return $rows;
     }
@@ -353,7 +360,7 @@ class Results {
             $actual = $this->get_actual($this->lc_id, $this->quarter_id, $this->term_id, $kpi);
             $target = $this->get_target($this->lc_id, $this->quarter_id, $this->term_id, $kpi);
 
-            if ($target!=null && $target != 0) {
+            if ($target!=null && $target != '0') {
                 $rates[]= $actual/$target;
             } else if ($target==0) {
                     if ($actual<0) {
@@ -530,22 +537,25 @@ class Results {
     }
 
     function get_trend($actual, $past) {
-        if ($past!=0) {
-            $rate = $actual/$past;
-        } else if ($actual > 0) {
-                $rate = 2;
-            } else if ($actual == 0) {
-                    $rate = 1;
-                } else {
-                    $rate = 0;
-                }
-        if ($rate<0.9 && $actual!=null) {
-            echo '<img src="images/red_trend.png">';
-        } else if ($rate<1.1 && $actual!=null) {
-                echo '<img src="images/yellow_trend.png">';
-            } else if ($rate >=1.1 & $past!=null) {
-                    echo '<img src="images/green_trend.png">';
-                }
+        if ($past!=null && $actual!=null) {
+            if ($past>0){
+            if ($actual<0.9*$past) {
+                echo '<img src="images/red_trend.png">';
+            } else if ($actual<1.1*$past) {
+                    echo '<img src="images/yellow_trend.png">';
+                } else if ($actual >=1.1*$past) {
+                        echo '<img src="images/green_trend.png">';
+                    }
+            } else {
+                if ($actual<1.1*$past) {
+                echo '<img src="images/red_trend.png">';
+            } else if ($actual>1.1*$past) {
+                    echo '<img src="images/yellow_trend.png">';
+                } else if ($actual >=0.9*$past) {
+                        echo '<img src="images/green_trend.png">';
+                    }
+            }
+        }
     }
 
     function get_eot_checkbox() {

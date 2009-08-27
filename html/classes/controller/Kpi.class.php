@@ -66,7 +66,6 @@ class KpiController extends GenericController {
             'name' => 'graphs'
         );
         $this->add_parent('graphs', $graph_conf);
-
     }
 
     function get_row_label( $row ) {

@@ -19,6 +19,8 @@ class Graphs extends Results {
         $this->kpi_id = $kpi_id;
         $this->help="<h3>Graphs</h3><p>If you have chosen KPI, you can see graph
          asigned to it. It is for the ends of terms or for quarters.</p>";
+
+        $this->kpi_query='select * from kpis';
     }
 
     function get_form_content() {
@@ -111,8 +113,8 @@ class Graphs extends Results {
                 $this->y_min = $t_min;
             }
 
-        $this->y_max = round(1.5*ceil($this->y_max), -1);
-        $this->y_min = round(1.5*floor($this->y_min), -1);
+        $this->y_max = round(1.1*ceil($this->y_max));
+        $this->y_min = round(1.1*floor($this->y_min));
 
         $data=array();
 
@@ -243,6 +245,16 @@ class Graphs extends Results {
                 $i++;
             }
         }
+    }
+
+    function get_kpi_by_csf_list($csf_id) {
+        if ($csf_id==null) {
+            $query = $this->kpi_query.' WHERE csf = 0';
+        } else {
+            $query = $this->kpi_query.' WHERE csf ='.$csf_id;
+        }
+        $rows = $this->dbutil->process_query_assoc($query);
+        return $rows;
     }
 }
 

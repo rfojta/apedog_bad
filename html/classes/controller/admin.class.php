@@ -164,6 +164,7 @@ class Admin {
         <h3>$this->page_title</h3>
         <p>you can add, modify, remove KPI unit</p>
         <p>Each KPI belongs to one KPI unit</p>
+        <p>Insert spec 'boolean' for Yes/no options in planning and entering</p>
             ";
 
     }
