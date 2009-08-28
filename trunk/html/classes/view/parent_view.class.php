@@ -51,11 +51,11 @@ class ParentView {
         $name = $this->name;
         echo "<span title=\"select superior $pname for this $name\">$pname: </span>";
         if( isset( $this->request[$pname]) ) {
-            $p_ctrl->get_list_box($id, $this->request[$pname]);
+            $p_ctrl->get_list_box($id, $this->request[$pname], $name);
             // TODO write wrapper for get_delete_checkbox()
             $this->get_delete_checkbox();
         } else {
-            $p_ctrl->get_list_box($id, $selected);
+            $p_ctrl->get_list_box($id, $selected, $name);
         }
         if( $selected > 0 ) {
             $link = $this->parent_conf['link'];
