@@ -65,7 +65,7 @@ class GenericController {
             // new style to set more than one parent
             foreach( $parent_conf as $name => $p_conf ) {
                 $this->parent_view[$name] = new ParentView(
-                    $this->name, $p_conf, $this);
+                    $name, $p_conf, $this);
             }
         }
 
@@ -80,7 +80,7 @@ class GenericController {
         $p_conf['name'] = $name;
         if( is_array($this->parent_view) ) {
             $this->parent_view[$name] = new ParentView(
-                $this->name, $p_conf, $this);
+                $name, $p_conf, $this);
             $this->parent_conf[$name] = $p_conf;
         } else {
             $tmp_name = $this->parent_view->get_name();
@@ -234,16 +234,18 @@ class GenericController {
      * @param <type> $id source object id
      * @param <type> $selected current target object id
      */
-    public function get_list_box($id, $selected) {
+    public function get_list_box($id, $selected, $name = null) {
         $rows = $this->model->find_all();
-        $name = $this->name;
+        if( $name == null) {
+            $name = $this->name;
+        }
         echo "<select name=\"$id-$name\">";
         echo "<option value=\"" . $row['id'] . "\"";
         if( $row[id] == $selected ) {
             echo "selected=\"1\"";
         }
         echo ">";
-        echo "NULL</option>";
+        echo "NULL</option>\n";
         foreach( $rows as $row ) {
             echo "<option value=\"" . $row['id'] . "\"";
             if( $row[id] == $selected ) {
@@ -251,9 +253,9 @@ class GenericController {
             }
             echo ">";
             echo $this->model->get_row_label($row)
-                . "</option>";
+                . "</option>\n";
         }
-        echo "</select>";
+        echo "</select>\n";
     }
 
     /**
