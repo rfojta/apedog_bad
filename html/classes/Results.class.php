@@ -212,7 +212,7 @@ class Results {
         echo '</big>';
         echo '</th>';
         echo '<th colspan="4" align="right">';
-        echo $rate;
+        echo $gom->draw_chart();
         echo '</th>';
         echo '</tr>';
         echo '<tr class="headTableRow">';
@@ -258,7 +258,7 @@ class Results {
             $query.=' and l.lc = '.$this->lc_id;
         }
         $query.=' order by `id`';
-        
+
         $rows = $this->dbutil->process_query_assoc($query);
         return $rows;
     }
@@ -278,7 +278,7 @@ class Results {
         echo '<td>';
         echo '</td>';
         echo '<td class="csfStatus">';
-        echo round($rate,2);
+        echo $this->get_status($rate);
         echo '</td>';
         echo '<td>';
         echo '</td>';
@@ -293,6 +293,7 @@ class Results {
         if ($this->area_id==$kpi['area']|| $this->area_id=='all' || $this->area_id==null) {
 
             $actual = $this->get_actual($this->lc_id, $this->quarter_id, $this->term_id, $kpi);
+
             $target = $this->get_target($this->lc_id, $this->quarter_id, $this->term_id, $kpi);
 
 
@@ -300,7 +301,6 @@ class Results {
 
             $past_values = $this->get_year_ago($kpi);
             $unit=$this->get_kpi_unit($kpi['kpi_unit']);
-
             echo '<tr class="kpi1TableRow">';
             echo '<td class="kpiName">';
             echo '<small>';
@@ -309,15 +309,21 @@ class Results {
             echo '</small>';
             echo '</td>';
             echo '<td class="currentValue">';
-            if($unit['spec']=='boolean') {
-                if ($actual == '1') {
-                    echo 'Yes';
-                } else if($actual == '0') {
-                        echo 'No';
-                    }
-            } else if($actual!=null) {
-                    echo round($actual,2).' '.$unit['name'];
-                }
+            if ($actual!=null|| $actual=='0') {
+                if($unit['spec']=='boolean') {
+                    if ($actual == '1') {
+                        echo 'Yes';
+                    } else if($actual == '0') {
+                            echo 'No';
+                        } else if ($actual=='-') {
+                                echo '-';
+                            }
+                } else if($actual!='-'||$actual=='0') {
+                        echo round($actual,2).' '.$unit['name'];
+                    } else if ($actual=='-') {
+                            echo '-';
+                        }
+            }
             echo '</td>';
             echo '<td class="goalValue">';
             if($unit['spec']=='boolean') {
@@ -325,15 +331,18 @@ class Results {
                     echo 'Yes';
                 } else if($target == '0') {
                         echo 'No';
-                    }
-            } else if($target!=null) {
+                    } else if ($target=='-') {
+                            echo '-';
+                        }
+            } else if($target!=null || $target!='-') {
                     echo round($target,2).' '.$unit['name'];
-                }
-
+                } else if ($target=='-') {
+                        echo '-';
+                    }
 
             echo '</td>';
             echo '<td class="kpiStatus">';
-            echo round($rate,2);
+            echo $this->get_status($rate);
             echo '</td>';
             echo '<td class="kpiTrend">';
             echo $this->get_trend($actual, $past_values);
@@ -360,17 +369,19 @@ class Results {
             $actual = $this->get_actual($this->lc_id, $this->quarter_id, $this->term_id, $kpi);
             $target = $this->get_target($this->lc_id, $this->quarter_id, $this->term_id, $kpi);
 
-            if ($target!=null && $target != '0') {
-                $rates[]= $actual/$target;
-            } else if ($target==0) {
-                    if ($actual<0) {
-                        $rates[]=0;
-                    } else if ($actual==1) {
-                            $rates[]=1;
-                        } else {
-                            $rates[]=2;
+            if ($target!=null && $target!='-' && $actual!='-') {
+                if ($target>0) {
+                    $rates[]=$actual/$target;
+                } else if ($target<0) {
+                        $rates[]=-$actual/$target+2;
+                    } else if ($target==0) {
+                            if ($actual>=0) {
+                                $rates[]=1;
+                            } else {
+                                $rates[]=0;
+                            }
                         }
-                }
+            }
         }
 
         if ($rates!=null) {
@@ -384,22 +395,24 @@ class Results {
             if ($this->eot=='true') {
                 $quarter_list = $this->get_quarter_list($term_id);
                 $actual;
+                $actuals=array();
                 if ($lc_id=='all'&& $this->user='MC') {
                     $lc_list=$this->get_lc_list();
                     $actualz=array();
                     foreach ($lc_list as $lc) {
-                        $actuals=array();
+
                         foreach ($quarter_list as $quarter) {
                             $actuals[]=$this->actual_values->get_value($lc['id'], $quarter['id'], $kpi['id']);
                         }
-                        $sumLogic=new SumLogic($actuals, $kpi['id']);
+                        $sumLogic=new SumLogic($actuals, $kpi['end_of_term']);
                         $actualz[]=$sumLogic->get_sum();
                     }
                     $sumLogic=new SumLogic($actualz, $kpi['all_lcs']);
                     $actual = $sumLogic->get_sum();
                 } else {
                     foreach ($quarter_list as $quarter) {
-                        $actuals[]=$this->actual_values->get_value($lc_id, $quarter['id'], $kpi['id']);
+                        $a=$this->actual_values->get_value($lc_id, $quarter['id'], $kpi['id']);
+                        $actuals[]=$a;
                     }
                     $sumLogic=new SumLogic($actuals, $kpi['end_of_term']);
                     $actual=$sumLogic->get_sum();
@@ -441,7 +454,6 @@ class Results {
                         }
                         $sumLogic=new SumLogic($targets, $kpi['end_of_term']);
                         $targetz[]=$sumLogic->get_sum();
-
                     }
                     $sumLogic=new SumLogic($targetz, $kpi['all_lcs']);
                     $target = $sumLogic->get_sum();
@@ -520,7 +532,15 @@ class Results {
     }
 
     function get_year_ago($kpi) {
-        $query = $this->quarter_query. ' WHERE id = '.$this->quarter_id;
+        if ($this->quarter_id!=null) {
+            $quarter_id=$this->quarter_id;
+        } else {
+            $quarter_list = $this->get_quarter_list($this->term_id);
+            $quarter_id=$quarter_list[0]['id'];
+        }
+        $past_actual='';
+
+        $query = $this->quarter_query. ' WHERE id = '.$quarter_id;
         $rows = $this->dbutil->process_query_assoc($query);
         $selected_quarter = $rows[0];
 
@@ -531,29 +551,29 @@ class Results {
             .$year_ago. ' and quarter_in_term = '.$quarter_in_term;
         $rows = $this->dbutil->process_query_assoc($query);
         $quarter_term_ago = $rows[0];
-
-        $past_actual = $this->get_actual($this->lc_id, $quarter_term_ago['id'], $year_ago['id'],  $kpi);
+        $past_actual = $this->get_actual($this->lc_id, $quarter_term_ago['id'], $year_ago,  $kpi);
         return $past_actual;
+
     }
 
     function get_trend($actual, $past) {
-        if ($past!=null && $actual!=null) {
-            if ($past>0){
-            if ($actual<0.9*$past) {
-                echo '<img src="images/red_trend.png">';
-            } else if ($actual<1.1*$past) {
-                    echo '<img src="images/yellow_trend.png">';
-                } else if ($actual >=1.1*$past) {
-                        echo '<img src="images/green_trend.png">';
-                    }
+        if ($past!=null && $actual!=null && $past!='-' && $actual!='-') {
+            if ($past>0) {
+                if ($actual<0.9*$past) {
+                    echo '<img src="images/red_trend.png">';
+                } else if ($actual<1.1*$past) {
+                        echo '<img src="images/yellow_trend.png">';
+                    } else if ($actual >=1.1*$past) {
+                            echo '<img src="images/green_trend.png">';
+                        }
             } else {
                 if ($actual<1.1*$past) {
-                echo '<img src="images/red_trend.png">';
-            } else if ($actual>1.1*$past) {
-                    echo '<img src="images/yellow_trend.png">';
-                } else if ($actual >=0.9*$past) {
-                        echo '<img src="images/green_trend.png">';
-                    }
+                    echo '<img src="images/red_trend.png">';
+                } else if ($actual>1.1*$past&&$actual<0.9*$past) {
+                        echo '<img src="images/yellow_trend.png">';
+                    } else if ($actual >=0.9*$past) {
+                            echo '<img src="images/green_trend.png">';
+                        }
             }
         }
     }

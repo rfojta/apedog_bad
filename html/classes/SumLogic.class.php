@@ -16,24 +16,31 @@ class SumLogic {
 
     function get_sum() {
         switch($this->logic) {
-            
+
             case 1: {
-                    return array_sum($this->values);
+                    foreach ($this->values as $val) {
+                        if ($val!=null && $val!='-') {
+                            $sum+=$val;
+                        }
+                    }
+                    return $sum;
                 };break;
 
             case 2: {
                     $i=0;
-                    foreach ($this->values as $val){
-                        $sum+=$val;
-                        if($val!=null){
+                    $sum=0;
+                    foreach ($this->values as $val) {
+                        if($val!=null && $val!='-') {
+                            $sum+=$val;
                             $i++;
                         }
                     }
-                    if($i==0){
-                        $i=1;
+                    if($i==0) {
+                        return null;
+                    } else {
+                        $value = $sum/$i;
+                        return $value;
                     }
-                    $value = $sum/$i;
-                    return $value;
                 };break;
 
             case 3: {
@@ -41,8 +48,8 @@ class SumLogic {
                 };break;
 
             case 4: {
-                    foreach ($this->values as $value){
-                        if ($value!=0){
+                    foreach ($this->values as $value) {
+                        if ($value!=0) {
                             return $value;
                         }
                     }
