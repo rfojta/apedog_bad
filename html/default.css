@@ -109,6 +109,16 @@ a:hover {
     color: #000000;
 }
 
+#content p#welcome{
+    height: 25px;
+    padding: 6px 0 0 31px;
+    text-transform: uppercase;
+    text-align:center;
+    font-weight:bolder;
+    font-size: 1em;
+    color: #000000;
+}
+
 #content h3 {
     font-size: 1em;
 }

@@ -2,6 +2,10 @@
 session_cache_expire(60);
 session_start();
 if (!isset($_SESSION['user'])) { header("Location: index.php"); exit; }
+
+if (isset($_REQUEST['shtu'])){
+    $info = "Hello, it's nice to have you here again!";
+}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
@@ -20,7 +24,7 @@ if (!isset($_SESSION['user'])) { header("Location: index.php"); exit; }
             <div id="colOne">
                 <h2 class="section">Main Page</h2>
                 <div class="content">
-                    <p></p>
+                    <?php echo "<p id=\"welcome\">".$info.'</p><p></p>';?>
                     <!-- rozcestnik -->
                     <table>
                         <tr><td><a href="detail_planning.php" title="Enter plans for each KPI"><img src="images/planning.png" border="0"></a></tr></td>
