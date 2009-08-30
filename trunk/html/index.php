@@ -1,30 +1,28 @@
 <?php
-//  ini_set("session.use_cookies_only","1");
-//  session_cache_expire(60);
-session_start();
-$info1 = "Please login.";
-if (isset($_REQUEST['logout'])) {
-    unset($_SESSION);
-    session_destroy();
-    $info1 = "You were successfully logged out.";
-}
-
-if (isset($_SESSION['user'])) {
-    header("Location: main_page.php");
-}
-
 include('classes/Apedog.class.php');
 include('classes/Login.class.php');
 
 $apedog = new Apedog('devel');
 $dbres = $apedog->dbres;
 $login = new Login($dbres);
-
 list($code, $info) = $login->validate($_POST);
+
+//  ini_set("session.use_cookies_only","1");
+//  session_cache_expire(60);
+session_start();
+if (isset($_REQUEST['logout'])) {
+    unset($_SESSION);
+    session_destroy();
+    $info = "You were successfully logged out.";
+}
+
+if (isset($_SESSION['user'])) {
+    header("Location: main_page.php");
+}
 
 if( $code == 1 ) {
     $_SESSION['user'] = $info;
-    header("Location: main_page.php");
+    header("Location: main_page.php?shtu");
     break;
 }
 
@@ -51,7 +49,7 @@ if( $code == 1 ) {
                 <div class="content">
                     <p>Apedog is a tool, which helps LCs in the Czech Republic to track their plans. It was developed to ensure sustainable growth, improving KPIs and improving AIESEC experience.</p>
                     <p>We recommend to use Mozilla Firefox for best look and performance.</p>
-                    <b><?php echo $info1; ?></b>
+                    <b><?php echo $info; ?></b>
 
                     <form action="index.php" method="post"><div style="text-align: left;" >
                             

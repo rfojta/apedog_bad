@@ -60,7 +60,7 @@ class Login {
             }
             return array(2,'Wrong password or not existing user!');
         }
-        return array(0,'');
+        return array(0,'Please login');
     }
 }
 ?>
