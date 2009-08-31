@@ -27,7 +27,6 @@ if (isset($_REQUEST['shtu'])){
                     <?php echo $info;?>
                     <!-- rozcestnik -->
                     <table>
-                        <a href="checkEntering.php">Mail</a>;
                         <tr><td><a href="detail_planning.php" title="Enter plans for each KPI"><img src="images/planning.png" border="0"></a></tr></td>
                         <tr><td><a href="entering_values.php" title="Enter actual values for each KPI"><img src="images/entering.png" border="0"></a></tr></td>
                         <tr><td><a href="reports.php" title="See reports according to plans and fullfilling"><img src="images/reports.png" border="0"></a></tr></td>

@@ -18,6 +18,7 @@ class Reminder {
             k.name,
             u.name AS 'user',
             u.email,
+            q.quarter_from,
             q.quarter_to
         FROM
             detail_tracking dt
@@ -26,37 +27,62 @@ class Reminder {
             JOIN kpis k on dt.kpi = k.id
             JOIN areas a on k.area = a.id
             JOIN users u on u.lc = l.id
-        WHERE q.quarter_to = ':deadline'
-          AND dt.actual IS NULL";
-
+        WHERE q.quarter_to = ':deadline' AND u.id=':user_id' 
+            AND dt.actual IS NULL
+        ORDER by a.name";
     function __construct( $dbutil ) {
         $this->dbutil = $dbutil;
         $lc = new LC($dbutil->dbres);
     }
 
     function check_tracking() {
-        $date_format='Y/m/d';
+        $date_format='Y-m-d';
         $today= date($date_format);
-        $deadline= date ($date_format, strtotime('-25 days ' . $today ));
-        $query = str_replace(':deadline', $deadline, $this->pre_query);
-        $rests=$this->dbutil->process_query_assoc($query);
-        foreach($rests as $rest) {
-            $this->send_mail($rest);
+        $deadline= date($date_format, strtotime('-25 days ' . $today ));
+        $users=$this->get_user_list();
+
+        foreach ($users as $user) {
+            $query = str_replace(':deadline', $deadline, $this->pre_query);
+            $query = str_replace(':user_id', $user['id'], $query);
+            $rests=$this->dbutil->process_query_assoc($query);
+            if ($rests) {
+                $this->send_mail($rests);
+            }
         }
     }
 
-    function send_mail($rest) {
-        $to      = $rest['email'];
+    function send_mail($rests) {
+        $data=array();
+
+
+        $till=date('jS F Y', strtotime($rest['quarter_to']));
+        foreach ($rests as $rest) {
+
+            $since=date('jS F Y', strtotime($rest['quarter_from']));
+            $till=date('jS F Y', strtotime($rest['quarter_to']));
+            $to=$rest['email'];
+            $user=$rest['user'];
+            $data[$rest['name']]=$rest['area_name'];
+        }
         $subject = 'Entering actual values into your AIESEC Performance Evaluator';
-        $message = 'Hello '.$rest['user'].'\nYou probably forgot to enter value
-            your LC achieved in '.$rest['name'].' in '. $rest['area_name'].'.\n
-            Do not forget, MC will lock this KPI in few days and you won´t be able to edit it then.\n
-            Regards,\n
-            your Apedog.';
+        $message = 'Hello '.$user.'!<br /><br />You probably forgot to enter value
+            your LC achieved since '.$since.' to '.$till.' in these KPIs: <ul>';
+        foreach($data as $kpi => $area) {
+            $message .= '<li>"'.$kpi.'" in "'.$area.'"</li>';
+        }
+        $message .= '</ul>';
+        $message .= 'Do not forget, MC will lock this KPI in few days and you won´t be able to edit it then.<br />
+            Regards,<br /> Your Apedog.';
         $headers = 'From: noreply@apedog.cz';
 
-        echo $message."!!!<br>";
         mail($to, $subject, $message, $headers);
+    }
+
+
+    function get_user_list() {
+        $query = 'SELECT * from users';
+        $users=$this->dbutil->process_query_assoc($query);
+        return $users;
     }
 }
 ?>

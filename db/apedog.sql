@@ -76,8 +76,8 @@ CREATE TABLE `detail_tracking` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `kpi` int(10) unsigned NOT NULL,
   `lc` int(10) unsigned NOT NULL,
-  `actual` double NOT NULL,
-  `target` double NOT NULL,
+  `actual` double default NULL,
+  `target` double default NULL,
   `created` datetime NOT NULL,
   `updated` datetime NOT NULL,
   `quarter` int(10) unsigned NOT NULL,
@@ -344,7 +344,7 @@ CREATE TABLE `users` (
   `login` varchar(45) COLLATE utf8_bin NOT NULL,
   `created` datetime NOT NULL,
   `updated` datetime NOT NULL,
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=11 ;
 
 
