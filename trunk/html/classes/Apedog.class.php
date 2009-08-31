@@ -47,8 +47,8 @@ class Apedog {
             $configuration = array(
                 server => 'localhost',
                 user => 'root',
-                password => '',
-                database => 'apedog'
+                password => 'papalala',
+                database => 'apedog2'
             );
         }
         $this->db_connect( $configuration );
