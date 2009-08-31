@@ -75,7 +75,10 @@ class GenericModel {
             $this->editable_fields = array();
             $rows = $this->get_columns();
             foreach( $rows as $row ) {
-                $this->editable_fields[] = $row[Field];
+                $col_name = $row['Field'];
+                if( $col_name != 'created' && $col_name != 'updated') {
+                    $this->editable_fields[] = $col_name;
+                }
             }
         }
 

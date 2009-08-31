@@ -55,7 +55,7 @@ class GenericController {
         if( isset( $this->parent_conf['name']) ) {
         // one parent
             $this->parent_view =
-                new ParentView($this->name,
+                new ParentView($name,
                 $this->parent_conf, $this);
         }
         elseif( is_array( $this->parent_conf ) ) {

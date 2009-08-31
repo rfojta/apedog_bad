@@ -17,7 +17,7 @@ class KpiModel extends GenericModel {
     protected $kpi_query = 'select * from kpis where area = ';
     protected $editable_fields = array('name', 
         'description', 'area', 'csf', 'kpi_unit',
-        'graphs', 'end_of_term');
+        'graphs', 'end_of_term', 'all_lcs');
 
     /**
      * Call query to find kpis by area. Deprecated, use find_by instead
@@ -38,7 +38,9 @@ class KpiModel extends GenericModel {
         $column_names = $this->get_column_names();
         $new_row = array();
         foreach( $column_names as $name) {
-            $new_row[$name] = '';
+            if( $name != 'created' && $name != 'updated') {
+                $new_row[$name] = '';
+            }
         }
         $new_row['name'] = 'new';
         $new_row['id'] = 'new';
