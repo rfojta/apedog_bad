@@ -353,7 +353,7 @@ class GenericController {
      * @param <type> $id
      */
     public function multi_list($id) {
-        if( is_numeric( $id ) ) {
+        if( is_numeric( $id ) || $id == 'new' ) {
             $this->multi_view->get_select_multi_for($id, $this->name, 0);
         }
     }

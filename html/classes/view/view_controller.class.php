@@ -195,7 +195,7 @@ class ViewController {
             $this->controller->child_list($id);
         }
 
-        if( $id != 'new' && $this->controller->has_multi() ) {
+        if( $this->controller->has_multi() ) {
             $this->controller->multi_list($id);
         }
 

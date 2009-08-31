@@ -43,12 +43,17 @@ class multi_link_view {
     public function get_select_multi_for( $from_key, $from_name, $default ) {
 
         // load all rows from link table for from_key
-        $selected_rows = $this->link_model->find_by( $from_name, $from_key );
+        $selected_rows = array();
         $selected_hash = array();
 
         $other_name = $this->get_other_name( $from_name );
-        foreach( $selected_rows as $row ) {
-           $selected_hash[$row[$other_name]] = 1; // mark selected
+
+        if( is_numeric($from_key) ) {
+            $selected_rows = $this->link_model->find_by( $from_name, $from_key );
+
+            foreach( $selected_rows as $row ) {
+               $selected_hash[$row[$other_name]] = 1; // mark selected
+            }
         }
 
         $model = $this->models[$from_name];
