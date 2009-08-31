@@ -29,11 +29,15 @@ if( isset( $_POST['posted'])) {
 		<script type="text/javascript" src="js/jquery-ui-1.7.2.custom.min.js"></script>
 
         <script type="text/javascript">
-            
+            Date.firstDayOfWeek = 0;
+            Date.format = 'yy-mm-dd';
+
             $(function() {
 
-                $('.date').datepicker('option', {dateFormat: 'yy-mm-dd'});
+                // $('.date').datepicker();
+                $('.date').datepicker({dateFormat: 'yy-mm-dd'});
                 $(".date").datepicker($.datepicker.regional['en'])
+                // $('.date').datepicker()
             });
         </script>
 
