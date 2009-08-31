@@ -14,13 +14,25 @@ class Entering extends DetailPlanning {
 
     protected $actaul_values;
 
+/**
+ * Constructor
+ * @param <type> $dbutil Library for working with db
+ * @param <type> $term_id Id of actual term for the page
+ * @param <type> $current_area area id for the page
+ * @param <type> $user either user or 'all'
+ * @param <type> $locking actual locking library
+ */
     function  __construct($dbutil, $term_id, $current_area, $user, $locking) {
         parent::__construct($dbutil, $term_id, $current_area, $user, $locking);
 
         $this->page = 'entering_values.php?';
         $this->actual_values = new DetailTracking($dbutil, 1);
     }
-
+/**
+ * Builds kpi row with KPI name, description, input, kpi unit and plan from Kpi
+ * @param <type> $kpi
+ * @param <type> $i
+ */
     protected function get_kpi_input($kpi, $i) {
         $quarter_id = $this->quarter_id;
         $lc_id = $this->lc_id;
@@ -70,7 +82,12 @@ class Entering extends DetailPlanning {
         echo "</tr> \n";
         echo "</li> \n";
     }
-
+/**
+ *Sets values into db
+ * @param <type> $kpi
+ * @param <type> $quarter
+ * @param <type> $value
+ */
     protected function set_values( $kpi,$quarter, $value ) {
         $this->actual_values->set_value(
             $this->lc_id,
@@ -80,6 +97,9 @@ class Entering extends DetailPlanning {
         );
     }
 
+/**
+ * Returns submit button that could be disabled when entering is locked
+ */
     function get_submit_button() {
         echo '<p>';
         echo '<input type="hidden" name="posted" value="1" />';
@@ -96,7 +116,9 @@ class Entering extends DetailPlanning {
         echo ' value="Save" />';
         echo '</p>';
     }
-
+    /**
+     * Returns Locked echo when entering is locked
+     */
     function get_locked_echo() {
         if ($this->locking->get_count($this->lc_id, $this->quarter_id, 'NULL')) {
             echo "<p><b>You can't enter values for this quarter as it has been locked by MC for you.</b></p>";

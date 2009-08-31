@@ -254,8 +254,8 @@ CREATE TABLE `quarters` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `quarter_from` date NOT NULL,
   `quarter_to` date NOT NULL,
-  `description` datetime NOT NULL,
-  `created` datetime NOT NULL,
+  `description` varchar(75) NOT NULL,
+  `created` varchar(75) NOT NULL,
   `updated` datetime NOT NULL,
   `term` int(10) unsigned NOT NULL,
   `quarter_in_term` int(11) NOT NULL,
@@ -345,7 +345,6 @@ CREATE TABLE `users` (
   `created` datetime NOT NULL,
   `updated` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `users-lc` (`lc`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=11 ;
 
 

@@ -3,6 +3,12 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
+
+/**
+ * This class determines output from an array of values
+ *
+ * @author Krystof
+ */
 class SumLogic {
 
     protected $targets;
@@ -14,6 +20,10 @@ class SumLogic {
         $this->logic = $logic;
     }
 
+    /**
+     * Determines output in dependendcy of kind of logic
+     * @return <type> value
+     */
     function get_sum() {
         switch($this->logic) {
 
