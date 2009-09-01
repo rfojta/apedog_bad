@@ -35,6 +35,7 @@ if( $code == 1 ) {
         <meta name="keywords" content="" />
         <meta name="description" content="" />
         <link href="default.css" rel="stylesheet" type="text/css" />
+        <link href="images/favicon.png" rel="icon" type="image/png" />
     </head>
     <body>
 
@@ -63,7 +64,13 @@ if( $code == 1 ) {
                 </div>
             </div>
 
-            <?php include('components/recent_updates.php'); ?>
+            <div id="colTwo">
+                <h2 class="section">Help</h2>
+                <div class="content">
+                    <h3>You will se help and hints while working with Apedog here</h3>
+                    <p>Now login with your login name (case sensitive) and password, all providedd by your MC.</p>
+                </div>
+            </div>
 
             <div style="clear: both;">&nbsp;</div>
         </div>
