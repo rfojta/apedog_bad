@@ -95,10 +95,11 @@ class Admin {
 
         $this->controller = new TermController($term_model, $model);
 
-        $this->page_title = "Apedog: Quarter Configuration";
+        $this->page_title = "Apedog: Term Configuration";
         $this->page_help = "<h3>$this->page_title</h3>
 <p>you can add, modify, remove Quarter or Terms</p>
 <p>Each Quarter belongs to one Term</p>
+<p>You must have term for
             ";
     }
 

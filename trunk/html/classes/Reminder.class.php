@@ -32,7 +32,6 @@ class Reminder {
         ORDER by a.name";
     function __construct( $dbutil ) {
         $this->dbutil = $dbutil;
-        $lc = new LC($dbutil->dbres);
     }
 
     function check_tracking() {
@@ -64,18 +63,29 @@ class Reminder {
             $user=$rest['user'];
             $data[$rest['name']]=$rest['area_name'];
         }
-        $subject = 'Entering actual values into your AIESEC Performance Evaluator';
-        $message = 'Hello '.$user.'!<br /><br />You probably forgot to enter value
-            your LC achieved since '.$since.' to '.$till.' in these KPIs: <ul>';
-        foreach($data as $kpi => $area) {
-            $message .= '<li>"'.$kpi.'" in "'.$area.'"</li>';
-        }
-        $message .= '</ul>';
-        $message .= 'Do not forget, MC will lock this KPI in few days and you won´t be able to edit it then.<br />
-            Regards,<br /> Your Apedog.';
-        $headers = 'From: noreply@apedog.cz';
+        $subject = 'Apedog: '.$since.' - '.$till;
+        $message = 'Hello '.$user.'!
 
-        mail($to, $subject, $message, $headers);
+You probably forgot to enter value your LC achieved since '.$since.' to '.$till.' in these KPIs: ';
+        $i=1;
+        foreach($data as $kpi => $area) {
+            $message .= '
+'.$i.'. "'.$kpi.'" in "'.$area.'"';
+            $i++;
+        }
+        $message.='
+
+';
+        $message .= 'Do not forget, MC will lock this KPI in few days and you won´t be able to edit it then.
+Regards,
+Your Apedog.';
+        $headers = 'From: noreply@apedog.cz';
+        echo $message.$to.$headers;
+        if(mail($to, $subject, $message, $headers)) {
+            echo 'jooooo';
+        } else {
+            echo 'neeee';
+        }
     }
 
 
