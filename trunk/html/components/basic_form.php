@@ -16,6 +16,7 @@ if( isset( $_POST['posted'])) {
         <meta name="keywords" content="" />
         <meta name="description" content="" />
         <link href="default.css" rel="stylesheet" type="text/css" />
+        <link href="images/favicon.png" rel="icon" type="image/png" />
         <!-- Added for testing datepicker -->
 <!-- remote links
         <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/ui-lightness/jquery-ui.css" type="text/css" media="all" />
