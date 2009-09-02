@@ -22,7 +22,7 @@ class DetailPlanning {
 
     protected $area_query = 'select * from areas';
     protected $quarter_query = 'select * from quarters where term = ';
-    protected $kpi_query = 'select * from kpis';
+    protected $kpi_query = 'select distinct k.* from lc_kpi l join kpis k on l.kpi = k.id';
     protected $term_query = 'select * from terms';
     protected $kpi_unit_query = 'select * from kpi_units';
 

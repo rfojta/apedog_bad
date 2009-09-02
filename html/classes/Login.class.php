@@ -13,6 +13,7 @@ class Login {
     var $dbres;
     var $user_query = 'select pass from users where login = ';
     var $user_count_query = 'select count(pass) from users where login = ';
+    var $lc_query = 'select l.name from lcs l join users u on l.id = u.lc where u.login = ';
 
     /**
      *
@@ -39,7 +40,7 @@ class Login {
             if (!$res) {
                 die('Invalid query: ' . mysql_error());
             }
-            
+
             $row = mysql_fetch_row($res);
             $count = $row[0];
 
@@ -54,8 +55,19 @@ class Login {
                 $row = mysql_fetch_row($res);
                 $pass = $row[0];
 
+                //more users from MC
                 if( $pass == $post['userpass'] ) {
-                    return array(1,$post['userid']);
+                    $query = $this->lc_query
+                        . '\''
+                        . mysql_real_escape_string($post['userid'])
+                        . '\'';
+                    $res = mysql_query( $query , $this->dbres );
+                    if (!$res) {
+                        die('Invalid query: ' . mysql_error());
+                    }
+
+                    $row = mysql_fetch_row($res);
+                    return array(1,$row[0]);
                 }
             }
             return array(2,'Wrong password or not existing user!');

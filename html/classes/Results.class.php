@@ -326,19 +326,21 @@ class Results {
             }
             echo '</td>';
             echo '<td class="goalValue">';
-            if($unit['spec']=='boolean') {
-                if ($target == '1') {
-                    echo 'Yes';
-                } else if($target == '0') {
-                        echo 'No';
+            if ($target!=null|| $target=='0') {
+                if($unit['spec']=='boolean') {
+                    if ($target == '1') {
+                        echo 'Yes';
+                    } else if($target == '0') {
+                            echo 'No';
+                        } else if ($target=='-') {
+                                echo '-';
+                            }
+                } else if($target!='-'||$target=='0') {
+                        echo round($target,2).' '.$unit['name'];
                     } else if ($target=='-') {
                             echo '-';
                         }
-            } else if($target!=null || $target!='-') {
-                    echo round($target,2).' '.$unit['name'];
-                } else if ($target=='-') {
-                        echo '-';
-                    }
+            }
 
             echo '</td>';
             echo '<td class="kpiStatus">';
@@ -352,14 +354,15 @@ class Results {
     }
 
     function get_status($rate) {
-        if ($rate < '0.85') {
-            echo "<img src='images/red_status.png'>";
-        } else if ($rate < '1') {
-                echo "<img src='images/orange_status.png'>";
-            } else {
-                echo "<img src='images/green_status.png'>";
-            }
-
+        if ($rate=='0'||$rate!=null) {
+            if ($rate < '0.85') {
+                echo "<img src='images/red_status.png'>";
+            } else if ($rate < '1') {
+                    echo "<img src='images/orange_status.png'>";
+                } else {
+                    echo "<img src='images/green_status.png'>";
+                }
+        }
     }
 
     function get_rate($kpi_list) {

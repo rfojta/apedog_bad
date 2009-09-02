@@ -22,4 +22,13 @@
        
     </div>
 </div>
-<div id="splash"><img src="images/img02<?php if($page!='index'&&$page!='useful_links'){echo '_'.$_SESSION['user'];} ?>.jpg" alt="" width="1024" height="140" /></div>
+<div id="splash"><img src="<?php
+            $src='images/img02';
+            if($page!='index'&&$page!='useful_links'){
+                $src .= '_'.$_SESSION['user'].'.jpg';
+                }
+            if (!file_exists($src)){
+                $src='images/img02.jpg';
+            }
+            echo $src;
+            ?>" alt="images/img02.jpg is missing" width="1024" height="140" /></div>

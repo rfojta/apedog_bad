@@ -52,7 +52,6 @@ class Entering extends DetailPlanning {
             . $kpi['name'] . ':</span>';
         echo "</td> \n";
         echo "<td> \n";
-        echo "<td> \n";
         $unit_spec = $this->get_kpi_unit_rf($kpi_id);
         $unit=$this->get_kpi_unit($kpi['kpi_unit']);
         if( $unit_spec == 'boolean') {
