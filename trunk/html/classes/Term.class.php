@@ -41,8 +41,12 @@ class Term {
         while( $row = mysql_fetch_assoc($res) ) {
             $out_array[] = $row;
         }
-
-        return $out_array[0]['id'];
+        $term=$out_array[0]['id'];
+        
+        if ($term==null){
+            $term = $this->get_first_term();
+        }
+        return $term;
     }
 
     function get_term_labels() {
@@ -60,6 +64,14 @@ class Term {
         }
 
         return $out_array;
+    }
+
+    function get_first_term(){
+        $query = 'select id from terms order by number_of_term';
+        $row = mysql_query( $query, $this->dbres);
+        if ($row[0]){
+            return $row[0];
+        } else return -1;
     }
 }
 ?>

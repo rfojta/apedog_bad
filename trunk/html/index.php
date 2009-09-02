@@ -68,7 +68,7 @@ if( $code == 1 ) {
                 <h2 class="section">Help</h2>
                 <div class="content">
                     <h3>You will se help and hints while working with Apedog here</h3>
-                    <p>Now login with your login name (case sensitive) and password, all providedd by your MC.</p>
+                    <p>Now login with your login name (case sensitive) and password, all provided by your MC.</p>
                 </div>
             </div>
 
