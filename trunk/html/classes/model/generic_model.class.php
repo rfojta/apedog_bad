@@ -120,6 +120,7 @@ class GenericModel {
      * Insert new record into db table
      * @param <array> $columns list of columns
      * @param <array> $values  list of values
+     * @return <type> $row id
      */
     public function insert($columns, $values ) {
         $pre_query = $this->insert_query;
@@ -130,7 +131,8 @@ class GenericModel {
 //        echo "<pre>";
 //        echo $query;
 //        echo "</pre>";
-        $this->dbutil->do_query($query);
+        $res = $this->dbutil->do_query($query);
+        return mysql_insert_id($this->dbutil->dbres);
     }
 
     private function escape_values_before_insert( $columns, $values ) {

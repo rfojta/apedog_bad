@@ -81,7 +81,8 @@ class DB_Util {
 
     /**
      * Call insert, update or delete query, no results expected
-     * @param <type> $query 
+     * @param <type> $query
+     * @return <type> mysql_query result
      */
     function do_query($query) {
         if( $this->debug ) {
@@ -91,6 +92,7 @@ class DB_Util {
         if( !$res ) {
 		$this->error($query);
         }
+        return $res;
     }
 
     /**
