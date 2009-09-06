@@ -33,6 +33,7 @@ class GenericController {
 
     // for inserting purposes
     protected $insert_cache = array();
+    protected $multi_cache = array();
 
     /**
      *
@@ -115,18 +116,26 @@ class GenericController {
      */
     protected function clear_cache() {
         $this->insert_cache = array();
+        $this->multi_cache = array();
     }
 
     /**
      * Check whether controller cache is used and call insert into table.
      */
     protected function flush() {
+        $id = null;
         if(count($this->insert_cache) > 0) {
             $columns = array_keys($this->insert_cache);
             $values = array_values($this->insert_cache);
-            $this->model->insert($columns, $values);
-            $this->clear_cache();
+            $id = $this->model->insert($columns, $values);
         }
+        if( is_numeric($id) && count($this->multi_cache) > 0) {
+            foreach( $this->multi_cache as $field => $value) {
+                $this->update_multi($field, $value, $id);
+            }
+        }
+        $this->clear_cache();
+        return $id;
     }
 
     /**
@@ -140,35 +149,49 @@ class GenericController {
         // cannot update id
         }
         elseif( $id == 'new' ) {
-            $this->insert_cache[$field] = $value;
-        }
-        elseif( $this->is_multi_field($field) ) {
-
-        // pre init
-            $link_model = $this->multi_conf['link_model'];
-            $target = $this->multi_conf['target'];
-
-            $this->delete_multi($id);
-
-            // create new
-            if( is_array($value) ) {
-                foreach( $value as $v ) {
-                    $columns = array( $this->name, $target );
-                    $values = array( $id, $v );
-                    $link_model->insert($columns, $values);
-                }
+            // We need to cache differently record field and fields with links to other table.
+            if( $this->is_multi_field($field) ) {
+                $this->multi_cache[$field] = $value; // this will be read and processed after we know record id.
             }
             else {
-                $columns = array( $this->name, $target );
-                $values = array( $id, $value );
-                $link_model->insert($columns, $values);
+                $this->insert_cache[$field] = $value;
             }
+        }
+        elseif( $this->is_multi_field($field) ) {
+            $this->update_multi($field, $value, $id);
         }
         elseif( $this->model->update($field, $value, $id) ) {
             echo "... updated $field!<br>";
         }
         else {
         // field is not editable
+        }
+    }
+
+    /**
+     * Specific for update of multi_field
+     * @param <type> $field
+     * @param <type> $value
+     * @param <type> $id
+     */
+    protected function update_multi($field, $value, $id) {
+        $link_model = $this->multi_conf['link_model'];
+        $target = $this->multi_conf['target'];
+
+        $this->delete_multi($id);
+
+        // create new
+        if( is_array($value) ) {
+            foreach( $value as $v ) {
+                $columns = array( $this->name, $target );
+                $values = array( $id, $v );
+                $link_model->insert($columns, $values);
+            }
+        }
+        else {
+            $columns = array( $this->name, $target );
+            $values = array( $id, $value );
+            $link_model->insert($columns, $values);
         }
     }
 
@@ -216,7 +239,10 @@ class GenericController {
             }
         }
 
-        $this->flush();
+        $id = $this->flush();
+        if( $this->has_multi() ) {
+        // convert new to $ID
+        }
     }
 
     /**
