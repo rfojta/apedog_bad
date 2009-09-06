@@ -13,8 +13,8 @@ class Term {
     private $dbres;
     private $current_term_query =
     'select id from terms
-         where term_to   > current_date()
-           and term_from < current_date()';
+         where term_to   >= current_date()
+           and term_from <= current_date()';
 
     private $term_labels_query =
     'select id, CONCAT_WS(\' - \',
