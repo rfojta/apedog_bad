@@ -12,18 +12,23 @@ class Graphs extends Results {
     protected $y_min=0;
     protected $term_list;
 
-    function __construct( $dbutil, $term_id, $current_area, $user, $quarter_in_term, $eot, $kpi_id ) {
-        parent::__construct( $dbutil, $term_id, $user, $quarter_in_term, $eot);
+    function __construct( $dbutil, $term_id, $current_area, $user, $quarter_in_term, $eot,$custom, $area_id, $kpi_id ) {
+        parent::__construct( $dbutil, $term_id, $user, $quarter_in_term, $eot, $custom, null);
         $this->area_id = $current_area;
         $this->page='reports.php?graphs';
         $this->kpi_id = $kpi_id;
-        $this->help="<h3>Graphs</h3><p>If you have chosen KPI, you can see graph
-         asigned to it. It is for the ends of terms or for quarters.</p>";
+        $this->help="<h3>Graphs</h3><p>You can see graph
+         asigned to chosen KPI. It is for the ends of terms or for quarters.</p>";
 
         $this->kpi_query='select * from kpis';
     }
 
     function get_form_content() {
+        $uri=explode('?', $_SERVER['REQUEST_URI']);
+        $uri=substr($uri[1], 7);
+        echo "<a href=reports.php?".$uri."><img src='images/back_arrow.png'border='0' alt='Back to the reports'></a>";
+        echo '<hr width="40%" align="left">';
+        echo "<p></p>";
         $quarter_list = $this->get_quarter_list($this->term_id);
         $area_list = $this->get_area_list();
         //        $kpi_list=$this->get_kpi_by_csf_list(null);
@@ -53,13 +58,12 @@ class Graphs extends Results {
         $this->term_list = $this->get_term_list();
 
         if ($this->eot!='true') {
-            $data=$this->get_values($quarter_list, $kpi);
             $x_labels = $this->get_xlabels($quarter_list);
             $x2_labels = $this->get_x2_labels($this->term_list);
         } else {
-            $data=$this->get_values($this->term_list, $kpi);
             $x_labels = $this->get_xlabels($this->term_list);
         }
+        $data=$this->get_values($this->term_list, $kpi);
         $y_max = 100;
         $line_labels=array('Current','Goal');
         $line_colors=array('4AA02C','151B8D');
@@ -75,20 +79,22 @@ class Graphs extends Results {
         $actuals=array();
         $targets=array();
         if($this->eot!='true') {
-            foreach ($list as $quarter) {
-
+            $quarter_list=array();
+            foreach ($list as $term) {
+                $quarter_list = array_merge($quarter_list, $this->get_quarter_list($term['id']));
+            }
+            foreach ($quarter_list as $quarter) {
                 $a=$this->get_actual($this->lc_id, $quarter['id'], $this->term['id'], $kpi);
                 $t=$this->get_target($this->lc_id, $quarter['id'], $this->term['id'], $kpi);
-                
-                if ($a==null){
+
+                if ($a==null) {
                     $a=0;
                 }
-                if ($t==null){
+                if ($t==null) {
                     $t=0;
                 }
                 $actuals[] = $a;
                 $targets[] = $t;
-
             }
         } else {
             foreach($list as $term) {
@@ -101,12 +107,12 @@ class Graphs extends Results {
         $t_max = max($targets);
         $a_min = min($actuals);
         $t_min = min($targets);
-        
+
         if ($a_max>$t_max) {
             $this->y_max=$a_max;
         } else {
-                $this->y_max = $t_max;
-            }
+            $this->y_max = $t_max;
+        }
         if ($a_min<0 && $a_min<$t_min) {
             $this->y_min=$a_min;
         } else if ($t_min<0) {

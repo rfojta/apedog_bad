@@ -137,12 +137,12 @@ class ViewController {
             if( $value != 0 ) {
                 echo "selected=\"true\"";
             }
-            echo ">Ano</option>\n";
+            echo ">Yes</option>\n";
             echo "<option value=\"0\"";
             if( $value == 0 ) {
                 echo "selected=\"true\"";
             }
-            echo ">Ne</option>\n";
+            echo ">No</option>\n";
             echo "</select>\n($value)<br>\n";
         }
         else {
@@ -173,7 +173,7 @@ class ViewController {
      * @param <type> $request http request data
      */
     public function get_form_content($request) {
-        echo "<table width=\"100%\"><tr><td>";
+        echo "<table width=\"100%\"><tr><td valign=\"top\">";
 
         $id = $request[id];
         $delete = $request[delete];
@@ -184,7 +184,7 @@ class ViewController {
         $this->new_item_link();
         $this->get_list($id);
 
-        echo "</td><td>";
+        echo "</td><td valign=\"top\">";
 
         $this->request = $request;
         if(isset($id) && $delete!='yes' ) {

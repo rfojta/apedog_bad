@@ -74,6 +74,11 @@ if( isset($_REQUEST['eot']) ) {
     $eot = $_REQUEST['eot'];
 }
 
+$custom = null;
+if( isset($_REQUEST['custom']) ) {
+    $custom = $_REQUEST['custom'];
+}
+
 $current_area = 'all';
 if( isset($_REQUEST['area_id']) ) {
     $current_area = $_REQUEST['area_id'];
