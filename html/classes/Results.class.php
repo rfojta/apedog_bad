@@ -23,6 +23,8 @@ class Results {
     protected $user;
     protected $eot; //end of a term
     protected $help;
+    protected $custom; //include custom KPIs
+    protected $area_id;
 
     protected $area_query = 'select * from areas';
     protected $quarter_query = 'select * from quarters';
@@ -34,7 +36,7 @@ class Results {
     protected $end_of_term_query = 'select * from logic WHERE `id` = ';
     protected $kpi_unit_query = 'select * from kpi_units';
 
-    function __construct( $dbutil, $term_id, $user, $quarter_in_term, $eot) {
+    function __construct( $dbutil, $term_id, $user, $quarter_in_term, $eot, $custom, $area_id) {
         $this->dbutil = $dbutil;
 
 
@@ -43,6 +45,8 @@ class Results {
         $this->term_id = $term_id;
         $this->quarter_in_term = $quarter_in_term;
         $this->eot = $eot;
+        $this->custom = $custom;
+        $this->area_id = $area_id;
 
         $lc = new LC($dbutil->dbres);
         $this->lc_id = $lc->get_lc_by_user($user);
@@ -50,8 +54,8 @@ class Results {
         $this->actual_values = new DetailTracking($dbutil, 1);
 
         $this->help = "<h3>BSC Results</h3><p>You can see output of all your
-        Business Perspectives here. Every LC has the same KPIs here.<p>You can choose term and quarter.
-        Check your values at the end of term!</p><p>You can see graphs by clicking on KPI.</p>
+        Business Perspectives here.<p>You can choose term and quarter.
+        Check your values at the end of term! Check your LC's custom KPIs!</p><p>You can see graphs by clicking on KPI.</p>
         <p>For more info about KPI, CSF or BP roll over it with mouse.</p>";
 
     }
@@ -76,6 +80,12 @@ class Results {
         $this->get_term_section($term_list);
         $this->get_quarter_section($quarter_list);
         $this->get_eot_checkbox();
+        echo "</p>";
+        echo "<p>";
+        if ($this->custom=='true'){
+            $this->get_area_section($this->get_area_list());
+        }
+        $this->get_custom_checkbox();
         echo "</p>";
 
         echo '<p>';
@@ -138,7 +148,7 @@ class Results {
         echo "Select term: \n";
         echo "<select name=\"term_id\" id=\"term_id\"\n";
         echo "onchange=\"window.location.href='".$this->page."&lc_id=".$this->lc_id.
-            "&area_id=".$this->area_id."&quarter_in_term=".$this->quarter_in_term.
+            "&area_id=".$this->area_id."&quarter_in_term=".$this->quarter_in_term."&custom=".$this->custom.
             "&eot=".$this->eot."&term_id='+this.value\">\n";
 
         foreach( $term_list as $term ) {
@@ -163,7 +173,10 @@ class Results {
     function get_quarter_section($quarter_list) {
         echo "Select quarter: \n";
         echo "<select name=\"quarter_id\" id=\"quarter_id\"\n";
-        echo "onchange=\"window.location.href='".$this->page."&lc_id=".$this->lc_id."&area_id=".$this->area_id."&term_id=".$this->term_id."&quarter_in_term='+this.value\">\n";
+        echo "onchange=\"window.location.href='".$this->page.
+        "&lc_id=".$this->lc_id."&area_id=".$this->area_id."&term_id="
+        .$this->term_id."&custom=".$this->custom.
+        "&quarter_in_term='+this.value\">\n";
 
         foreach( $quarter_list as $quarter ) {
             echo "<option value=\"".$quarter['quarter_in_term']."\"";
@@ -257,6 +270,11 @@ class Results {
         if ($this->lc_id!='all') {
             $query.=' and l.lc = '.$this->lc_id;
         }
+
+        if ($this->custom!='true'){
+            $query.=' and k.in_bsc = 1';
+        }
+        
         $query.=' order by `id`';
 
         $rows = $this->dbutil->process_query_assoc($query);
@@ -498,7 +516,7 @@ class Results {
         echo "<select name=\"lc_id\" id=\"lc_id\"\n";
         echo "onchange=\"window.location.href='".$this->page."&area_id="
             .$this->area_id."&kpi_id=".$this->kpi_id."&term_id=".$this->term_id.
-            "&quarter_in_term=".$this->quarter_in_term.
+            "&quarter_in_term=".$this->quarter_in_term."&custom=".$this->custom.
             "&eot=".$this->eot."&lc_id='+this.value\">\n";
 
         echo "<option value='all'";
@@ -587,7 +605,8 @@ class Results {
         //            .$this->area_id."&lc_id=".$this->lc_id."&term_id=".$this->term_id.
         //            "&eot='+this.checked\"}";
         echo "onchange=\"window.location.href='".$this->page."&area_id="
-            .$this->area_id."&lc_id=".$this->lc_id."&kpi_id=".$this->kpi_id."&term_id=".$this->term_id.
+            .$this->area_id."&lc_id=".$this->lc_id."&kpi_id=".$this->kpi_id.
+            "&term_id=".$this->term_id."&custom=".$this->custom.
             "&eot='+this.checked\"";
         if( isset($_REQUEST['eot']) ) {
             if( 'true' == $_REQUEST['eot']) {
@@ -599,6 +618,26 @@ class Results {
         echo "End of a term";
     }
 
+    function get_custom_checkbox() {
+        echo '<input type="checkbox" name="custom" value="1" ';
+        //        echo "onchange=if(this.checked){\"window.location.href='".$this->page."&area_id="
+        //            .$this->area_id."&lc_id=".$this->lc_id."&term_id=".$this->term_id.
+        //            "&eot='+this.checked\"}";
+        echo "onchange=\"window.location.href='".$this->page."&area_id="
+            .$this->area_id."&lc_id=".$this->lc_id."&kpi_id=".$this->kpi_id."&quarter_in_term=".$this->quarter_in_term.
+            "&term_id=".$this->term_id."&eot=".$this->eot."&area_id=".$this->area_id."&custom='+this.checked\"";
+        if( isset($_REQUEST['custom']) ) {
+            if( 'true' == $_REQUEST['custom']) {
+                $this->custom=$_REQUEST['custom'];
+                echo ' checked';
+            } else {
+                $this->area_id='all';
+            }
+        }
+        echo ">";
+        echo "Include custom KPIs";
+    }
+
     function get_help() {
         echo $this->help;
     }
@@ -607,6 +646,39 @@ class Results {
         $query = $this->kpi_unit_query . ' WHERE `id` = '.$unit_id;
         $rows = $this->dbutil->process_query_assoc($query);
         return $rows[0];
+    }
+    protected function get_area_section( $area_list ) {
+        echo "Select area: \n";
+        echo "<select name=\"area_id\" id=\"area_id\"\n";
+        echo "onchange=\"window.location.href='".$this->page."&area_id="
+            .$this->area_id."&lc_id=".$this->lc_id."&kpi_id=".$this->kpi_id."&quarter_in_term=".$this->quarter_in_term.
+            "&term_id=".$this->term_id."&eot=".$this->eot."&custom=".$this->custom."&area_id='+this.value\">\n";
+        echo "<option value=\"all\"";
+        if( isset($_REQUEST['area_id']) ) {
+            if('all' == $_REQUEST['area_id']) {
+                $this->area_id='all';
+                echo " selected ";
+            }
+        }
+        echo ">";
+        echo 'All';
+        echo "</option>\n";
+
+        foreach( $area_list as $area ) {
+            echo "<option value=\"".$area['id']."\"";
+            if( isset($_REQUEST['area_id']) ) {
+                if( $area['id'] == $_REQUEST['area_id']) {
+                    $this->area_id=$area['id'];
+                    echo " selected ";
+                }
+            }
+
+            echo ">";
+            echo $area['name'];
+            echo "</option>\n";
+        }
+
+        echo "</select>\n";
     }
 }
 ?>
