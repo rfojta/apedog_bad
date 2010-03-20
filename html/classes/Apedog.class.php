@@ -11,7 +11,7 @@
  * @author Richard
  */
 class Apedog {
-
+    var $version = '1.0';
     var $dbres;
 
     function db_connect( $configuration ) {
@@ -39,17 +39,24 @@ class Apedog {
         if( $environment == 'prod' ) {
             $configuration = array(
                 server => 'localhost',
-                user => 'apedog',
-                password => 'ponorka',
-                database => 'apedog_cholerik_cz'
+                user => 'root',
+                password => '',
+                database => 'apedog'
             );
-        } else {
+        } else if ($environment == 'Czech Republic') {
             $configuration = array(
                 server => 'localhost',
                 user => 'root',
                 password => '',
                 database => 'apedog'
             );
+        } else {
+            $configuration = array(
+                server => 'localhost',
+                user => 'root',
+                password => '',
+                database => 'apedo'
+            ); 
         }
         $this->db_connect( $configuration );
     }
