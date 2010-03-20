@@ -1,5 +1,6 @@
 <?php
 include('init.php');
+echo $_SESSION['country_code'];
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
@@ -9,7 +10,7 @@ include('init.php');
         <meta name="keywords" content="" />
         <meta name="description" content="" />
         <link href="default.css" rel="stylesheet" type="text/css" />
-        <link href="images/favicon.png" rel="icon" type="image/png" />
+        <link href="images/common/favicon.png" rel="icon" type="image/png" />
     </head>
     <body>
         <?php include('components/menu.php'); ?>

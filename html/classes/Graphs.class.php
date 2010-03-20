@@ -26,7 +26,7 @@ class Graphs extends Results {
     function get_form_content() {
         $uri=explode('?', $_SERVER['REQUEST_URI']);
         $uri=substr($uri[1], 7);
-        echo "<a href=reports.php?".$uri."><img src='images/back_arrow.png'border='0' alt='Back to the reports'></a>";
+        echo "<a href=reports.php?".$uri."><img src='images/common/back_arrow.png'border='0' alt='Back to the reports'></a>";
         echo '<hr width="40%" align="left">';
         echo "<p></p>";
         $quarter_list = $this->get_quarter_list($this->term_id);

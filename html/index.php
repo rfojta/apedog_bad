@@ -56,7 +56,7 @@ if ($_SESSION['country_code']==null||$_POST['Country']!=null) {
         <meta name="keywords" content="" />
         <meta name="description" content="" />
         <link href="default.css" rel="stylesheet" type="text/css" />
-        <link href="images/favicon.png" rel="icon" type="image/png" />
+        <link href="images/common/favicon.png" rel="icon" type="image/png" />
         <script type="text/javascript" src="js/mootools.js"></script>
 
         <script type="text/javascript">
@@ -127,9 +127,17 @@ if ($_SESSION['country_code']==null||$_POST['Country']!=null) {
 
                         </form>
                     </p>
+                    <br />
+                    <!-- AddThis Button BEGIN -->
+                <div class="addthis_toolbox addthis_default_style">
+                    <a href="http://www.addthis.com/bookmark.php?v=250&amp;username=xa-4ba542004f4da56d" class="addthis_button_compact" align="right" addthis:url="http://praha.aiesec.cz/apedog" addthis:title="Apedog - AEISEC Countries Performance Monitoring tool" addthis:description="Apedog is a tool, which helps AIESEC Countries to track their plans. It was developed to ensure sustainable growth, improving KPIs and improving AIESEC experience.">Share Apedog!</a>
+                </div>
+                <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#username=xa-4ba542004f4da56d"></script>
+                <!-- AddThis Button END -->
 
                 </div>
             </div>
+
 
             <div id="colTwo">
                 <h2 class="section">Help</h2>
@@ -142,5 +150,15 @@ if ($_SESSION['country_code']==null||$_POST['Country']!=null) {
             <div style="clear: both;">&nbsp;</div>
 
             <?php include('components/footer.php'); ?>
+
+            <script type="text/javascript">
+                var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+                document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+            </script>
+            <script type="text/javascript">
+                try {
+                    var pageTracker = _gat._getTracker("UA-10736615-3");
+                    pageTracker._trackPageview();
+                } catch(err) {}</script>
     </body>
 </html>

@@ -374,11 +374,11 @@ class Results {
     function get_status($rate) {
         if ($rate=='0'||$rate!=null) {
             if ($rate < '0.85') {
-                echo "<img src='images/red_status.png'>";
+                echo "<img src='images/common/red_status.png'>";
             } else if ($rate < '1') {
-                    echo "<img src='images/orange_status.png'>";
+                    echo "<img src='images/common/orange_status.png'>";
                 } else {
-                    echo "<img src='images/green_status.png'>";
+                    echo "<img src='images/common/green_status.png'>";
                 }
         }
     }
@@ -581,19 +581,19 @@ class Results {
         if ($past!=null && $actual!=null && $past!='-' && $actual!='-') {
             if ($past>0) {
                 if ($actual<0.9*$past) {
-                    echo '<img src="images/red_trend.png">';
+                    echo '<img src="images/common/red_trend.png">';
                 } else if ($actual<1.1*$past) {
-                        echo '<img src="images/yellow_trend.png">';
+                        echo '<img src="images/common/yellow_trend.png">';
                     } else if ($actual >=1.1*$past) {
-                            echo '<img src="images/green_trend.png">';
+                            echo '<img src="images/common/green_trend.png">';
                         }
             } else {
                 if ($actual<1.1*$past) {
-                    echo '<img src="images/red_trend.png">';
+                    echo '<img src="images/common/red_trend.png">';
                 } else if ($actual>1.1*$past&&$actual<0.9*$past) {
-                        echo '<img src="images/yellow_trend.png">';
+                        echo '<img src="images/common/yellow_trend.png">';
                     } else if ($actual >=0.9*$past) {
-                            echo '<img src="images/green_trend.png">';
+                            echo '<img src="images/common/green_trend.png">';
                         }
             }
         }
