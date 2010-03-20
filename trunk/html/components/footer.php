@@ -1,5 +1,8 @@
 <div id="footer">
-	<p>Copyright &copy; 2009 <strong>Apedog 1.0 </strong> Fojta, Kuželka <br /> praha.it@aiesec.cz</p>
+	<p>
+            Copyright &copy; 2009 <strong>Apedog 1.0 </strong> Fojta, Kuželka <br /> praha.it@aiesec.cz
+        </p>
+
 </div>
 <?php
 if( isset( $dbres )) {

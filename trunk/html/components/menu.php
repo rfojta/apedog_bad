@@ -23,12 +23,17 @@
     </div>
 </div>
 <div id="splash"><img src="<?php
-            $src='images/img02';
+            $src='images/';
+            if ($_SESSION['country_code']!=null&&$page!='index'&&$page!='useful_links'){
+                $src.='_'.$_SESSION['country_code'];
+            } else {
+                $src.='common';
+            }
+            $src.='/img02';
             if($page!='index'&&$page!='useful_links'){
                 $src .= '_'.$_SESSION['user'].'.jpg';
+                } else {
+                    $src.='.jpg';
                 }
-            if (!file_exists($src)){
-                $src='images/img02.jpg';
-            }
             echo $src;
-            ?>" alt="images/img02.jpg is missing" width="1024" height="140" /></div>
+            ?>" alt="<?php echo $src; ?> is missing" width="1024" height="140" /></div>

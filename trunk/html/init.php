@@ -1,7 +1,8 @@
 <?php
 session_cache_expire(60);
 session_start();
-if (!isset($_SESSION['user'])) { header("Location: index.php"); exit; }
+if (!isset($_SESSION['user'])||!isset($_SESSION['country_code'])) {
+session_destroy();header("Location: index.php"); exit; }
 $info = $_SESSION['user'];
 $lc = $_SESSION['user'];
 

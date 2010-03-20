@@ -1,23 +1,7 @@
--- phpMyAdmin SQL Dump
--- version 2.11.9.4
--- http://www.phpmyadmin.net
---
--- Host: mysql.praha.aiesec.cz
--- Generation Time: Sep 01, 2009 at 02:01 PM
--- Server version: 5.0.67
--- PHP Version: 5.2.9
-
-SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
-
---
--- Database: `apedog_COUNTRY_CODE`
---
-
--- --------------------------------------------------------
-
 --
 -- Table structure for table `areas`
 --
+
 
 DROP TABLE IF EXISTS `areas`;
 CREATE TABLE `areas` (
@@ -203,7 +187,7 @@ CREATE TABLE `lcs` (
 --
 
 INSERT INTO `lcs` (`id`, `name`, `description`, `created`, `updated`) VALUES
-(1, 'MC', 'Member Committee  Czech republic', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
+(1, 'MC', 'Member Committee', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 

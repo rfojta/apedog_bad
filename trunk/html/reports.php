@@ -9,7 +9,7 @@ include('init.php');
         <meta name="keywords" content="" />
         <meta name="description" content="" />
         <link href="default.css" rel="stylesheet" type="text/css" />
-        <link href="images/favicon.png" rel="icon" type="image/png" />
+        <link href="images/common/favicon.png" rel="icon" type="image/png" />
     </head>
     <body>
         <?php include('components/menu.php'); ?>
