@@ -2,7 +2,7 @@
 /* 
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
- */
+*/
 
 /**
  * Description of Apedog
@@ -16,9 +16,9 @@ class Apedog {
 
     function db_connect( $configuration ) {
         $this->dbres = mysql_connect(
-            $configuration['server'],
-            $configuration['user'],
-            $configuration['password']
+                $configuration['server'],
+                $configuration['user'],
+                $configuration['password']
         );
 
         if (!$this->dbres) {
@@ -33,31 +33,19 @@ class Apedog {
     }
 
     //put your code here
-    function Apedog($environment) {
-        $configuration = array();
-        
-        if( $environment == 'prod' ) {
-            $configuration = array(
-                server => 'localhost',
-                user => 'root',
-                password => '',
-                database => 'apedog'
-            );
-        } else if ($environment == 'Czech Republic') {
-            $configuration = array(
-                server => 'localhost',
-                user => 'root',
-                password => '',
-                database => 'apedog'
-            );
+    function Apedog($country_code) {
+        if ($country_code!=null) {
+            $database='apedog_'.$country_code;
         } else {
-            $configuration = array(
+            $database = 'apedog';
+        }
+        $configuration = array(
                 server => 'localhost',
                 user => 'root',
                 password => '',
-                database => 'apedo'
-            ); 
-        }
+                database => $database
+        );
+
         $this->db_connect( $configuration );
     }
 

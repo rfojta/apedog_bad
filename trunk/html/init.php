@@ -49,7 +49,7 @@ foreach( glob('classes/view/*.php') as $php_class ) {
 
 
 
-$apedog = new Apedog('devel');
+$apedog = new Apedog($_SESSION['country_code']);
 $dbres = $apedog->dbres;
 
 $dbutil = new DB_Util($apedog->dbres);

@@ -52,7 +52,6 @@ class DB_Util {
         while( $row = mysql_fetch_assoc($res) ) {
             $out_array[] = $row;
         }
-
         return $out_array;
     }
 
