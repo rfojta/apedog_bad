@@ -21,7 +21,7 @@ include_once('classes/controller/admin.class.php');
 $admin = new Admin($dbutil);
 
 
-$conf_items = array('area', 'kpi', 'term', 'quarter', 'user', 'lc', 'business_perspective', 'csf');
+$conf_items = array('kpi', 'term', 'quarter', 'user', 'lc', 'business_perspective', 'csf');
 $conf_items[] = 'kpi_unit';
 
 echo "<div style=\"float:left\">";
