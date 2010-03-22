@@ -11,7 +11,7 @@
  * @author Richard
  */
 class Apedog {
-    var $version = '1.0';
+    var $version = '1.1';
     var $dbres;
 
     function db_connect( $configuration ) {
