@@ -1,6 +1,6 @@
 <div id="footer">
 	<p>
-            Copyright &copy; 2009 <strong>Apedog 1.0 </strong> Fojta, Kuželka <br /> praha.it@aiesec.cz
+            Copyright &copy; 2009 <strong>Apedog 1.1 </strong> Fojta, Kuželka <br /> praha.it@aiesec.cz
         </p>
 
 </div>
