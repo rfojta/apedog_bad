@@ -31,7 +31,7 @@ class Report {
         $this->area_id = $area_id;
 
         $lc = new LC($dbres);
-        $this->lc_id = $lc->get_lc_by_user($user);
+        $this->lc_id = $lc->get_lc_by_name($user);
 
         $this->target_values = new Tracking($dbres);
         $this->actual_values = new Tracking($dbres, 1);

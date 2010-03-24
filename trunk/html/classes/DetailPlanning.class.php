@@ -42,7 +42,7 @@ class DetailPlanning {
         $this->locking = $locking;
 
         $lc = new LC($dbutil->dbres);
-        $this->lc_id = $lc->get_lc_by_user($user);
+        $this->lc_id = $lc->get_lc_by_name($user);
 
         $this->target_values = new DetailTracking($dbutil);
 

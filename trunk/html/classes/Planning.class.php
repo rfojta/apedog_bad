@@ -33,7 +33,7 @@ class Planning {
         $this->quarter_id = $area_id;
 
         $lc = new LC($dbutil->dbres);
-        $this->lc_id = $lc->get_lc_by_user($user);
+        $this->lc_id = $lc->get_lc_by_name($user);
 
         $this->target_values = new Tracking($dbutil);
 

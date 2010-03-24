@@ -95,7 +95,7 @@ if ($_SESSION['country_code']==null||$_POST['Country']!=null) {
                 <h2 class="section">Welcome to AEISEC Countries Performance Monitor</h2>
                 <div class="content">
                     <p>Apedog is a tool, which helps AIESEC Countries to track their plans. It was developed to ensure sustainable growth, improving KPIs and improving AIESEC experience.</p>
-                    <p>We recommend to use Mozilla Firefox for best look and performance.</p>
+                    <p>We recommend to use Mozilla Firefox or Google Chrome for best look and performance.</p>
                     <b><?php echo $info; ?></b>
                     <p>
                         <form action="index.php" method="post">
@@ -115,7 +115,7 @@ if ($_SESSION['country_code']==null||$_POST['Country']!=null) {
                                     ?>
 
                                 </select>
-                                <div id="hiddenParagraph" style="overflow:hidden; height: 100px;">
+                                <div id="hiddenParagraph" style="overflow:hidden; height: 115px;">
                                     <table style="margin: 0pt; padding: 10px; text-align: left; border:0">
                                         <tr><td><label for="userid">Login: </label></td><td><input type="text" name="userid" id="userid" size="10" /></td></tr>
                                         <tr><td><label for="userpass">Password: </label></td><td><input type="password" name="userpass" id="userpass" size="10" /></td></tr>

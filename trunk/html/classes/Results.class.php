@@ -49,7 +49,7 @@ class Results {
         $this->area_id = $area_id;
 
         $lc = new LC($dbutil->dbres);
-        $this->lc_id = $lc->get_lc_by_user($user);
+        $this->lc_id = $lc->get_lc_by_name($user);
         $this->target_values = new DetailTracking($dbutil);
         $this->actual_values = new DetailTracking($dbutil, 1);
 
