@@ -58,7 +58,7 @@ class Entering extends DetailPlanning {
             $this->get_boolean_input($kpi_id, $actual);
         } else {
             echo "<input name=\"kpi-$kpi_id\"";
-            if ($this->locking->get_count($this->lc_id, 'NULL', $this->term_id)) {
+            if ($this->locking->get_count($this->lc_id, $this->quarter_id, 'NULL')) {
                 echo ' disabled ';
             }
             echo "value=\"$actual\" />";
@@ -122,6 +122,30 @@ class Entering extends DetailPlanning {
         if ($this->locking->get_count($this->lc_id, $this->quarter_id, 'NULL')) {
             echo "<p><b>You can't enter values for this quarter as it has been locked by MC for you.</b></p>";
         }
+    }
+
+    /**
+ * Builds dropdown yes/no input
+ * @param <type> $id id of kpi
+ * @param <type> $value selected/not selected
+ */
+    protected function get_boolean_input( $id, $value ) {
+        echo "<select name=\"kpi-$id\" ";
+        if ($this->locking->get_count($this->lc_id, $this->quarter_id, 'NULL')) {
+                echo ' disabled ';
+            }
+        echo ">\n";
+        echo "<option value=\"1\" ";
+        if( $value == '1' ) {
+            echo "selected=\"true\"";
+        }
+        echo ">Yes</option>\n";
+        echo "<option value=\"0\"";
+        if( $value != '1' ) {
+            echo "selected=\"true\"";
+        }
+        echo ">No</option>\n";
+        echo "</select>\n<br>\n";
     }
 }
 ?>
