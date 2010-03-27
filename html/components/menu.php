@@ -22,7 +22,7 @@
        
     </div>
 </div>
-<div id="splash"><img src="<?php
+<div id="splash" style="background: url(<?php
             $src='images/';
             if ($_SESSION['country_code']!=null&&$page!='index'&&$page!='useful_links'){
                 $src.='_'.$_SESSION['country_code'];
@@ -36,4 +36,4 @@
                     $src.='.jpg';
                 }
             echo $src;
-            ?>" alt="<?php echo $src; ?> is missing" width="1024" height="140" /></div>
+            ?>)"><span style="position:relative; bottom:-123px; left: 919px; color: black; font-family:Verdana,Helvetica,sans-serif; font-weight: 900;">Apedog 1.1</span></div>
