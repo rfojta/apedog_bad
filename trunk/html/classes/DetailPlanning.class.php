@@ -118,7 +118,11 @@ class DetailPlanning {
  * @param <type> $value selected/not selected
  */
     protected function get_boolean_input( $id, $value ) {
-        echo "<select name=\"kpi-$id\" >\n";
+        echo "<select name=\"kpi-$id\" ";
+        if ($this->locking->get_count($this->lc_id, 'NULL', $this->term_id)) {
+                echo ' disabled ';
+            }
+        echo ">\n";
         echo "<option value=\"1\" ";
         if( $value == '1' ) {
             echo "selected=\"true\"";
