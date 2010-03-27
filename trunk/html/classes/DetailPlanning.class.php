@@ -331,8 +331,8 @@ class DetailPlanning {
     function get_kpi_list($area_id) {
         if ($area_id!='all') {
             $query = $this->kpi_query . " where area = " . $this->dbutil->escape($area_id);
-        } else {
-            $query = $this->kpi_query;
+        }  else {
+            $query = $this->kpi_query.' and l.lc = '.$this->lc_id;
         }
         $rows = $this->dbutil->process_query_assoc($query);
         return $rows;
