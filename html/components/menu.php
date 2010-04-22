@@ -23,7 +23,7 @@
     </div>
 </div>
 <div id="splash" style="background: url(<?php
-$src='images/';
+$src='\'images/';
 if ($_SESSION['country_code']!=null&&$page!='index'&&$page!='useful_links') {
     $src.='_'.$_SESSION['country_code'];
 } else {
@@ -36,5 +36,5 @@ if($page!='index'&&$page!='useful_links') {
     $src.='.jpg';
 }
 echo $src;
-     ?>)">
+     ?>')">
     <span style="position:relative; bottom:-123px; left: 919px; color: black; font-family:Verdana,Helvetica,sans-serif; font-weight: 900;">Apedog 1.1</span></div>
