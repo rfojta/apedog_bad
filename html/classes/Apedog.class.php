@@ -37,13 +37,13 @@ class Apedog {
         if ($country_code!=null) {
             $database='apedog_'.$country_code;
         } else {
-            $database = 'apedog';
+            $database = 'apedog_base';
         }
         $configuration = array(
-                server => 'localhost',
-                user => 'root',
-                password => '',
-                database => $database
+                'server' => 'localhost',
+                'user' => 'root',
+                'password' => '',
+                'database' => $database
         );
 
         $this->db_connect( $configuration );

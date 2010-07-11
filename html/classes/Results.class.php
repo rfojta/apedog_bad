@@ -1,4 +1,5 @@
 <?php
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -10,8 +11,8 @@
  * @author Krystof
  */
 class Results {
-    protected $dbutil;
 
+    protected $dbutil;
     protected $term_id;
     protected $quarter_id;
     protected $quarter_in_term;
@@ -21,11 +22,13 @@ class Results {
     protected $actual_values;
     protected $locking;
     protected $user;
-    protected $eot; //end of a term
-    protected $help;
-    protected $custom; //include custom KPIs
-    protected $area_id;
+    protected $eot;
+ //end of a term
+    protected $help;    
 
+    protected $custom;
+ //include custom KPIs
+    protected $area_id;
     protected $area_query = 'select * from areas';
     protected $quarter_query = 'select * from quarters';
     protected $kpi_query = 'select distinct k.* from lc_kpi l join kpis k on l.kpi = k.id';
@@ -36,7 +39,7 @@ class Results {
     protected $end_of_term_query = 'select * from logic WHERE `id` = ';
     protected $kpi_unit_query = 'select * from kpi_units';
 
-    function __construct( $dbutil, $term_id, $user, $quarter_in_term, $eot, $custom, $area_id) {
+    function __construct($dbutil, $term_id, $user, $quarter_in_term, $eot, $custom, $area_id) {
         $this->dbutil = $dbutil;
 
 
@@ -57,7 +60,6 @@ class Results {
         Business Perspectives here.<p>You can choose term and quarter.
         Check your values at the end of term! Check your LC's custom KPIs!</p><p>You can see graphs by clicking on KPI.</p>
         <p>For more info about KPI, CSF or BP roll over it with mouse.</p>";
-
     }
 
     function get_area_list() {
@@ -71,9 +73,9 @@ class Results {
         $quarter_list = $this->get_quarter_list($this->term_id);
         $area_list = $this->get_area_list();
         $business_perspectives_list = $this->get_bp_list();
-        echo "<p></p>";
+        echo $_REQUEST['lc_id'];
         echo "<p>";
-        if( $_SESSION['user'] == 'MC') {
+        if ($_SESSION['user'] == 'MC') {
             $lc_list = $this->get_lc_list();
             $this->get_lc_section($lc_list);
         }
@@ -82,22 +84,25 @@ class Results {
         $this->get_eot_checkbox();
         echo "</p>";
         echo "<p>";
-        if ($this->custom=='true'){
+        if ($this->custom == 'true') {
             $this->get_area_section($this->get_area_list());
         }
         $this->get_custom_checkbox();
+
+        echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+        echo "<a href='xlswriter.php' target='_blank'>Export to XLS</a>";
         echo "</p>";
 
         echo '<p>';
         echo "<table width=100%><tr><td width='50%' valign=top>";
         $i = 0;
-        foreach( $business_perspectives_list as $bp ) {
+        foreach ($business_perspectives_list as $bp) {
 
             echo "<table cellspacing='0' cellpadding='3' class='bpTable' width=100%>";
             $this->get_output($bp);
             echo "</table>";
 
-            if( ( $i % 2 ) == 0 ) {
+            if (( $i % 2 ) == 0) {
                 echo "</td>\n<td valign=top>";
             } else {
                 echo "</td></tr>\n<tr><td width='50%' valign=top>";
@@ -107,21 +112,21 @@ class Results {
         echo "</table>";
     }
 
-    function submit( $post ) {
+    function submit($post) {
         $quarter;
         $rec;
-        $kpi=array();
-        foreach( $post as $key => $value ) {
-        // $tokens = array();
-            if( $key=='quarter_id') {
-                $quarter=$value;
+        $kpi = array();
+        foreach ($post as $key => $value) {
+            // $tokens = array();
+            if ($key == 'quarter_id') {
+                $quarter = $value;
             }
 
-            if( preg_match('/^kpi-(\d+)$/', $key, $tokens) ) {
+            if (preg_match('/^kpi-(\d+)$/', $key, $tokens)) {
 
-                if( $value > 0 && $quarter!=null ) {
-                    $kpi=$tokens;
-                    $this->set_values($kpi,$quarter,$value);
+                if ($value > 0 && $quarter != null) {
+                    $kpi = $tokens;
+                    $this->set_values($kpi, $quarter, $value);
                 }
             }
         }
@@ -134,10 +139,10 @@ class Results {
     }
 
     function get_quarter_list($term_id) {
-        if ($term_id==null) {
+        if ($term_id == null) {
             $query = $this->quarter_query . ' ORDER BY `id`';
         } else {
-            $query = $this->quarter_query . ' where term = '.$term_id . ' ORDER BY `quarter_in_term`';
+            $query = $this->quarter_query . ' where term = ' . $term_id . ' ORDER BY `quarter_in_term`';
         }
         $rows = $this->dbutil->process_query_assoc($query);
         //        $this->quarter_id=$rows[0]['id'];
@@ -147,23 +152,23 @@ class Results {
     function get_term_section($term_list) {
         echo "Select term: \n";
         echo "<select name=\"term_id\" id=\"term_id\"\n";
-        echo "onchange=\"window.location.href='".$this->page."&lc_id=".$this->lc_id.
-            "&area_id=".$this->area_id."&quarter_in_term=".$this->quarter_in_term."&custom=".$this->custom.
-            "&eot=".$this->eot."&term_id='+this.value\">\n";
+        echo "onchange=\"window.location.href='" . $this->page . "&lc_id=" . $this->lc_id .
+        "&area_id=" . $this->area_id . "&quarter_in_term=" . $this->quarter_in_term . "&custom=" . $this->custom .
+        "&eot=" . $this->eot . "&term_id='+this.value\">\n";
 
-        foreach( $term_list as $term ) {
-            echo "<option value=\"".$term['id']."\"";
-            if( isset($_REQUEST['term_id']) ) {
-                if( $term['id'] == $_REQUEST['term_id']) {
-                    $this->term_id=$term['id'];
+        foreach ($term_list as $term) {
+            echo "<option value=\"" . $term['id'] . "\"";
+            if (isset($_REQUEST['term_id'])) {
+                if ($term['id'] == $_REQUEST['term_id']) {
+                    $this->term_id = $term['id'];
                     echo " selected ";
                 }
-            } else if ($term['id']==$this->term_id) {
-                    echo " selected";
-                }
+            } else if ($term['id'] == $this->term_id) {
+                echo " selected";
+            }
 
             echo ">";
-            echo date('Y', strtotime($term['term_from'])).'/'.date('Y', strtotime($term['term_to']));
+            echo date('Y', strtotime($term['term_from'])) . '/' . date('Y', strtotime($term['term_to']));
             echo "</option>\n";
         }
 
@@ -173,26 +178,26 @@ class Results {
     function get_quarter_section($quarter_list) {
         echo "Select quarter: \n";
         echo "<select name=\"quarter_id\" id=\"quarter_id\"\n";
-        echo "onchange=\"window.location.href='".$this->page.
-        "&lc_id=".$this->lc_id."&area_id=".$this->area_id."&term_id="
-        .$this->term_id."&custom=".$this->custom.
+        echo "onchange=\"window.location.href='" . $this->page .
+        "&lc_id=" . $this->lc_id . "&area_id=" . $this->area_id . "&term_id="
+        . $this->term_id . "&custom=" . $this->custom .
         "&quarter_in_term='+this.value\">\n";
 
-        foreach( $quarter_list as $quarter ) {
-            echo "<option value=\"".$quarter['quarter_in_term']."\"";
-            if( isset($_REQUEST['quarter_in_term']) ) {
-                if( $quarter['quarter_in_term'] == $_REQUEST['quarter_in_term']) {
-                    $this->quarter_id=$quarter['id'];
-                    $this->quarter_in_term=$quarter['quarter_in_term'];
+        foreach ($quarter_list as $quarter) {
+            echo "<option value=\"" . $quarter['quarter_in_term'] . "\"";
+            if (isset($_REQUEST['quarter_in_term'])) {
+                if ($quarter['quarter_in_term'] == $_REQUEST['quarter_in_term']) {
+                    $this->quarter_id = $quarter['id'];
+                    $this->quarter_in_term = $quarter['quarter_in_term'];
                     echo " selected ";
                 }
-            } else if ($quarter['quarter_in_term']==$this->quarter_in_term) {
-                    $this->quarter_id=$quarter['id'];
-                    echo " selected ";
-                }
+            } else if ($quarter['quarter_in_term'] == $this->quarter_in_term) {
+                $this->quarter_id = $quarter['id'];
+                echo " selected ";
+            }
 
             echo ">";
-            echo date('j.n.Y', strtotime($quarter['quarter_from'])).'-'.date('j.n.Y', strtotime($quarter['quarter_to']));
+            echo date('j.n.Y', strtotime($quarter['quarter_from'])) . '-' . date('j.n.Y', strtotime($quarter['quarter_to']));
             echo "</option>\n";
         }
 
@@ -212,16 +217,16 @@ class Results {
             $temp = $this->get_kpi_by_csf_list($csf['id']);
             $kpi_list = array_merge($kpi_list, $temp);
         }
-        $rate = round($this->get_rate($kpi_list)*100);
-        if ($rate>100) {
-            $rate=100;
+        $rate = round($this->get_rate($kpi_list) * 100);
+        if ($rate > 100) {
+            $rate = 100;
         }
-        $gom = new GoogleOMeter('50x24',$rate,null,null);
+        $gom = new GoogleOMeter('50x24', $rate, null, null);
         echo '<tr class="bpTableRow">';
         echo '<th width="48%">';
         echo '<big>';
         echo '<span title="' . $bp['description'] . '">'
-            . $bp['name']. ':</span>';
+        . $bp['name'] . ':</span>';
         echo '</big>';
         echo '</th>';
         echo '<th colspan="4" align="right">';
@@ -245,36 +250,36 @@ class Results {
         echo '</td>';
         echo '</tr>' . "\n";
 
-        foreach($csf_list as $csf) {
+        foreach ($csf_list as $csf) {
             $this->get_csf_section($csf);
         }
     }
 
     function get_csf_list($bp_id) {
-        if ($bp_id==null) {
-            $query = $this->csf_query.'= 0';
+        if ($bp_id == null) {
+            $query = $this->csf_query . '= 0';
         } else {
-            $query = $this->csf_query.'='.$bp_id;
+            $query = $this->csf_query . '=' . $bp_id;
         }
         $rows = $this->dbutil->process_query_assoc($query);
         return $rows;
     }
 
     function get_kpi_by_csf_list($csf_id) {
-        if ($csf_id==null) {
-            $query = $this->kpi_query.' WHERE k.csf = 0';
+        if ($csf_id == null) {
+            $query = $this->kpi_query . ' WHERE k.csf = 0';
         } else {
-            $query = $this->kpi_query.' WHERE k.csf ='.$csf_id;
+            $query = $this->kpi_query . ' WHERE k.csf =' . $csf_id;
         }
 
-        if ($this->lc_id!='all') {
-            $query.=' and l.lc = '.$this->lc_id;
+        if ($this->lc_id != 'all') {
+            $query.=' and l.lc = ' . $this->lc_id;
         }
 
-        if ($this->custom!='true'){
+        if ($this->custom != 'true') {
             $query.=' and k.in_bsc = 1';
         }
-        
+
         $query.=' order by `id`';
 
         $rows = $this->dbutil->process_query_assoc($query);
@@ -289,7 +294,7 @@ class Results {
         echo '<tr class="csfTableRow">';
         echo '<td>';
         echo '<span title="' . $csf['description'] . '">'
-            . $csf['name'] . ':</span>';
+        . $csf['name'] . ':</span>';
         echo '</td>';
         echo '<td>';
         echo '</td>';
@@ -308,7 +313,7 @@ class Results {
     }
 
     function get_kpi_section($kpi) {
-        if ($this->area_id==$kpi['area']|| $this->area_id=='all' || $this->area_id==null) {
+        if ($this->area_id == $kpi['area'] || $this->area_id == 'all' || $this->area_id == null) {
 
             $actual = $this->get_actual($this->lc_id, $this->quarter_id, $this->term_id, $kpi);
 
@@ -318,46 +323,46 @@ class Results {
             $rate = $this->get_rate(array($kpi));
 
             $past_values = $this->get_year_ago($kpi);
-            $unit=$this->get_kpi_unit($kpi['kpi_unit']);
+            $unit = $this->get_kpi_unit($kpi['kpi_unit']);
             echo '<tr class="kpi1TableRow">';
             echo '<td class="kpiName">';
             echo '<small>';
-            echo '<a href="reports.php?graphs&kpi_id='.$kpi['id'].'&lc_id='.$this->lc_id.
-                '&eot='.$this->eot.'" title="' . $kpi['description'] . '">'. $kpi['name'] . ':</a>';
+            echo '<a href="reports.php?graphs&kpi_id=' . $kpi['id'] . '&lc_id=' . $this->lc_id .
+            '&eot=' . $this->eot . '" title="' . $kpi['description'] . '">' . $kpi['name'] . ':</a>';
             echo '</small>';
             echo '</td>';
             echo '<td class="currentValue">';
-            if ($actual!=null|| $actual=='0') {
-                if($unit['spec']=='boolean') {
+            if ($actual != null || $actual == '0') {
+                if ($unit['spec'] == 'boolean') {
                     if ($actual == '1') {
                         echo 'Yes';
-                    } else if($actual == '0') {
-                            echo 'No';
-                        } else if ($actual=='-') {
-                                echo '-';
-                            }
-                } else if($actual!='-'||$actual=='0') {
-                        echo round($actual,2).' '.$unit['name'];
-                    } else if ($actual=='-') {
-                            echo '-';
-                        }
+                    } else if ($actual == '0') {
+                        echo 'No';
+                    } else if ($actual == '-') {
+                        echo '-';
+                    }
+                } else if ($actual != '-' || $actual == '0') {
+                    echo round($actual, 2) . ' ' . $unit['name'];
+                } else if ($actual == '-') {
+                    echo '-';
+                }
             }
             echo '</td>';
             echo '<td class="goalValue">';
-            if ($target!=null|| $target=='0') {
-                if($unit['spec']=='boolean') {
+            if ($target != null || $target == '0') {
+                if ($unit['spec'] == 'boolean') {
                     if ($target == '1') {
                         echo 'Yes';
-                    } else if($target == '0') {
-                            echo 'No';
-                        } else if ($target=='-') {
-                                echo '-';
-                            }
-                } else if($target!='-'||$target=='0') {
-                        echo round($target,2).' '.$unit['name'];
-                    } else if ($target=='-') {
-                            echo '-';
-                        }
+                    } else if ($target == '0') {
+                        echo 'No';
+                    } else if ($target == '-') {
+                        echo '-';
+                    }
+                } else if ($target != '-' || $target == '0') {
+                    echo round($target, 2) . ' ' . $unit['name'];
+                } else if ($target == '-') {
+                    echo '-';
+                }
             }
 
             echo '</td>';
@@ -372,14 +377,14 @@ class Results {
     }
 
     function get_status($rate) {
-        if ($rate=='0'||$rate!=null) {
+        if ($rate == '0' || $rate != null) {
             if ($rate < '0.85') {
                 echo "<img src='images/common/red_status.png'>";
             } else if ($rate < '1') {
-                    echo "<img src='images/common/orange_status.png'>";
-                } else {
-                    echo "<img src='images/common/green_status.png'>";
-                }
+                echo "<img src='images/common/orange_status.png'>";
+            } else {
+                echo "<img src='images/common/green_status.png'>";
+            }
         }
     }
 
@@ -390,117 +395,111 @@ class Results {
             $actual = $this->get_actual($this->lc_id, $this->quarter_id, $this->term_id, $kpi);
             $target = $this->get_target($this->lc_id, $this->quarter_id, $this->term_id, $kpi);
 
-            if ($target!=null && $target!='-' && $actual!='-') {
-                if ($target>0) {
-                    $rates[]=$actual/$target;
-                } else if ($target<0) {
-                        $rates[]=-$actual/$target+2;
-                    } else if ($target==0) {
-                            if ($actual>=0) {
-                                $rates[]=1;
-                            } else {
-                                $rates[]=0;
-                            }
-                        }
+            if ($target != null && $target != '-' && $actual != '-') {
+                if ($target > 0) {
+                    $rates[] = $actual / $target;
+                } else if ($target < 0) {
+                    $rates[] = -$actual / $target + 2;
+                } else if ($target == 0) {
+                    if ($actual >= 0) {
+                        $rates[] = 1;
+                    } else {
+                        $rates[] = 0;
+                    }
+                }
             }
         }
 
-        if ($rates!=null) {
-            $rate = array_sum($rates)/count($rates);
+        if ($rates != null) {
+            $rate = array_sum($rates) / count($rates);
         }
         return $rate;
     }
 
     function get_actual($lc_id, $quarter_id, $term_id, $kpi) {
-        if($quarter_id!=null && $kpi!=null) {
-            if ($this->eot=='true') {
+        if ($quarter_id != null && $kpi != null) {
+            if ($this->eot == 'true') {
                 $quarter_list = $this->get_quarter_list($term_id);
                 $actual;
-                $actuals=array();
-                if ($lc_id=='all'&& $this->user='MC') {
-                    $lc_list=$this->get_lc_list();
-                    $actualz=array();
+                if ($lc_id == 'all' && $this->user = 'MC') {
+                    $lc_list = $this->get_lc_list();
+                    $actualz = array();
                     foreach ($lc_list as $lc) {
-
+                        $actuals = array();
                         foreach ($quarter_list as $quarter) {
-                            $actuals[]=$this->actual_values->get_value($lc['id'], $quarter['id'], $kpi['id']);
+                            $actuals[] = $this->actual_values->get_value($lc['id'], $quarter['id'], $kpi['id']);
                         }
-                        $sumLogic=new SumLogic($actuals, $kpi['end_of_term']);
-                        $actualz[]=$sumLogic->get_sum();
+                        $sumLogic = new SumLogic($actuals, $kpi['end_of_term']);
+                        $actualz[] = $sumLogic->get_sum();
                     }
-                    $sumLogic=new SumLogic($actualz, $kpi['all_lcs']);
+                    $sumLogic = new SumLogic($actualz, $kpi['all_lcs']);
                     $actual = $sumLogic->get_sum();
                 } else {
                     foreach ($quarter_list as $quarter) {
-                        $a=$this->actual_values->get_value($lc_id, $quarter['id'], $kpi['id']);
-                        $actuals[]=$a;
+                        $a = $this->actual_values->get_value($lc_id, $quarter['id'], $kpi['id']);
+                        $actuals[] = $a;
                     }
-                    $sumLogic=new SumLogic($actuals, $kpi['end_of_term']);
-                    $actual=$sumLogic->get_sum();
-                }
-
-            }
-            else if ($lc_id=='all' && $this->user='MC') {
-                    $actuals=array();
-                    $lc_list=$this->get_lc_list();
-                    foreach ($lc_list as $lc) {
-                        $actuals[]=$this->actual_values->get_value(
-                            $lc['id'], $quarter_id, $kpi['id']);
-                    }
-                    $sumLogic=new SumLogic($actuals, $kpi['all_lcs']);
+                    $sumLogic = new SumLogic($actuals, $kpi['end_of_term']);
                     $actual = $sumLogic->get_sum();
-
-                } else {
-                    $actual=$this->actual_values->get_value(
-                        $lc_id, $quarter_id, $kpi['id']
-                    );
                 }
+            } else if ($lc_id == 'all' && $this->user = 'MC') {
+                $actuals = array();
+                $lc_list = $this->get_lc_list();
+                foreach ($lc_list as $lc) {
+                    $actuals[] = $this->actual_values->get_value(
+                                    $lc['id'], $quarter_id, $kpi['id']);
+                }
+                $sumLogic = new SumLogic($actuals, $kpi['all_lcs']);
+                $actual = $sumLogic->get_sum();
+            } else {
+                $actual = $this->actual_values->get_value(
+                                $lc_id, $quarter_id, $kpi['id']
+                );
+            }
         }
         return $actual;
     }
 
     function get_target($lc_id, $quarter_id, $term_id, $kpi) {
-        if($quarter_id!=null && $kpi!=null) {
-            if ($this->eot=='true') {
+        if ($quarter_id != null && $kpi != null) {
+            if ($this->eot == 'true') {
                 $quarter_list = $this->get_quarter_list($term_id);
 
                 $target;
-                if ($lc_id=='all'&& $this->user='MC') {
-                    $lc_list=$this->get_lc_list();
-                    $targetz=array();
+                if ($lc_id == 'all' && $this->user = 'MC') {
+                    $lc_list = $this->get_lc_list();
+                    $targetz = array();
                     foreach ($lc_list as $lc) {
-                        $targets=array();
+                        $targets = array();
                         foreach ($quarter_list as $quarter) {
-                            $targets[]=$this->target_values->get_value($lc['id'], $quarter['id'], $kpi['id']);
+                            $targets[] = $this->target_values->get_value($lc['id'], $quarter['id'], $kpi['id']);
                         }
-                        $sumLogic=new SumLogic($targets, $kpi['end_of_term']);
-                        $targetz[]=$sumLogic->get_sum();
+                        $sumLogic = new SumLogic($targets, $kpi['end_of_term']);
+                        $targetz[] = $sumLogic->get_sum();
                     }
-                    $sumLogic=new SumLogic($targetz, $kpi['all_lcs']);
+                    $sumLogic = new SumLogic($targetz, $kpi['all_lcs']);
                     $target = $sumLogic->get_sum();
                 } else {
                     foreach ($quarter_list as $quarter) {
-                        $targets[]=$this->target_values->get_value($lc_id, $quarter['id'], $kpi['id']);
+                        $targets[] = $this->target_values->get_value($lc_id, $quarter['id'], $kpi['id']);
                     }
-                    $sumLogic=new SumLogic($targets, $kpi['end_of_term']);
-                    $target=$sumLogic->get_sum();
+                    $sumLogic = new SumLogic($targets, $kpi['end_of_term']);
+                    $target = $sumLogic->get_sum();
                 }
-
-            } else if ($lc_id=='all' && $this->user='MC') {
-                    $targets=array();
-                    $lc_list=$this->get_lc_list();
-                    foreach ($lc_list as $lc) {
-                        $targets[]=$this->target_values->get_value(
-                            $lc['id'], $quarter_id, $kpi['id']);
-                    }
-                    $sumLogic=new SumLogic($targets, $kpi['all_lcs']);
-                    $target=$sumLogic->get_sum();
-
-                } else {
-                    $target=$this->target_values->get_value(
-                        $lc_id, $quarter_id, $kpi['id']
-                    );
+            } else if ($lc_id == 'all' && $this->user = 'MC') {
+                $targets = array();
+                $lc_list = $this->get_lc_list();
+                foreach ($lc_list as $lc) {
+                    $targets[] = $this->target_values->get_value(
+                                    $lc['id'], $quarter_id, $kpi['id']);
                 }
+                $sumLogic = new SumLogic($targets, $kpi['all_lcs']);
+                $target = $sumLogic->get_sum();
+            } else {
+                $target = $this->target_values->get_value(
+                                $lc_id, $quarter_id, $kpi['id']
+                );
+            }
         }
         return $target;
     }
@@ -514,36 +513,36 @@ class Results {
     function get_lc_section($lc_list) {
         echo "Select LC: \n";
         echo "<select name=\"lc_id\" id=\"lc_id\"\n";
-        echo "onchange=\"window.location.href='".$this->page."&area_id="
-            .$this->area_id."&kpi_id=".$this->kpi_id."&term_id=".$this->term_id.
-            "&quarter_in_term=".$this->quarter_in_term."&custom=".$this->custom.
-            "&eot=".$this->eot."&lc_id='+this.value\">\n";
+        echo "onchange=\"window.location.href='" . $this->page . "&area_id="
+        . $this->area_id . "&kpi_id=" . $this->kpi_id . "&term_id=" . $this->term_id .
+        "&quarter_in_term=" . $this->quarter_in_term . "&custom=" . $this->custom .
+        "&eot=" . $this->eot . "&lc_id='+this.value\">\n";
 
         echo "<option value='all'";
-        if( isset($_REQUEST['lc_id']) ) {
-            if( 'all' == $_REQUEST['lc_id']) {
-                $this->lc_id='all';
+        if (isset($_REQUEST['lc_id'])) {
+            if ('all' == $_REQUEST['lc_id']) {
+                $this->lc_id = 'all';
                 echo " selected ";
             }
-        } else if ('all'==$this->lc_id) {
-                echo " selected ";
-            }
+        } else if ('all' == $this->lc_id) {
+            echo " selected ";
+        }
 
         echo ">";
         echo 'All';
         echo "</option>\n";
 
 
-        foreach( $lc_list as $lc ) {
-            echo "<option value=\"".$lc['id']."\"";
-            if( isset($_REQUEST['lc_id']) ) {
-                if( $lc['id'] == $_REQUEST['lc_id']) {
-                    $this->lc_id=$lc['id'];
+        foreach ($lc_list as $lc) {
+            echo "<option value=\"" . $lc['id'] . "\"";
+            if (isset($_REQUEST['lc_id'])) {
+                if ($lc['id'] == $_REQUEST['lc_id']) {
+                    $this->lc_id = $lc['id'];
                     echo " selected ";
                 }
-            } else if ($lc['id']==$this->lc_id) {
-                    echo " selected ";
-                }
+            } else if ($lc['id'] == $this->lc_id) {
+                echo " selected ";
+            }
 
             echo ">";
             echo $lc['name'];
@@ -553,48 +552,47 @@ class Results {
     }
 
     function get_year_ago($kpi) {
-        if ($this->quarter_id!=null) {
-            $quarter_id=$this->quarter_id;
+        if ($this->quarter_id != null) {
+            $quarter_id = $this->quarter_id;
         } else {
             $quarter_list = $this->get_quarter_list($this->term_id);
-            $quarter_id=$quarter_list[0]['id'];
+            $quarter_id = $quarter_list[0]['id'];
         }
-        $past_actual='';
+        $past_actual = '';
 
-        $query = $this->quarter_query. ' WHERE id = '.$quarter_id;
+        $query = $this->quarter_query . ' WHERE id = ' . $quarter_id;
         $rows = $this->dbutil->process_query_assoc($query);
         $selected_quarter = $rows[0];
 
-        $year_ago = $selected_quarter['term']-1;
+        $year_ago = $selected_quarter['term'] - 1;
         $quarter_in_term = $selected_quarter['quarter_in_term'];
 
-        $query = $this->quarter_query. ' WHERE term = '
-            .$year_ago. ' and quarter_in_term = '.$quarter_in_term;
+        $query = $this->quarter_query . ' WHERE term = '
+                . $year_ago . ' and quarter_in_term = ' . $quarter_in_term;
         $rows = $this->dbutil->process_query_assoc($query);
         $quarter_term_ago = $rows[0];
-        $past_actual = $this->get_actual($this->lc_id, $quarter_term_ago['id'], $year_ago,  $kpi);
+        $past_actual = $this->get_actual($this->lc_id, $quarter_term_ago['id'], $year_ago, $kpi);
         return $past_actual;
-
     }
 
     function get_trend($actual, $past) {
-        if ($past!=null && $actual!=null && $past!='-' && $actual!='-') {
-            if ($past>0) {
-                if ($actual<0.9*$past) {
+        if ($past != null && $actual != null && $past != '-' && $actual != '-') {
+            if ($past > 0) {
+                if ($actual < 0.9 * $past) {
                     echo '<img src="images/common/red_trend.png">';
-                } else if ($actual<1.1*$past) {
-                        echo '<img src="images/common/yellow_trend.png">';
-                    } else if ($actual >=1.1*$past) {
-                            echo '<img src="images/common/green_trend.png">';
-                        }
+                } else if ($actual < 1.1 * $past) {
+                    echo '<img src="images/common/yellow_trend.png">';
+                } else if ($actual >= 1.1 * $past) {
+                    echo '<img src="images/common/green_trend.png">';
+                }
             } else {
-                if ($actual<1.1*$past) {
+                if ($actual < 1.1 * $past) {
                     echo '<img src="images/common/red_trend.png">';
-                } else if ($actual>1.1*$past&&$actual<0.9*$past) {
-                        echo '<img src="images/common/yellow_trend.png">';
-                    } else if ($actual >=0.9*$past) {
-                            echo '<img src="images/common/green_trend.png">';
-                        }
+                } else if ($actual > 1.1 * $past && $actual < 0.9 * $past) {
+                    echo '<img src="images/common/yellow_trend.png">';
+                } else if ($actual >= 0.9 * $past) {
+                    echo '<img src="images/common/green_trend.png">';
+                }
             }
         }
     }
@@ -604,13 +602,13 @@ class Results {
         //        echo "onchange=if(this.checked){\"window.location.href='".$this->page."&area_id="
         //            .$this->area_id."&lc_id=".$this->lc_id."&term_id=".$this->term_id.
         //            "&eot='+this.checked\"}";
-        echo "onchange=\"window.location.href='".$this->page."&area_id="
-            .$this->area_id."&lc_id=".$this->lc_id."&kpi_id=".$this->kpi_id.
-            "&term_id=".$this->term_id."&custom=".$this->custom.
-            "&eot='+this.checked\"";
-        if( isset($_REQUEST['eot']) ) {
-            if( 'true' == $_REQUEST['eot']) {
-                $this->eot=$_REQUEST['eot'];
+        echo "onchange=\"window.location.href='" . $this->page . "&area_id="
+        . $this->area_id . "&lc_id=" . $this->lc_id . "&kpi_id=" . $this->kpi_id .
+        "&term_id=" . $this->term_id . "&custom=" . $this->custom .
+        "&eot='+this.checked\"";
+        if (isset($_REQUEST['eot'])) {
+            if ('true' == $_REQUEST['eot']) {
+                $this->eot = $_REQUEST['eot'];
                 echo ' checked';
             }
         }
@@ -623,15 +621,15 @@ class Results {
         //        echo "onchange=if(this.checked){\"window.location.href='".$this->page."&area_id="
         //            .$this->area_id."&lc_id=".$this->lc_id."&term_id=".$this->term_id.
         //            "&eot='+this.checked\"}";
-        echo "onchange=\"window.location.href='".$this->page."&area_id="
-            .$this->area_id."&lc_id=".$this->lc_id."&kpi_id=".$this->kpi_id."&quarter_in_term=".$this->quarter_in_term.
-            "&term_id=".$this->term_id."&eot=".$this->eot."&area_id=".$this->area_id."&custom='+this.checked\"";
-        if( isset($_REQUEST['custom']) ) {
-            if( 'true' == $_REQUEST['custom']) {
-                $this->custom=$_REQUEST['custom'];
+        echo "onchange=\"window.location.href='" . $this->page . "&area_id="
+        . $this->area_id . "&lc_id=" . $this->lc_id . "&kpi_id=" . $this->kpi_id . "&quarter_in_term=" . $this->quarter_in_term .
+        "&term_id=" . $this->term_id . "&eot=" . $this->eot . "&area_id=" . $this->area_id . "&custom='+this.checked\"";
+        if (isset($_REQUEST['custom'])) {
+            if ('true' == $_REQUEST['custom']) {
+                $this->custom = $_REQUEST['custom'];
                 echo ' checked';
             } else {
-                $this->area_id='all';
+                $this->area_id = 'all';
             }
         }
         echo ">";
@@ -643,20 +641,21 @@ class Results {
     }
 
     function get_kpi_unit($unit_id) {
-        $query = $this->kpi_unit_query . ' WHERE `id` = '.$unit_id;
+        $query = $this->kpi_unit_query . ' WHERE `id` = ' . $unit_id;
         $rows = $this->dbutil->process_query_assoc($query);
         return $rows[0];
     }
-    protected function get_area_section( $area_list ) {
+
+    protected function get_area_section($area_list) {
         echo "Select area: \n";
         echo "<select name=\"area_id\" id=\"area_id\"\n";
-        echo "onchange=\"window.location.href='".$this->page."&area_id="
-            .$this->area_id."&lc_id=".$this->lc_id."&kpi_id=".$this->kpi_id."&quarter_in_term=".$this->quarter_in_term.
-            "&term_id=".$this->term_id."&eot=".$this->eot."&custom=".$this->custom."&area_id='+this.value\">\n";
+        echo "onchange=\"window.location.href='" . $this->page . "&area_id="
+        . $this->area_id . "&lc_id=" . $this->lc_id . "&kpi_id=" . $this->kpi_id . "&quarter_in_term=" . $this->quarter_in_term .
+        "&term_id=" . $this->term_id . "&eot=" . $this->eot . "&custom=" . $this->custom . "&area_id='+this.value\">\n";
         echo "<option value=\"all\"";
-        if( isset($_REQUEST['area_id']) ) {
-            if('all' == $_REQUEST['area_id']) {
-                $this->area_id='all';
+        if (isset($_REQUEST['area_id'])) {
+            if ('all' == $_REQUEST['area_id']) {
+                $this->area_id = 'all';
                 echo " selected ";
             }
         }
@@ -664,11 +663,11 @@ class Results {
         echo 'All';
         echo "</option>\n";
 
-        foreach( $area_list as $area ) {
-            echo "<option value=\"".$area['id']."\"";
-            if( isset($_REQUEST['area_id']) ) {
-                if( $area['id'] == $_REQUEST['area_id']) {
-                    $this->area_id=$area['id'];
+        foreach ($area_list as $area) {
+            echo "<option value=\"" . $area['id'] . "\"";
+            if (isset($_REQUEST['area_id'])) {
+                if ($area['id'] == $_REQUEST['area_id']) {
+                    $this->area_id = $area['id'];
                     echo " selected ";
                 }
             }
@@ -680,5 +679,6 @@ class Results {
 
         echo "</select>\n";
     }
+
 }
 ?>
