@@ -40,10 +40,10 @@ class Apedog {
             $database = 'apedog_base';
         }
         $configuration = array(
-                'server' => 'localhost',
-                'user' => 'root',
-                'password' => '',
-                'database' => $database
+                server => 'mysql.praha.aiesec.cz',
+                user => 'qwerta',
+                password => 'testtest',
+                database => $database
         );
 
         $this->db_connect( $configuration );
