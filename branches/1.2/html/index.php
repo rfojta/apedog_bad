@@ -28,7 +28,6 @@ if (isset($_REQUEST['logout'])) {
 if (isset($_SESSION['user'])) {
     header("Location: main_page.php");
 }
-
 if( $code == 1 ) {
     $_SESSION['user'] = $info;
     header("Location: main_page.php?shtu");
@@ -37,11 +36,6 @@ if( $code == 1 ) {
 
 if ($_SESSION['country_code']==null||$_POST['Country']!=null) {
     $apedog = new Apedog(null);
-    $dbres = mysql_connect(
-            'mysql.praha.aiesec.cz',
-            'qwerta',
-            'testtest'
-    );
     $dbutil = new DB_Util($apedog->dbres);
     $country_query='SELECT * from countries order by name';
     $countries = $dbutil->process_query_assoc($country_query);
@@ -107,10 +101,13 @@ if ($_SESSION['country_code']==null||$_POST['Country']!=null) {
                                     echo '<option value="0">--Choose your country--</option>';
                                     foreach($countries as $country) {
                                         echo "\n<option value=\"".$country['Code']."\"";
-                                        if ($_POST['Country']==$country['Code']) {
-                                            echo " selected ";
-                                        };
+                                        if(isset($_POST['Country'])) {
+                                            if ($_POST['Country']==$country['Code']) {
+                                                echo " selected ";
+                                            };
+                                        }
                                         echo ">".$country['Name']."</option>";
+
                                     }
                                     ?>
 
@@ -129,11 +126,11 @@ if ($_SESSION['country_code']==null||$_POST['Country']!=null) {
                     </p>
                     <br />
                     <!-- AddThis Button BEGIN -->
-                <div class="addthis_toolbox addthis_default_style">
-                    <a href="http://www.addthis.com/bookmark.php?v=250&amp;username=xa-4ba542004f4da56d" class="addthis_button_compact" align="right" addthis:url="http://praha.aiesec.cz/apedog" addthis:title="Apedog - AEISEC Countries Performance Monitoring tool" addthis:description="Apedog is a tool, which helps AIESEC Countries to track their plans. It was developed to ensure sustainable growth, improving KPIs and improving AIESEC experience.">Share Apedog!</a>
-                </div>
-                <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#username=xa-4ba542004f4da56d"></script>
-                <!-- AddThis Button END -->
+                    <div class="addthis_toolbox addthis_default_style">
+                        <a href="http://www.addthis.com/bookmark.php?v=250&amp;username=xa-4ba542004f4da56d" class="addthis_button_compact" align="right" addthis:url="http://praha.aiesec.cz/apedog" addthis:title="Apedog - AEISEC Countries Performance Monitoring tool" addthis:description="Apedog is a tool, which helps AIESEC Countries to track their plans. It was developed to ensure sustainable growth, improving KPIs and improving AIESEC experience.">Share Apedog!</a>
+                    </div>
+                    <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#username=xa-4ba542004f4da56d"></script>
+                    <!-- AddThis Button END -->
 
                 </div>
             </div>
