@@ -28,7 +28,7 @@ class Reminder {
             JOIN kpis k on dt.kpi = k.id
             JOIN areas a on k.area = a.id
             JOIN users u on u.lc = l.id
-        WHERE q.quarter_to = ':deadline' AND u.id=':user_id' 
+        WHERE q.quarter_to = ':deadline' AND u.id=':user_id'
             AND dt.actual IS NULL
         ORDER by a.name";
     protected $target_query = "SELECT
@@ -64,6 +64,7 @@ class Reminder {
             $query = str_replace(':deadline', $deadline, $this->actual_query);
             $query = str_replace(':user_id', $user['id'], $query);
             $rests = $this->dbutil->process_query_assoc($query);
+            echo $user['id'].', ';
             if ($rests) {
                 $this->send_actual_mail($rests);
             }
@@ -103,7 +104,7 @@ You probably forgot to enter value your LC achieved since ' . $since . ' to ' . 
         $message.='
 
 ';
-        $message .= 'Do not forget, MC will lock this KPIs in few days and you won´t be able to edit it then.
+        $message .= 'Do not forget, MC will lock this KPIs in few days and you wonÂ´t be able to edit it then.
 Regards,
 Your Apedog.';
         $headers = 'From: noreply@apedog.cz';
@@ -141,7 +142,7 @@ You probably forgot to enter values your LC is planning to achieve since ' . $si
         $message.='
 
 ';
-        $message .= 'Do not forget, MC will lock this KPIs in few days and you won´t be able to edit it then.
+        $message .= 'Do not forget, MC will lock this KPIs in few days and you wonÂ´t be able to edit it then.
 Regards,
 Your Apedog.';
         $headers = 'From: noreply@apedog.cz';

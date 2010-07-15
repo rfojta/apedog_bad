@@ -40,16 +40,20 @@ class Apedog {
             $database = 'apedog_base';
         }
         $configuration = array(
-                server => 'mysql.praha.aiesec.cz',
-                user => 'qwerta',
-                password => 'testtest',
-                database => $database
+                'server' => 'localhost',
+                'user' => 'root',
+                'password' => '',
+                'database' => $database
         );
 
         $this->db_connect( $configuration );
     }
 
     function db_link() {
+        return $this->dbres;
+    }
+
+    function getDbres(){
         return $this->dbres;
     }
 }
