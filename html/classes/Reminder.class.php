@@ -64,7 +64,7 @@ class Reminder {
             $query = str_replace(':deadline', $deadline, $this->actual_query);
             $query = str_replace(':user_id', $user['id'], $query);
             $rests = $this->dbutil->process_query_assoc($query);
-            echo $user['id'].', ';
+            echo $user['email'].', ';
             if ($rests) {
                 $this->send_actual_mail($rests);
             }
