@@ -73,7 +73,6 @@ class Results {
         $quarter_list = $this->get_quarter_list($this->term_id);
         $area_list = $this->get_area_list();
         $business_perspectives_list = $this->get_bp_list();
-        echo $_REQUEST['lc_id'];
         echo "<p>";
         if ($_SESSION['user'] == 'MC') {
             $lc_list = $this->get_lc_list();
@@ -88,9 +87,13 @@ class Results {
             $this->get_area_section($this->get_area_list());
         }
         $this->get_custom_checkbox();
-
+        if(isset ($_REQUEST['lc_id'])){
+            $lc =  $_REQUEST['lc_id'];
+        } else {
+            $lc=$this->lc_id;
+        }
         echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-        echo "<a href='xlswriter.php' target='_blank'>Export to XLS</a>";
+        echo "<a href='xlswriter.php?l=".$lc."' target='_blank'>Export to XLS</a>";
         echo "</p>";
 
         echo '<p>';
