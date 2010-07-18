@@ -252,7 +252,7 @@ class DetailPlanning {
  * @return <type> terms rows
  */
     function get_term_list() {
-        $query = $this->term_query . ' ORDER BY `number_of_term`';
+        $query = $this->term_query . ' ORDER BY `term_from`';
         $rows = $this->dbutil->process_query_assoc($query);
         return $rows;
     }
@@ -263,7 +263,7 @@ class DetailPlanning {
  * @return <type>
  */
     function get_quarter_list($term_id) {
-        $query = $this->quarter_query . $term_id . ' ORDER BY `quarter_in_term`';
+        $query = $this->quarter_query . $term_id . ' ORDER BY `quarter_from`';
         $rows = $this->dbutil->process_query_assoc($query);
         $this->quarter_id=$rows[0]['id'];
         return $rows;

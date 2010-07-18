@@ -92,8 +92,9 @@ class Results {
         } else {
             $lc=$this->lc_id;
         }
-        echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-        echo "<a href='xlswriter.php?l=".$lc."' target='_blank'>Export to XLS</a>";
+        echo "&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;";
+        //echo "<a href='xlswriter.php?l=".$lc."' target='_blank'>Export to XLS</a>";
+echo '<INPUT TYPE="BUTTON" VALUE="Export to XLS" ONCLICK="window.open(\'xlswriter.php?l='.$lc.'\')">';
         echo "</p>";
 
         echo '<p>';
@@ -136,7 +137,7 @@ class Results {
     }
 
     function get_term_list() {
-        $query = $this->term_query . ' ORDER BY `number_of_term`';
+        $query = $this->term_query . ' ORDER BY `term_from`';
         $rows = $this->dbutil->process_query_assoc($query);
         return $rows;
     }
@@ -145,7 +146,7 @@ class Results {
         if ($term_id == null) {
             $query = $this->quarter_query . ' ORDER BY `id`';
         } else {
-            $query = $this->quarter_query . ' where term = ' . $term_id . ' ORDER BY `quarter_in_term`';
+            $query = $this->quarter_query . ' where term = ' . $term_id . ' ORDER BY `quarter_from`';
         }
         $rows = $this->dbutil->process_query_assoc($query);
         //        $this->quarter_id=$rows[0]['id'];
