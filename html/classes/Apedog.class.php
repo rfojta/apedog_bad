@@ -11,7 +11,7 @@
  * @author Richard
  */
 class Apedog {
-    var $version = '1.1';
+    var $version = '1.2';
     var $dbres;
 
     function db_connect( $configuration ) {
@@ -55,6 +55,10 @@ class Apedog {
 
     function getDbres(){
         return $this->dbres;
+    }
+
+    function echoVersion(){
+        echo $this->version;
     }
 }
 ?>

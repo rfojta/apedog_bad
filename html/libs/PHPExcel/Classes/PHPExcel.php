@@ -197,9 +197,9 @@ class PHPExcel
      *
      * @return PHPExcel_Worksheet
      */
-    public function createSheet($iSheetIndex = null, $sheetName = null)
+    public function createSheet($iSheetIndex = null, $sh)
     {
-        $newSheet = new PHPExcel_Worksheet($this, $sheetName);
+        $newSheet = new PHPExcel_Worksheet($this, $sh);
         $this->addSheet($newSheet, $iSheetIndex);
         return $newSheet;
     }

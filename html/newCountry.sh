@@ -17,7 +17,7 @@ fi
 
 
 #inserting row into base db
-mysql -uqwerta -ptesttest -h mysql.praha.aiesec.cz apedog_base2<<EOFMYSQL
+mysql -uqwerta -ptesttest -h mysql.praha.aiesec.cz apedog_base<<EOFMYSQL
 INSERT INTO countries (
 id ,
 Name ,
