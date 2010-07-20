@@ -27,18 +27,16 @@ $dbutil = new DB_Util($apedog->dbres);
 construct();
 
 function construct() {
-//        $this->lc_id = $lc_id;
     $dokument = new PHPExcel();
     $dokument->getProperties()->setCreator("Apedog");
     $dokument->getProperties()->setLastModifiedBy("Apedog");
-//    echo $_SESSION['country_code'];
     $dbutil = getData();
     write($dokument, $dbutil);
     $oldExcelWriter = new PHPExcel_Writer_Excel5($dokument);
     $time = date('Ymd_his'); // 20080613
     $oldExcelWriter->save("files/xls/current_$time.xls");
     header("Location: files/xls/current_$time.xls");
-    print ("<script>window.close();</script>");
+   print ("<script>window.close();</script>");
 }
 
 function getData() {
@@ -79,8 +77,7 @@ function write_list($dbutil,$dokument, $noOfSheet, $lc_id, $lc_name) {
         where lcs.id=9 group by kpis.id, quarter_from order by quarter_from desc;';
     $quarter_query = 'select * from quarters order by quarter_from;';
     $quarters = $dbutil->process_query_assoc($quarter_query);
-
-    $dokument->createSheet($noOfSheet, $lc_name);
+   $dokument->createSheet($noOfSheet, $lc_name);
     $dokument->setActiveSheetIndex($noOfSheet);
 
     $term_query = 'select * from terms order by term_from;';
