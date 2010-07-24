@@ -41,6 +41,7 @@ class SumLogic {
                     $sum=0;
                     foreach ($this->values as $val) {
                         if($val!=null && $val!='-') {
+//                                                        echo $val;
                             $sum+=$val;
                             $i++;
                         }

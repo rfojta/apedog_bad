@@ -11,7 +11,7 @@
  * @author Richard
  */
 class Apedog {
-    var $version = '1.1';
+    var $version = '1.2';
     var $dbres;
 
     function db_connect( $configuration ) {
@@ -37,13 +37,13 @@ class Apedog {
         if ($country_code!=null) {
             $database='apedog_'.$country_code;
         } else {
-            $database = 'apedog';
+            $database = 'apedog_base';
         }
         $configuration = array(
-                server => 'localhost',
-                user => 'root',
-                password => '',
-                database => $database
+                'server' => 'localhost',
+                'user' => 'root',
+                'password' => '',
+                'database' => $database
         );
 
         $this->db_connect( $configuration );
@@ -51,6 +51,14 @@ class Apedog {
 
     function db_link() {
         return $this->dbres;
+    }
+
+    function getDbres(){
+        return $this->dbres;
+    }
+
+    function echoVersion(){
+        echo $this->version;
     }
 }
 ?>
