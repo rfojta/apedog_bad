@@ -1,0 +1,4 @@
+SELECT quarter_from, k.name, dt.actual, dt.target
+        FROM quarters q,kpis k  join detail_tracking dt on dt.kpi = k.id join lcs on lcs.id = dt.lc
+        join terms t on q.term = t.id
+        where lcs.id=9 group by kpis.name, q.quarter_from order by q.quarter_from desc, kpis.name
