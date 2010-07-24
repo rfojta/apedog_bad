@@ -1,6 +1,6 @@
 <div id="footer">
 	<p>
-	     <strong>Apedog 1.1, </strong> Fojta, Kuželka<br />
+	     <strong>Apedog 1.2, </strong> Fojta, Kuželka<br />
  praha.it@aiesec.cz
 <br />
 <u><a href="http://www.gnu.org/licenses/quick-guide-gplv3.html">

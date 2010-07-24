@@ -30,13 +30,13 @@ function construct() {
     $dokument = new PHPExcel();
     $dokument->getProperties()->setCreator("Apedog");
     $dokument->getProperties()->setLastModifiedBy("Apedog");
-    $dbutil = getData();
+       $dbutil = getData();
     write($dokument, $dbutil);
     $oldExcelWriter = new PHPExcel_Writer_Excel5($dokument);
     $time = date('Ymd_his'); // 20080613
     $oldExcelWriter->save("files/xls/current_$time.xls");
     header("Location: files/xls/current_$time.xls");
-   print ("<script>window.close();</script>");
+    print ("<script>window.close();</script>");
 }
 
 function getData() {
