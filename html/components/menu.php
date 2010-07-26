@@ -37,4 +37,4 @@ if($page!='index'&&$page!='useful_links') {
 }
 echo $src;
      ?>')">
-    <span style="position:relative; bottom:-123px; left: 919px; color: black; font-family:Verdana,Helvetica,sans-serif; font-weight: 900;">Apedog 1.2</span></div>
+    <span style="position:relative; bottom:-123px; left: 919px; color: black; font-family:Verdana,Helvetica,sans-serif; font-weight: 900;">Apedog 1.5 &alpha;</span></div>
