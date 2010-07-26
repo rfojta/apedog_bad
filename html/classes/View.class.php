@@ -43,7 +43,12 @@ class BSC_View {
         foreach( $rows as $row ) {
             echo "<tr>";
             foreach( $row as $key => $value ) {
-                echo "<td>" . htmlspecialchars($value) . "</td>";
+                if( $key == 'status') {
+                    echo "<td><input type=checkbox "
+                    . (($value == 1) ? "checked=\"checked\"" : "") . "/></td>";
+                }
+                else
+                    echo "<td>" . htmlspecialchars($value) . "</td>";
             }
             echo "</tr>\n";
         }
