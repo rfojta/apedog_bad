@@ -2,8 +2,9 @@
 
 = Introduction =
 
-export a dailyServices.php
+K: export a dailyServices.php
 
+R: view and view.class
 
 = Details =
 
@@ -11,3 +12,17 @@ Add your content here.  Format your content with:
   * Text in *bold* or _italic_
   * Headings, paragraphs, and lists
   * Automatic links to other wiki pages
+
+== View and View Class ==
+
+  # changed Results.class
+  # link to view.php with csfs parameter
+  # added 4 tables into db
+  ## bsc_*
+  # created select in view.class
+ 
+TODO:
+
+  # add rowspan to strategy and strategic action column
+  # export data from Vlada's excel
+  # add control buttons to add strategy, action, operation and responsible manually
