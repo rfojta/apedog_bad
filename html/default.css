@@ -297,10 +297,8 @@ a:hover {
     color: #666666;
 }
 
-#view table, th, td {
+.view {
     border: 1px solid black;
 }
 
-#view th {
-    background-color: green;
-}
+
