@@ -135,18 +135,21 @@ class BSC_View {
 					if ($value == 0) {
 						$update = "update bsc_operations set status=0 where id = " . $op_id;
 						$this->dbutil->do_query($update);
+						$this->sendNotification($op_id, 'from "Done" to "Not Done"');
 					}
 					break;
 				case 0:
 					if ($value == 1) {
 						$update = "update bsc_operations set status=1 where id = " . $op_id;
 						$this->dbutil->do_query($update);
+						$this->sendNotification($op_id, 'from "Not Done" to "Done"');
 					}
 					break;
 				case null:
 					if ($value == 1) {
 						$update = "update bsc_operations set status=1 where id = " . $op_id;
 						$this->dbutil->do_query($update);
+						$this->sendNotification($op_id, 'from "Not Done" to "Done"');
 					}
 					break;
 				default:
@@ -190,6 +193,41 @@ class BSC_View {
 		}
 
 		echo "</select>\n";
+	}
+
+	function sendNotification($op_id, $typeOfChange) {
+		$query = "select c.name csf_name, s.name strategy_name, sa.name action_name, o.name operation_name, o.when ddl, r.name user, u.email LCPemail, u.name LCPname
+	from bsc_responsible r join
+	bsc_operations o on r.id=o.responsible join
+	bsc_strategic_action sa on sa.id = o.strategic_action join
+	bsc_strategy s on s.id = sa.strategy join
+	csfs c on s.csfs = c.id join
+	users u on u.lc = r.lc
+	where o.id = " . $op_id;
+		$rows = $this->dbutil->process_query_assoc($query);
+		$rows = $rows[0];
+
+		$to = $rows['LCPemail'];
+		$user = $rows['user'];
+		$subject = 'Apedog - operation status changed by ' . $user;
+		$message = "Hello " . $rows['LCPname'] . "!
+
+	$user just changed status $typeOfChange for following operation:
+
+CSF: " . $rows['csf_name'] . "
+Strategy: " . $rows['strategy_name'] . "
+Strategic action: " . $rows['action_name'] . "
+Operation: " . $rows['operation_name'] . "
+
+DDL for finishing this operation was ".$rows['ddl']." .
+Regards,
+Your Apedog.";
+		$headers = 'From: noreply@apedog.cz';
+		if (mail($to, $subject, $message, $headers)) {
+			echo 'jooooo';
+		} else {
+			echo 'neeee';
+		}
 	}
 
 }
