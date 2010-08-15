@@ -107,12 +107,9 @@ class BSC_View {
 	}
 
 	/**
-	 * handle status changes
+	 * handle status changes, sends emails
 	 */
 	function submit($post) {
-		foreach ($post as $key => $value) {
-			echo $key . "--" . $value;
-		}
 		$operation_ids = array();
 		$operations = $this->dbutil->process_query_assoc($this->query);
 		if ($operations != null) {
@@ -129,37 +126,33 @@ class BSC_View {
 		}
 		foreach ($operation_ids as $op_id => $value) {
 
-			echo "op_id".$op_id."->"."$value";
 			$s = "select status from bsc_operations where id =" . $op_id;
 			$old_value = $this->dbutil->process_query_assoc($s);
 			$old_status = $old_value[0]['status'];
-			echo "old:".$old_status;
+			$update;
 			switch ($old_status) {
 				case 1:
 					if ($value == 0) {
-						echo "z jedna na nula!";
+						$update = "update bsc_operations set status=0 where id = " . $op_id;
+						$this->dbutil->do_query($update);
 					}
 					break;
 				case 0:
 					if ($value == 1) {
-
-						echo "z nula na jedna!";
+						$update = "update bsc_operations set status=1 where id = " . $op_id;
+						$this->dbutil->do_query($update);
 					}
 					break;
 				case null:
 					if ($value == 1) {
-						echo "z nic na 1!";
+						$update = "update bsc_operations set status=1 where id = " . $op_id;
+						$this->dbutil->do_query($update);
 					}
 					break;
-				default: echo "niccc";
+				default:
 					break;
 			}
 		}
-		$actual_statuses = $this->dbutil->process_query_assoc($s);
-
-		$update = "update bsc_operations set status=0 where id in (
-			) and status = 1 where id in (
-			)";
 	}
 
 	/**
