@@ -79,7 +79,13 @@ class BSC_View {
 			echo "</tr>\n";
 			echo "</thead>\n";
 			foreach ($rows as $row) {
-				echo "<tr>";
+				echo "<tr";
+				if ($row['when']<date('Y-m-d')&& $row['status']!='1'){
+					echo " class='overtime";
+				} else if ($row['status']=='1'){
+					echo " class='done";
+				}
+				echo "'>";
 				foreach ($row as $key => $value) {
 					if ($key == 'status') {
 						echo "<td><input type=checkbox name='status-" . $row['operation_id']
