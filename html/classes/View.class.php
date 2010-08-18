@@ -34,6 +34,7 @@ class BSC_View {
 		}
 
 		$this->page = "view.php?";
+		$this->lc_query = "select lc from users where login = ";
 	}
 
 	/**
@@ -41,14 +42,13 @@ class BSC_View {
 	 * operations, actions and responsible
 	 */
 	function get_form_content() {
-
-
+		$lcs = $this->dbutil->process_query_assoc($this->lc_query . "'" . $this->user . "'");
+		$this->query = $this->query . " and s.lc = " . $lcs['0']['lc'];
 		$rows = $this->dbutil->process_query_assoc($this->query);
 		$csf_query = 'select * from csfs order by 1';
 
 		$csfs = $this->dbutil->process_query_assoc($csf_query);
 		$this->getCsfDropdown($csfs);
-
 		echo "<table id='test1' class='sortable-onload-show-4-5r rowstyle-alt no-arrow max-pages-4 paginate-10'>";
 		if ($rows != null) {
 			echo "<thead>\n";
@@ -174,6 +174,21 @@ class BSC_View {
 		echo "onchange=\"window.location.href='" . $this->page .
 		"csfs='+this.value\">\n";
 
+		echo "<option value='all'";
+		if (isset($_GET['csfs'])) {
+			if ('all' == $_GET['csfs']) {
+				$this->csf_id = 'all';
+				$this->csfs = 'all';
+				echo " selected ";
+			}
+		} else if ('all' == $this->csf_id) {
+			echo " selected ";
+		}
+
+		echo ">";
+		echo 'All';
+		echo "</option>\n";
+
 		foreach ($csfList as $csf) {
 			echo "<option value=\"" . $csf['id'] . "\"";
 			if (isset($_GET['csfs'])) {
@@ -202,7 +217,7 @@ class BSC_View {
 	bsc_strategic_action sa on sa.id = o.strategic_action join
 	bsc_strategy s on s.id = sa.strategy join
 	csfs c on s.csfs = c.id join
-	users u on u.lc = r.lc
+	users u on u.lc = s.lc
 	where o.id = " . $op_id;
 		$rows = $this->dbutil->process_query_assoc($query);
 		$rows = $rows[0];
@@ -219,15 +234,11 @@ Strategy: " . $rows['strategy_name'] . "
 Strategic action: " . $rows['action_name'] . "
 Operation: " . $rows['operation_name'] . "
 
-DDL for finishing this operation was ".$rows['ddl']." .
+DDL for finishing this operation was " . $rows['ddl'] . " .
 Regards,
 Your Apedog.";
 		$headers = 'From: noreply@apedog.cz';
-		if (mail($to, $subject, $message, $headers)) {
-			echo 'jooooo';
-		} else {
-			echo 'neeee';
-		}
+		mail($to, $subject, $message, $headers);
 	}
 
 }
