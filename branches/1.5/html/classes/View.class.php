@@ -15,12 +15,13 @@ class BSC_View {
 	//put your code here
 	private $dbutil;
 	private $csfs;
+	private $term_id;
 	private $csf_id;
 	private $user;
 	private $query;
 	private $page;
 
-	function __construct($dbutil, $csfs, $user) {
+	function __construct($dbutil, $csfs, $user, $current_term) {
 		$this->dbutil = $dbutil;
 		$this->csfs = $csfs;
 		$this->user = $user;
@@ -35,6 +36,12 @@ class BSC_View {
 
 		$this->page = "view.php?";
 		$this->lc_query = "select lc from users where login = ";
+		if (isset($_GET['term_id'])) {
+			$this->term_id = $_GET['term_id'];
+		} else {
+			$this->term_id = $current_term;
+		}
+		$this->query .= " and s.term = " . $this->term_id;
 	}
 
 	/**
@@ -46,9 +53,12 @@ class BSC_View {
 		$this->query = $this->query . " and s.lc = " . $lcs['0']['lc'];
 		$rows = $this->dbutil->process_query_assoc($this->query);
 		$csf_query = 'select * from csfs order by 1';
-
 		$csfs = $this->dbutil->process_query_assoc($csf_query);
-		$this->getCsfDropdown($csfs);
+		$term_query = 'select * from terms order by 2';
+		$terms = $this->dbutil->process_query_assoc($term_query);
+
+		$this->getCsfDropDown($csfs);
+		$this->get_term_section($terms);
 		echo "<table id='test1' class='sortable-onload-show-4-5r rowstyle-alt no-arrow max-pages-4 paginate-10'>";
 		if ($rows != null) {
 			echo "<thead>\n";
@@ -80,9 +90,9 @@ class BSC_View {
 			echo "</thead>\n";
 			foreach ($rows as $row) {
 				echo "<tr";
-				if ($row['when']<date('Y-m-d')&& $row['status']!='1'){
+				if ($row['when'] < date('Y-m-d') && $row['status'] != '1') {
 					echo " class='overtime";
-				} else if ($row['status']=='1'){
+				} else if ($row['status'] == '1') {
 					echo " class='done";
 				}
 				echo "'>";
@@ -178,7 +188,7 @@ class BSC_View {
 		echo "CSF: \n";
 		echo "<select name=\"csf_id\" id=\"csf_id\"\n";
 		echo "onchange=\"window.location.href='" . $this->page .
-		"csfs='+this.value\">\n";
+		"term_id=" . $this->term_id . "&csfs='+this.value\">\n";
 
 		echo "<option value='all'";
 		if (isset($_GET['csfs'])) {
@@ -210,6 +220,31 @@ class BSC_View {
 
 			echo ">";
 			echo $csf['name'];
+			echo "</option>\n";
+		}
+
+		echo "</select>\n";
+	}
+
+	function get_term_section($term_list) {
+		echo "Select term: \n";
+		echo "<select name=\"term_id\" id=\"term_id\"\n";
+		echo "onchange=\"window.location.href='" . $this->page .
+		"csfs=" . $this->csf_id . "&term_id='+this.value\">\n";
+
+		foreach ($term_list as $term) {
+			echo "<option value=\"" . $term['id'] . "\"";
+			if (isset($_REQUEST['term_id'])) {
+				if ($term['id'] == $_REQUEST['term_id']) {
+					$this->term_id = $term['id'];
+					echo " selected ";
+				}
+			} else if ($term['id'] == $this->term_id) {
+				echo " selected";
+			}
+
+			echo ">";
+			echo date('Y', strtotime($term['term_from'])) . '/' . date('Y', strtotime($term['term_to']));
 			echo "</option>\n";
 		}
 

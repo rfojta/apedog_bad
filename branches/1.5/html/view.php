@@ -32,7 +32,7 @@ include('classes/View.class.php');
 				<div class="content">
 					<form method="POST" action="" >
 						<?php
-						$reports = new BSC_View($dbutil, $_GET['csfs'], $_SESSION['user']);
+						$reports = new BSC_View($dbutil, $_GET['csfs'], $_SESSION['user'], $current_term);
 						if (isset($_POST['posted'])) {
 							$reports->submit($_POST);
 						}
