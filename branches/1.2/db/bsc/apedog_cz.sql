@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `bsc_operations` (
   `status` int(1) NOT NULL,
   `strategic_action` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 --
 -- Dumping data for table `bsc_operations`
@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS `bsc_responsible` (
   `name` varchar(255) NOT NULL,
   `lc` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 --
 -- Dumping data for table `bsc_responsible`
@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS `bsc_strategic_action` (
   `name` varchar(255) NOT NULL,
   `strategy` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 --
 -- Dumping data for table `bsc_strategic_action`
@@ -96,7 +96,7 @@ CREATE TABLE IF NOT EXISTS `bsc_strategy` (
   `lc` int(11) NOT NULL,
   `csfs` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
 --
 -- Dumping data for table `bsc_strategy`
