@@ -181,6 +181,7 @@ class BSC_View {
 		echo "Columns: strategy, action, operation, responsible, deadline and status<br><br>";
 		echo "Use dropdown menus or filter by typing keyword and hitting ENTER.<br>";
 		echo "For numeric and date values >, <, = and ! operators are allowed.";
+		echo "You can sort by multiple columns using SHIFT.";
 	}
 
 	function getCsfDropDown($csfList) {
