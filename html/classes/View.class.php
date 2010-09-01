@@ -20,6 +20,8 @@ class BSC_View {
 	private $user;
 	private $query;
 	private $page;
+	private $responsibles_query;
+	private $ths;
 
 	function __construct($dbutil, $csfs, $user, $current_term) {
 		$this->dbutil = $dbutil;
@@ -42,6 +44,10 @@ class BSC_View {
 			$this->term_id = $current_term;
 		}
 		$this->query .= " and s.term = " . $this->term_id;
+		$this->responsibles_query = "select r.name from bsc_responsible r
+			join bsc_responsible_term rt on r.id=rt.responsible
+			join terms t on rt.term=t.id
+			where t.id = " . $this->term_id;
 	}
 
 	/**
@@ -56,14 +62,20 @@ class BSC_View {
 		$csfs = $this->dbutil->process_query_assoc($csf_query);
 		$term_query = 'select * from terms order by 2';
 		$terms = $this->dbutil->process_query_assoc($term_query);
+		$r = $this->dbutil->process_query_assoc($this->responsibles_query);
+		$responsibles = $r[0];
 
 		$this->getCsfDropDown($csfs);
 		$this->get_term_section($terms);
+		$items_with_plus = array('strategy', 'action', 'operation', 'responsible');
 		echo "<table id='test1' class='sortable-onload-show-4-5r rowstyle-alt no-arrow max-pages-4 paginate-10'>";
 		if ($rows != null) {
 			echo "<thead>\n";
 			echo "<tr>\n";
 			foreach ($rows[0] as $key => $value) {
+				if ($key != 'operation_id') {
+					$this->ths[] = $key;
+				}
 				switch ($key) {
 					case "strategy":
 						echo "<th class=\"sortable-text create-list datatype-text\">" . $key . "</th>";
@@ -96,18 +108,32 @@ class BSC_View {
 					echo " class='done";
 				}
 				echo "'>";
+
 				foreach ($row as $key => $value) {
 					if ($key == 'status') {
 						echo "<td><input type=checkbox name='status-" . $row['operation_id']
 						. (($value == 1) ? "' checked=\"checked\"" : "'") . "/></td>";
 					} else if ($key != 'operation_id')
-						echo "<td>" . htmlspecialchars($value) . "</td>";
+						echo "<td>" . htmlspecialchars($value);
+					echo "</td>";
 				}
 				echo "</tr>\n";
 			}
+			echo "<tfoot id='table_footer'>";
+			foreach ($rows[0] as $key => $value) {
+				if ($key != 'operation_id') {
+					echo "<td id='table_footer'>";
+					if (in_array($key, $items_with_plus)) {
+						echo "<input type='button' value='+' onclick=\"addRow('test1','$key','$responsibles');\">";
+					}
+					echo "</td>";
+				}
+			}
+			echo "</tfoot>";
 		}
 		echo "</table>\n";
 
+		$this->javascripts();
 		$this->get_submit_button();
 	}
 
@@ -180,7 +206,7 @@ class BSC_View {
 	function get_help() {
 		echo "Columns: strategy, action, operation, responsible, deadline and status<br><br>";
 		echo "Use dropdown menus or filter by typing keyword and hitting ENTER.<br>";
-		echo "For numeric and date values >, <, = and ! operators are allowed.";
+		echo "For numeric and date values >, <, = and ! operators are allowed.<br>";
 		echo "You can sort by multiple columns using SHIFT.";
 	}
 
@@ -283,6 +309,62 @@ Your Apedog.";
 		mail($to, $subject, $message, $headers);
 	}
 
+	/*
+	 * prints all javascripts
+	 */
+
+	function javascripts() {
+		echo '<script>
+function addRow(id,freeColumn, responsibles){
+var tbody = document.getElementById(id).getElementsByTagName("tbody")[0];
+var row = document.createElement("tr");';
+		foreach ($this->ths as $th) {
+
+			echo '
+				var data1 = document.createElement("td");
+switch ("' . $th . '")
+	{
+		case freeColumn:
+			var input = document.createElement("input");
+			input.className="free";
+			break;
+		case "status":
+			var input = document.createElement("input");
+			input.type = "checkbox";
+			break;
+		case "when":
+			var input = document.createElement("input");
+			input.setAttribute("datepicker","true");
+			random = Math.round(Math.random()*1000);
+			input.setAttribute("id","fdp"+random);
+			input.setAttribute("datepicker_format","YYYY-MM-DD");
+			input.className="free";
+			break;
+		default:
+			var input = document.createElement("select");
+			var options = getColumnValues(id,"2");
+
+			input.options[0] = new Option("selection 1","value 1");
+			input.options[1] = new Option("selection 2","value 2");
+			input.options[2] = new Option("selection 3","value 3");
+			input.options[3] = new Option("selection 4","value 4");
+			break;
+	}
+row.appendChild(data1);
+data1.appendChild(input);
+';
+		}
+		echo '
+tbody.appendChild(row);
+DatePickerControl.init();
+}
+function getColumnValues(tableId,columnNo){
+var tbody = document.getElementById(tableId).getElementsByTagName("tbody")[0];
+var trs = tbody.getElementsByTagName("tr");
 }
 
+</script>';
+	}
+
+}
 ?>

@@ -23,6 +23,14 @@ include('classes/View.class.php');
 		<![endif]-->
 
 		<link href="./libs/tablefilter2/filter.css"   rel="stylesheet" type="text/css" />
+
+		<link type="text/css" href="css/ui-lightness/jquery-ui-1.7.2.custom.css" rel="stylesheet" />
+		<script type="text/javascript" src="libs/datepickercontrol/datepickercontrol.js"></script>
+		<link type="text/css" rel="stylesheet" href="libs/datepickercontrol/datepickercontrol_lnx.css" />
+		<input type="hidden" id="DPC_TODAY_TEXT" value="today"/>
+		<input type="hidden" id="DPC_BUTTON_TITLE" value="Open calendar..."/>
+		<input type="hidden" id="DPC_MONTH_NAMES" value="['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']"/>
+		<input type="hidden" id="DPC_DAY_NAMES" value="['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']"/>
 	</head>
 	<body>
 		<?php include('components/menu.php'); ?>
