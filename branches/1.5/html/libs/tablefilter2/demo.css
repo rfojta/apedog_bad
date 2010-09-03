@@ -226,7 +226,7 @@ tbody tr td:first-child
 {
         font-weight:bold;
 }
-td input.free {
+td .free {
 	width: 87px;
 }
 /* Image free rules for Internet Explorer < 7 */
