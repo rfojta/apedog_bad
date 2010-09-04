@@ -38,7 +38,7 @@ include('classes/View.class.php');
 			<div id="colOne">
 				<h2 class="section">View</h2>
 				<div class="content">
-					<form method="POST" action="" >
+					<form method="POST" action="" id="viewForm">
 						<?php
 						$reports = new BSC_View($dbutil, $_GET['csfs'], $_SESSION['user'], $current_term);
 						if (isset($_POST['posted'])) {
