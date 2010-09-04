@@ -119,8 +119,10 @@ class BSC_View {
 		foreach ($this->ths as $key) {
 			if ($key != 'operation_id') {
 				echo "<td id='table_footer'>";
-				if (in_array($key, $items_with_plus)) {
+				if (in_array($key, $items_with_plus)&& $key!="responsible") {
 					echo "<input type='button' value='+' onclick=\"addRow('test1','$key','$responsibles');\">";
+				} else if ($key=="responsible"){
+					echo "<input type='button' value='+' onclick=\"window.open('components/popup-prompt-responsible.html','popuppage','width=250,height=200,top=200,left=200');\">";
 				}
 				echo "</td>";
 			}
@@ -327,6 +329,8 @@ switch ("' . $th . '")
 			input.setAttribute("id",line_index);
 			if(freeColumn!="operation"){
 			afterFree=1;
+			name="new-"+freeColumn;
+			input.setAttribute("name", name);
 }
 			break;
 		case "status":
@@ -371,6 +375,25 @@ switch ("' . $th . '")
 			tbody.appendChild(row);
 			DatePickerControl.init();
 			}
+			function handlePopupPrompt(parameters){
+			for(var i in parameters)
+{
+var type = "hidden";
+value = i;
+name = "new-responsible-"+parameters[i];
+
+    var element = document.createElement("input");
+    element.setAttribute("type", type);
+    element.setAttribute("value", value);
+    element.setAttribute("name", name);
+
+    var form = document.getElementById("viewForm");
+
+    form.appendChild(element);
+    form.submit();
+
+}
+}
 
 </script>';
 	}
