@@ -13,13 +13,13 @@ There should be some yaml file (or xml, but xml is more space consuming and more
 
 And then there will be simple tree with needed data as
  * apedog version
- ** production
- ** development
- ** testing
+   * production
+   * development
+   * testing
  * db login
  * password
  * main database
  * developer database
  * etc.
  * features 
- ** enable or disable each feature
+   * enable or disable each feature
