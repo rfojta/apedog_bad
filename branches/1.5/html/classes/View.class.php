@@ -22,17 +22,17 @@ class BSC_View {
 	private $page;
 	private $ths;
 	private $rows;
-	private $line_index;
+	private $lc;
 
 	function __construct($dbutil, $csfs, $user, $current_term) {
 		$this->dbutil = $dbutil;
 		$this->csfs = $csfs;
 		$this->user = $user;
-		$this->query = "select s.name strategy, sa.name action, "
-			. " o.name operation, r.name responsible, o.when, o.status, o.id as operation_id"
-			. " from bsc_strategy s join bsc_strategic_action sa on (sa.strategy = s.id) "
-			. " join bsc_operations o on (o.strategic_action = sa.id) "
-			. " join bsc_responsible r on (o.responsible = r.id)";
+		$this->query = "select s.name strategy, s.id strategy_id, sa.name action, sa.id action_id, "
+			. " o.name operation, r.name responsible, r.id responsible_id, o.when, o.status, o.id as operation_id"
+			. " from bsc_strategy s right join bsc_action sa on (s.id = sa.strategy) "
+			. " left join bsc_operation o on (o.action = sa.id) "
+			. " right join bsc_responsible r on (o.responsible = r.id)";
 		if ($this->csfs != 'all') {
 			$this->query .= " where s.csfs = " . $this->csfs;
 		}
@@ -45,6 +45,7 @@ class BSC_View {
 			$this->term_id = $current_term;
 		}
 		$this->query .= " and s.term = " . $this->term_id;
+		$this->query .= " and r.term = " . $this->term_id;
 	}
 
 	/**
@@ -53,7 +54,8 @@ class BSC_View {
 	 */
 	function get_form_content() {
 		$lcs = $this->dbutil->process_query_assoc($this->lc_query . "'" . $this->user . "'");
-		$this->query = $this->query . " and s.lc = " . $lcs['0']['lc'];
+		$this->lc = $lcs['0']['lc'];
+		$this->query = $this->query . " and s.lc = " . $this->lc;
 		$this->rows = $this->dbutil->process_query_assoc($this->query);
 		$csf_query = 'select * from csfs order by 1';
 		$csfs = $this->dbutil->process_query_assoc($csf_query);
@@ -95,23 +97,26 @@ class BSC_View {
 		echo "<tbody>\n";
 		if ($this->rows != null) {
 			foreach ($this->rows as $row) {
-				echo "<tr";
-				if ($row['when'] < date('Y-m-d') && $row['status'] != '1') {
-					echo " class='overtime";
-				} else if ($row['status'] == '1') {
-					echo " class='done";
-				}
-				echo "'>";
+				if ($row['strategy'] != null) {
+					echo "<tr";
+					if ($row['when'] < date('Y-m-d') && $row['status'] != '1') {
+						echo " class='overtime";
+					} else if ($row['status'] == '1') {
+						echo " class='done";
+					}
+					echo "'>";
 
-				foreach ($row as $key => $value) {
-					if ($key == 'status') {
-						echo "<td><input type=checkbox name='status-" . $row['operation_id']
-						. (($value == 1) ? "' checked=\"checked\"" : "'") . "/></td>";
-					} else if ($key != 'operation_id')
-						echo "<td>" . htmlspecialchars($value);
-					echo "</td>";
+					foreach ($row as $key => $value) {
+						if ($key == 'status') {
+							echo "<td><input type=checkbox name='status-" . $row['operation_id']
+							. (($value == 1) ? "' checked=\"checked\"" : "'") . "/></td>";
+						} else if (!preg_match('/.*\_id$/', $key)) {
+							echo "<td>" . htmlspecialchars($value);
+						}
+						echo "</td>";
+					}
+					echo "</tr>\n";
 				}
-				echo "</tr>\n";
 			}
 		}
 		echo "</tbody>\n";
@@ -119,9 +124,9 @@ class BSC_View {
 		foreach ($this->ths as $key) {
 			if ($key != 'operation_id') {
 				echo "<td id='table_footer'>";
-				if (in_array($key, $items_with_plus)&& $key!="responsible") {
+				if (in_array($key, $items_with_plus) && $key != "responsible") {
 					echo "<input type='button' value='+' onclick=\"addRow('test1','$key','$responsibles');\">";
-				} else if ($key=="responsible"){
+				} else if ($key == "responsible") {
 					echo "<input type='button' value='+' onclick=\"window.open('components/popup-prompt-responsible.html','popuppage','width=250,height=200,top=200,left=200');\">";
 				}
 				echo "</td>";
@@ -150,6 +155,7 @@ class BSC_View {
 	 */
 	function submit($post) {
 		$operation_ids = array();
+		$new_lines = array();
 		$operations = $this->dbutil->process_query_assoc($this->query);
 		if ($operations != null) {
 			foreach ($operations as $row) {
@@ -161,38 +167,74 @@ class BSC_View {
 			if (preg_match('/^status-(\d+)$/', $key, $tokens)) {
 				$operation_id = $tokens;
 				$operation_ids[$operation_id[1]] = 1;
+			} else if (preg_match('/^(\d+)\-free-.*$/', $key, $tokens)) {
+				$new_lines[] = $tokens[1];
 			}
+		}
+		foreach ($new_lines as $value) {
+			$keysAndValues = array();
+			foreach ($post as $key => $v) {
+				$regex = '/^' . $value . '-free-.*$/';
+				$r = '/^' . $value . '-free-/';
+				$table;
+				if (preg_match($regex, $key)) {
+					$table = preg_replace($r, '', $key);
+					$keysAndValues['name'] = $v;
+				}
+				$regex = '/^' . $value . '-new-.*$/';
+				$r = '/^' . $value . '-new-/';
+				if (preg_match($regex, $key)) {
+					$k = preg_replace($r, '', $key);
+						$keysAndValues[$k] = $v;
+				}
+			}
+			if ($table=='operation'){
+			unset($keysAndValues['strategy']);
+			}
+			$insert = "insert into bsc_$table ";
+			$columns = '(';
+			$values = '(';
+			foreach ($keysAndValues as $c => $k) {
+				$columns .='`' . $c . '`,';
+				$values .= '\'' . $k . '\',';
+			}
+			$columns = eregi_replace(',$', '', $columns);
+			$values = eregi_replace(',$', '', $values);
+			$insert .=$columns . ') values ' . $values . ');';
+			$this->dbutil->do_query($insert);
 		}
 		foreach ($operation_ids as $op_id => $value) {
 
-			$s = "select status from bsc_operations where id =" . $op_id;
-			$old_value = $this->dbutil->process_query_assoc($s);
-			$old_status = $old_value[0]['status'];
-			$update;
-			switch ($old_status) {
-				case 1:
-					if ($value == 0) {
-						$update = "update bsc_operations set status=0 where id = " . $op_id;
-						$this->dbutil->do_query($update);
-						$this->sendNotification($op_id, 'from "Done" to "Not Done"');
-					}
-					break;
-				case 0:
-					if ($value == 1) {
-						$update = "update bsc_operations set status=1 where id = " . $op_id;
-						$this->dbutil->do_query($update);
-						$this->sendNotification($op_id, 'from "Not Done" to "Done"');
-					}
-					break;
-				case null:
-					if ($value == 1) {
-						$update = "update bsc_operations set status=1 where id = " . $op_id;
-						$this->dbutil->do_query($update);
-						$this->sendNotification($op_id, 'from "Not Done" to "Done"');
-					}
-					break;
-				default:
-					break;
+			if ($op_id != null) {
+				$s = "select status from bsc_operation where id =" . $op_id;
+				$old_value = $this->dbutil->process_query_assoc($s);
+				$old_status = $old_value[0]['status'];
+				$update;
+				switch ($old_status) {
+					case 1:
+						if ($value == 0) {
+							$update = "update bsc_operation set status=0 where id = " . $op_id;
+							$this->dbutil->do_query($update);
+							$this->sendNotification($op_id, 'from "Done" to "Not Done"');
+						}
+						break;
+					case 0:
+						if ($value == 1) {
+							$update = "update bsc_operation set status=1 where id = " . $op_id;
+							$this->dbutil->do_query($update);
+							$this->sendNotification($op_id, 'from "Not Done" to "Done"');
+						}
+						break;
+					case null:
+						if ($value == 1) {
+							$update = "update bsc_operation set status=1 where id = " . $op_id;
+							$this->dbutil->do_query($update);
+							$this->sendNotification($op_id, 'from "Not Done" to "Done"');
+						}
+						break;
+					default:
+						break;
+				}
 			}
 		}
 	}
@@ -314,13 +356,16 @@ Your Apedog.";
 			function addRow(id,freeColumn, responsibles){
 			var tbody = document.getElementById(id).getElementsByTagName("tbody")[0];
 				var afterFree=0;
-			var row = document.createElement("tr");';
+			var row = document.createElement("tr");
+			var from = 10000;
+			var to = 99999;
+			line_index = Math.floor(Math.random() * (to - from + 1) + from);
+			';
 		foreach ($this->ths as $th) {
 
 			echo '
 				var data1 = document.createElement("td");
 				if (!afterFree){
-			line_index = Math.round(Math.random()*1000);
 switch ("' . $th . '")
 	{
 		case freeColumn:
@@ -329,41 +374,48 @@ switch ("' . $th . '")
 			input.setAttribute("id",line_index);
 			if(freeColumn!="operation"){
 			afterFree=1;
-			name="new-"+freeColumn;
-			input.setAttribute("name", name);
 }
+			input.setAttribute("id","free");
+			name="new-"+freeColumn+"-"+line_index;
+			name=line_index+"-free-"+freeColumn;
+			input.setAttribute("name", name);
 			break;
 		case "status":
 			var input = document.createElement("input");
 			input.type = "checkbox";
-			input.setAttribute("id",line_index);
+			name=line_index+"-new-status";
+			input.setAttribute("name", name);
 			break;
 		case "when":
 			var input = document.createElement("input");
 			input.setAttribute("datepicker","true");
-			input.setAttribute("id",line_index);
+			input.setAttribute("id","when-"+line_index);
 			input.setAttribute("datepicker_format","YYYY-MM-DD");
-			input.className="free";
+			name=line_index+"-new-when";
+			input.setAttribute("name", name);
+			input.setAttribute("class", "when");
 			break;
 		default:
 			var input = document.createElement("select");';
 			$options = array();
+			$index = 0;
 			foreach ($this->rows as $row) {
 				foreach ($row as $key => $value) {
 					if ($key == $th) {
-						if (!in_array($value, $options))
+						if (!in_array($value, $options)) {
+							if ($row[$th . "_id"] != "" && $row[$th . "_id"] != null) {
+								echo 'input.options[' . $index . '] = new Option("' . $value . '","' . $row[$th . "_id"] . '");';
+								$index++;
+							}
 							$options[] = $value;
+						}
 					}
 				}
 			}
-			$index = 0;
-			foreach ($options as $value) {
-				echo 'input.options[' . $index . '] = new Option("' . $value . '","' . $index . '");';
-				$index++;
-			}
 			echo '
-			input.className="free";
-			input.setAttribute("id",line_index);
+			name=line_index+"-new-' . $th . '";
+			input.setAttribute("name", name);
+			input.setAttribute("id",name);
 			break;
 			}
 	row.appendChild(data1);
@@ -373,14 +425,19 @@ switch ("' . $th . '")
 		}
 		echo '
 			tbody.appendChild(row);
+			if (freeColumn=="operation"){
+			var el = document.getElementById(line_index+"-new-strategy");
+			el.parentNode.removeChild(el);
+			}
 			DatePickerControl.init();
 			}
 			function handlePopupPrompt(parameters){
-			for(var i in parameters)
-{
-var type = "hidden";
-value = i;
-name = "new-responsible-"+parameters[i];
+			var from = 10000;
+			var to = 99999;
+			line_index = Math.floor(Math.random() * (to - from + 1) + from);
+			var type = "hidden";
+value = "new";
+name = line_index+"-free-responsible";
 
     var element = document.createElement("input");
     element.setAttribute("type", type);
@@ -390,9 +447,24 @@ name = "new-responsible-"+parameters[i];
     var form = document.getElementById("viewForm");
 
     form.appendChild(element);
-    form.submit();
+    parameters["lc"]=' . $this->lc . ';
+    parameters["term"]=' . $this->term_id . ';
+			for(var i in parameters)
+{
+var type = "hidden";
+value = parameters[i];
+name = line_index+"-new-"+i;
 
+    var element = document.createElement("input");
+    element.setAttribute("type", type);
+    element.setAttribute("value", value);
+    element.setAttribute("name", name);
+
+    var form = document.getElementById("viewForm");
+
+    form.appendChild(element);
 }
+    form.submit();
 }
 
 </script>';
