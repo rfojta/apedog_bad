@@ -215,7 +215,6 @@ tr
    will produce 1000 http requests for the image in question) */
 tr[class="alt"] td
 {
-        background: #F5FAFA url(../media/td_alt.jpg) no-repeat;
 }
 td[class~="alt"]
 {
@@ -226,7 +225,7 @@ tbody tr td:first-child
 {
         font-weight:bold;
 }
-td .free {
+td .when, #free {
 	width: 87px;
 }
 /* Image free rules for Internet Explorer < 7 */
