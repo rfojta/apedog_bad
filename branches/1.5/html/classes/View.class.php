@@ -126,10 +126,13 @@ class BSC_View {
         foreach ($this->ths as $key) {
             if ($key != 'operation_id') {
                 echo "<td id='table_footer'>";
-                if (in_array($key, $items_with_plus) && $key != "responsible") {
+                if ($key=="strategy"&& $this->csfs=='all') {
+                    echo "<input type='button' value='+' disabled onclick=\"addRow('test1','$key','$responsibles');\">";
+                }
+                else if (in_array($key, $items_with_plus) && $key != "responsible") {
                     echo "<input type='button' value='+' onclick=\"addRow('test1','$key','$responsibles');\">";
                 } else if ($key == "responsible") {
-                    echo "<input type='button' value='+' onclick=\"window.open('components/popup-prompt-responsible.html','popuppage','width=250,height=200,top=200,left=200');\">";
+                    echo "<input type='button' value='+' onclick=\"new_responsible();\">";
                 }
                 echo "</td>";
             }
@@ -183,7 +186,6 @@ class BSC_View {
                     $table = preg_replace($r, '', $key);
                     $keysAndValues['name'] = $v;
                     if ($table=='strategy') {
-                        echo 'dfsdfasdfasd-'.$this->csfs;
                         $keysAndValues['csfs']=$this->csfs;
                     }
                 }
@@ -197,20 +199,21 @@ class BSC_View {
             if ($table=='operation') {
                 unset($keysAndValues['strategy']);
             }
-            $keysAndValues['term']=$this->term_id;
-            $keysAndValues['lc']=$this->lc;
-            echo $this->term_id."!!!!".$this->lc;
-            $insert = "insert into bsc_$table ";
-            $columns = '(';
-            $values = '(';
-            foreach ($keysAndValues as $c => $k) {
-                $columns .='`' . $c . '`,';
-                $values .= '\'' . $k . '\',';
+            if ($keysAndValues['name']!=null) {
+                $keysAndValues['term']=$this->term_id;
+                $keysAndValues['lc']=$this->lc;
+                $insert = "insert into bsc_$table ";
+                $columns = '(';
+                $values = '(';
+                foreach ($keysAndValues as $c => $k) {
+                    $columns .='`' . $c . '`,';
+                    $values .= '\'' . $k . '\',';
+                }
+                $columns = eregi_replace(',$', '', $columns);
+                $values = eregi_replace(',$', '', $values);
+                $insert .=$columns . ') values ' . $values . ');';
+                $this->dbutil->do_query($insert);
             }
-            $columns = eregi_replace(',$', '', $columns);
-            $values = eregi_replace(',$', '', $values);
-            $insert .=$columns . ') values ' . $values . ');';
-            $this->dbutil->do_query($insert);
         }
         foreach ($operation_ids as $op_id => $value) {
 
@@ -369,10 +372,25 @@ Your Apedog.";
 
     function javascripts() {
         echo '<script>
+            function new_responsible(){
+            var tbody = document.getElementById("test1").getElementsByTagName("tbody")[0];
+				var afterFree=0;
+                        var r = document.getElementById("new_row");
+                        if (r!=null){
+                        tbody.removeChild(r);
+                        }
+                window.open("components/popup-prompt-responsible.html","popuppage","width=300,height=300,top=200,left=200");
+}
+
 			function addRow(id,freeColumn, responsibles){
 			var tbody = document.getElementById(id).getElementsByTagName("tbody")[0];
 				var afterFree=0;
+                        var r = document.getElementById("new_row");
+                        if (r!=null){
+                        tbody.removeChild(r);
+                        }
 			var row = document.createElement("tr");
+                        row.setAttribute("id","new_row");
 			var from = 10000;
 			var to = 99999;
 			line_index = Math.floor(Math.random() * (to - from + 1) + from);
@@ -395,6 +413,7 @@ switch ("' . $th . '")
 			name="new-"+freeColumn+"-"+line_index;
 			name=line_index+"-free-"+freeColumn;
 			input.setAttribute("name", name);
+                        input.setAttribute("notClear", "");
 			break;
 		case "status":
 			var input = document.createElement("input");
@@ -409,6 +428,7 @@ switch ("' . $th . '")
 			input.setAttribute("datepicker_format","YYYY-MM-DD");
 			name=line_index+"-new-when";
 			input.setAttribute("name", name);
+                        input.setAttribute("notClear", "");
 			input.setAttribute("class", "when");
 			break;
 		default:
