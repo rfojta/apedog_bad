@@ -1,0 +1,1 @@
+rename table bsc_strategic_action to bsc_action, bsc_operations to bsc_operation;
