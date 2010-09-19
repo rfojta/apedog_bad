@@ -25,6 +25,7 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 -- Struktura tabulky `csfs`
 --
 
+DROP TABLE IF EXISTS `csfs`;
 CREATE TABLE IF NOT EXISTS `csfs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) CHARACTER SET latin1 NOT NULL,
