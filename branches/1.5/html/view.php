@@ -76,7 +76,7 @@ include('classes/View.class.php');
                         if (isset($_POST['posted'])) {
                             $reports->submit($_POST);
                         }
-                        $reports->get_form_content();
+                        $reports->get_form_content( false );
                         ?>
                     </form>
                 </div>

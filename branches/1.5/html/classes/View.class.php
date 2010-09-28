@@ -28,11 +28,12 @@ class BSC_View {
         $this->dbutil = $dbutil;
         $this->csfs = $csfs;
         $this->user = $user;
-        $this->query = "select s.name strategy, s.id strategy_id, sa.name action, sa.id action_id, "
-                . " o.name operation, r.name responsible, r.id responsible_id, o.when, o.status, o.id as operation_id"
-                . " from bsc_strategy s right join bsc_action sa on (s.id = sa.strategy) "
-                . " join bsc_operation o on (o.action = sa.id) "
-                . " join bsc_responsible r on (o.responsible = r.id)";
+        $this->query = "select s.name strategy, s.id strategy_id, sa.name action, sa.id action_id, \n"
+                . " o.name operation, r.name responsible, r.id responsible_id, \n"
+                . " o.when, o.status, o.id as operation_id \n"
+                . " from bsc_strategy s left join bsc_action sa on (s.id = sa.strategy) \n"
+                . " left join bsc_operation o on (o.action = sa.id) \n"
+                . " left join bsc_responsible r on (o.responsible = r.id) \n";
 
         if ($this->csfs != 'all') {
             $this->query .= " where s.csfs = " . $this->csfs;
@@ -46,18 +47,28 @@ class BSC_View {
             $this->term_id = $current_term;
         }
         $this->query .= " and s.term = " . $this->term_id;
-        $this->query .= " and r.term = " . $this->term_id;
+        $this->query .= " and ( r.term = " . $this->term_id . " OR r.term IS NULL)";
         $lcs = $this->dbutil->process_query_assoc($this->lc_query . "'" . $this->user . "'");
         $this->lc = $lcs['0']['lc'];
+    }
+
+    function debug( $what ) {
+        echo "<pre>";
+        print_r($what);
+        echo "</pre>";
     }
 
     /**
      * generates html table from strategy,
      * operations, actions and responsible
      */
-    function get_form_content() {
+    function get_form_content( $debug = true ) {
         $this->query = $this->query . " and s.lc = " . $this->lc;
         $this->rows = $this->dbutil->process_query_assoc($this->query);
+        if( $debug ) {
+            $this->debug( $this->query );
+            $this->debug( $this->rows );
+        }
         $csf_query = 'select * from csfs order by 1';
         $csfs = $this->dbutil->process_query_assoc($csf_query);
         $term_query = 'select * from terms order by 2';
@@ -93,6 +104,7 @@ class BSC_View {
                         echo "<th>" . $key . "</th>";
                     }
             }
+            echo "\n";
         }
         echo "</tr>\n";
         echo "</thead>\n";
@@ -102,42 +114,45 @@ class BSC_View {
                 if ($row['strategy'] != null) {
                     echo "<tr";
                     if ($row['when'] < date('Y-m-d') && $row['status'] != '1') {
-                        echo " class='overtime";
+                        echo " class=\"overtime\"";
                     } else if ($row['status'] == '1') {
-                        echo " class='done";
+                        echo " class=\"done\"";
                     }
-                    echo "'>";
+                    echo ">";
 
                     foreach ($row as $key => $value) {
                         if ($key == 'status') {
                             echo "<td><input type=checkbox name='status-" . $row['operation_id']
-                                    . (($value == 1) ? "' checked=\"checked\"" : "'") . "/></td>";
+                                    . (($value == 1) ? "' checked=\"checked\"" : "'") . "/></td>\n";
                         } else if (!preg_match('/.*\_id$/', $key)) {
-                            echo "<td>" . htmlspecialchars($value);
+                            echo "<td>" . htmlspecialchars($value) . "</td>\n";
+                        } else {
+                           ;
                         }
-                        echo "</td>";
                     }
                     echo "</tr>\n";
                 }
             }
         }
         echo "</tbody>\n";
-        echo "<tfoot id='table_footer'>";
+        echo "<tfoot id='table_footer'><tr>\n";
         foreach ($this->ths as $key) {
             if ($key != 'operation_id') {
-                echo "<td id='table_footer'>";
+                echo "<td id='table_footer'>\n";
                 if ($key=="strategy"&& $this->csfs=='all') {
-                    echo "<input type='button' value='+' disabled onclick=\"addRow('test1','$key','$responsibles');\">";
+                    echo "<input type='button' value='+' disabled onclick=\"addRow('test1','$key','$responsibles');\">\n";
                 }
                 else if (in_array($key, $items_with_plus) && $key != "responsible") {
-                    echo "<input type='button' value='+' onclick=\"addRow('test1','$key','$responsibles');\">";
+                    echo "<input type='button' value='+' onclick=\"addRow('test1','$key','$responsibles');\">\n";
                 } else if ($key == "responsible") {
-                    echo "<input type='button' value='+' onclick=\"new_responsible();\">";
+                    echo "<input type='button' value='+' onclick=\"new_responsible();\">\n";
+                } else {
+                    ;
                 }
-                echo "</td>";
+                echo "</td>\n";
             }
         }
-        echo "</tfoot>";
+        echo "</tr></tfoot>";
         echo "</table>\n";
 
         $this->javascripts();
@@ -158,7 +173,12 @@ class BSC_View {
     /**
      * handle status changes, sends emails
      */
-    function submit($post) {
+    function submit($post, $debug = true) {
+        if($debug) {
+            echo "<pre>";
+            print_r($post);
+            echo "</pre>\n";
+        }
         $operation_ids = array();
         $new_lines = array();
         $operations = $this->dbutil->process_query_assoc($this->query);
@@ -432,14 +452,15 @@ switch ("' . $th . '")
 			input.setAttribute("class", "when");
 			break;
 		default:
-			var input = document.createElement("select");';
+			var input = document.createElement("select");' . "\n";
             if ($th!='when' && $th!='status') {
                 $options = $this->get_rows_for_term($th, $this->term_id);
 //            $options = array();
                 $index = 0;
                 foreach ($options as $row) {
 
-                    echo 'input.options[' . $index . '] = new Option("' . $row[$th] . '","' .$row[$th.'_id'] . '");';
+                    echo 'input.options[' . $index . '] = new Option("' . $this->escape($row[$th])
+                        . '","' . $this->escape($row[$th.'_id']) . '");' . "\n";
                     $index++;
 
 
@@ -501,6 +522,14 @@ name = line_index+"-new-"+i;
 }
 
 </script>';
+    }
+
+    /**
+     * replace " and ' with \" \'
+     * @param <type> $str 
+     */
+    function escape( $str ) {
+        return str_replace("'", "\\'", str_replace("\"", "\\\"", $str));
     }
 
 }
