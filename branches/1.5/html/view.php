@@ -72,11 +72,11 @@ include('classes/View.class.php');
                 <div class="content">
                     <form method="POST" action="" id="viewForm" onSubmit="return validateInputs();">
                         <?php
-                        $reports = new BSC_View($dbutil, $_GET['csfs'], $_SESSION['user'], $current_term);
+                        $reports = new BSC_View($dbutil, $_GET['csfs'], $_SESSION['user'], $current_term, $_GET);
                         if (isset($_POST['posted'])) {
                             $reports->submit($_POST);
                         }
-                        $reports->get_form_content( false );
+                        $reports->get_form_content( true );
                         ?>
                     </form>
                 </div>

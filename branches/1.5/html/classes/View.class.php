@@ -23,17 +23,36 @@ class BSC_View {
     private $ths;
     private $rows;
     private $lc;
+    private $rec_per_page;
+    private $when_from;
+    private $when_to;
 
-    function __construct($dbutil, $csfs, $user, $current_term) {
+    /**
+     *
+     * @param <type> $dbutil inner database class
+     * @param <type> $csfs critical factor
+     * @param <type> $user logged user
+     * @param <type> $current_term actual term
+     * @param <type> $rec_per_page records per page
+     */
+    function __construct($dbutil, $csfs, $user, $current_term, $get) {
         $this->dbutil = $dbutil;
         $this->csfs = $csfs;
         $this->user = $user;
+        if(array_key_exists('rec_per_page', $get))
+            $this->rec_per_page = $get['rec_per_page'];
+        else
+            $this->rec_per_page = 10;
+        $this->when_from = $get['when_from'];
+        $this->when_to = $get['when_to'];
+
+        // main big query
         $this->query = "select s.name strategy, s.id strategy_id, sa.name action, sa.id action_id, \n"
                 . " o.name operation, r.name responsible, r.id responsible_id, \n"
                 . " o.when, o.status, o.id as operation_id \n"
-                . " from bsc_strategy s left join bsc_action sa on (s.id = sa.strategy) \n"
-                . " left join bsc_operation o on (o.action = sa.id) \n"
-                . " left join bsc_responsible r on (o.responsible = r.id) \n";
+                . " from bsc_strategy s right join bsc_action sa on (s.id = sa.strategy) \n"
+                . " right join bsc_operation o on (o.action = sa.id) \n"
+                . " right join bsc_responsible r on (o.responsible = r.id) \n";
 
         if ($this->csfs != 'all') {
             $this->query .= " where s.csfs = " . $this->csfs;
@@ -52,6 +71,10 @@ class BSC_View {
         $this->lc = $lcs['0']['lc'];
     }
 
+    /**
+     * generates PRE tag with content
+     * @param <type> $what 
+     */
     function debug( $what ) {
         echo "<pre>";
         print_r($what);
@@ -64,10 +87,24 @@ class BSC_View {
      */
     function get_form_content( $debug = true ) {
         $this->query = $this->query . " and s.lc = " . $this->lc;
+
+        // when from to filtering
+        if( $this->when_from != null) {
+                $this->query .= " and ( o.when >= '" . $this->when_from . "'";
+                $this->query .= " or o.when is null)";
+        }
+        if( $this->when_to!= null) {
+                $this->query .= " and ( o.when <= '" . $this->when_to . "'";
+                $this->query .= " or o.when is null)";
+        }
+
+
+        $this->query .= ' order by o.when desc';
+
         $this->rows = $this->dbutil->process_query_assoc($this->query);
         if( $debug ) {
             $this->debug( $this->query );
-            $this->debug( $this->rows );
+            $this->debug( array_splice($this->rows, 0, 2) );
         }
         $csf_query = 'select * from csfs order by 1';
         $csfs = $this->dbutil->process_query_assoc($csf_query);
@@ -77,9 +114,15 @@ class BSC_View {
 
         $this->getCsfDropDown($csfs);
         $this->get_term_section($terms);
+        $this->getRecordsOnPageDropDrown();
+        echo "<br>";
+        $this->get_when_filters();
+        // END OF PAGE LINK
+        echo "&nbsp;<a href=\"#end_of_page\" title=\"Go to the end of page\">EOP</a>";
         $this->ths = array('strategy', 'action', 'operation', 'responsible', 'when', 'status');
         $items_with_plus = array('strategy', 'action', 'operation', 'responsible');
-        echo "<table id='test1' class='sortable-onload-show-4-5r rowstyle-alt no-arrow max-pages-4 paginate-10'>";
+        echo "<table id='test1' class='sortable-onload-show-4-5r rowstyle-alt no-arrow max-pages-4 paginate-" .
+            $this->rec_per_page . "'>";
         echo "<thead>\n";
         echo "<tr>\n";
         foreach ($this->ths as $key) {
@@ -154,7 +197,8 @@ class BSC_View {
         }
         echo "</tr></tfoot>";
         echo "</table>\n";
-
+        // END OF PAGE ANCHOR
+        echo "<a name=\"end_of_page\"></a>";
         $this->javascripts();
         $this->get_submit_button();
     }
@@ -281,12 +325,72 @@ class BSC_View {
         echo "You can sort by multiple columns using SHIFT.";
     }
 
+    /**
+     * Generates full url page for window refresh trick
+     * @param <type> $param_to_replace
+     */
+    function page_with_params($param_to_replace) {
+        $url = $this->page . "a=1";
+        $param_list = array(
+            'term_id' => $this->term_id,
+            'csfs' => $this->csf_id,
+            'rec_per_page' => $this->rec_per_page,
+            'when_from' => $this->when_from,
+            'when_to' => $this->when_to
+        );
+
+        foreach( $param_list as $key => $value) {
+            $url .= "&$key=";
+            if( $key == $param_to_replace) {
+                $url .= "'+this.value+'";
+            }
+            else {
+                $url .= $value;
+            }
+        }
+        return $url;
+    }
+
+    /**
+     * Simplifying string to prevent types with ' and "
+     * @param <type> $param_to_replace
+     * @return <type>
+     */
+    function on_change($param_to_replace) {
+        return "onchange=\"window.location.href='" .
+            $this->page_with_params($param_to_replace) . "'\"";
+    }
+
+    /**
+     * Generates SELECT tag with some counts inside
+     */
+    function getRecordsOnPageDropDrown() {
+        echo "Rows Per Page:\n";
+        echo "<select name=\"rec_per_page\" id=\"rec_per_page\"\n";
+        echo $this->on_change('rec_per_page') . ">\n";
+
+        $options = array(10, 20, 50, 100);
+        $selected = "";
+        foreach( $options as $value ) {
+            if( $value == $this->rec_per_page )
+                $selected = "selected=\"selected\"";
+            else
+                $selected = "";
+            echo "<option value=\"$value\" $selected>$value</option>\n";
+        }
+        echo "</select>";
+
+    }
+
+    /**
+     * Generates select tag with critical factor list
+     * @param <type> $csfList
+     */
     function getCsfDropDown($csfList) {
 
         echo "CSF: \n";
         echo "<select name=\"csf_id\" id=\"csf_id\"\n";
-        echo "onchange=\"window.location.href='" . $this->page .
-                "term_id=" . $this->term_id . "&csfs='+this.value\">\n";
+        echo $this->on_change('csfs') . ">\n";
 
         echo "<option value='all'";
         if (isset($_GET['csfs'])) {
@@ -324,11 +428,14 @@ class BSC_View {
         echo "</select>\n";
     }
 
+    /**
+     * Select tag of terms with refresh trick
+     * @param <type> $term_list
+     */
     function get_term_section($term_list) {
         echo "Select term: \n";
         echo "<select name=\"term_id\" id=\"term_id\"\n";
-        echo "onchange=\"window.location.href='" . $this->page .
-                "csfs=" . $this->csf_id . "&term_id='+this.value\">\n";
+        echo $this->on_change('term_id') . ">\n";
 
         foreach ($term_list as $term) {
             echo "<option value=\"" . $term['id'] . "\"";
@@ -347,6 +454,17 @@ class BSC_View {
         }
 
         echo "</select>\n";
+    }
+
+    function get_when_filters() {
+        $whens = array('when_from', 'when_to');
+        foreach( $whens as $when_id) {
+            echo '<input datepicker="true" id="' . $when_id . '" ';
+            echo 'datepicker_format="YYYY-MM-DD" name="' . $when_id . '" ';
+            echo $this->on_change($when_id);
+            echo ' value="' . $this->$when_id . '"';
+            echo ' notclear="" class="when" maxlength="10" isdatepicker="true">';
+        }
     }
 
     function get_rows_for_term($table,$term_id) {
