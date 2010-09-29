@@ -32,6 +32,9 @@ include('classes/View.class.php');
         <input type="hidden" id="DPC_MONTH_NAMES" value="['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']"/>
         <input type="hidden" id="DPC_DAY_NAMES" value="['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']"/>
         <script>
+            /**
+             * validate inputs before submit
+             */
             function validateInputs(){
                 dateInputs = document.getElementsByClassName("when");
                 freeColumnInputs = document.getElementsByClassName("free");
@@ -43,15 +46,26 @@ include('classes/View.class.php');
                 }
 
             }
-            checkField= function(ar){
+            /**
+             * check all fields in array that is not null
+             * except when_from and when_to
+             */
+            checkField = function(ar) {
+                var result = true;
                 for (i = 0; i < ar.length; i++) {
-                    if (ar[i].value==""){
-                        return false;
-                    } else {
-                        return true;
-                    }
+                    // all fields shouldn't be null except when_from and when_to
+                    alert(ar[i].name);
+                    if( ar[i].name == 'when_from' || ar[i].name == 'when_to')
+                        continue;
+                    // alert(result);
+                    result = result && (! ar[i].value == "");
+                    // alert("result after: " + result);
                 }
+                return result;
             }
+            /**
+             * redefine new function for getting inputs with particular class
+             */
             document.getElementsByClassName = function(cl) {
                 var retnode = [];
                 var myclass = new RegExp('\\b'+cl+'\\b');
