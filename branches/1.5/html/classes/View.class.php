@@ -50,9 +50,9 @@ class BSC_View {
         $this->query = "select s.name strategy, s.id strategy_id, sa.name action, sa.id action_id, \n"
                 . " o.name operation, r.name responsible, r.id responsible_id, \n"
                 . " o.when, o.status, o.id as operation_id \n"
-                . " from bsc_strategy s right join bsc_action sa on (s.id = sa.strategy) \n"
-                . " right join bsc_operation o on (o.action = sa.id) \n"
-                . " right join bsc_responsible r on (o.responsible = r.id) \n";
+                . " from bsc_strategy s left join bsc_action sa on (s.id = sa.strategy) \n"
+                . " left join bsc_operation o on (" . $this->action_join() . ") \n"
+                . " left join bsc_responsible r on (o.responsible = r.id) \n";
 
         if ($this->csfs != 'all') {
             $this->query .= " where s.csfs = " . $this->csfs;
@@ -71,6 +71,20 @@ class BSC_View {
         $this->lc = $lcs['0']['lc'];
     }
 
+    function action_join() {
+        $on_part = 'o.action = sa.id';
+          // when from to filtering
+        if( $this->when_from != null) {
+                $on_part .= " and o.when >= '" . $this->when_from . "'";
+                // $this->query .= " or o.when is null)";
+        }
+        if( $this->when_to!= null) {
+                $on_part .= " and o.when <= '" . $this->when_to . "'";
+                // $this->query .= " or o.when is null)";
+        }
+        return $on_part;
+    }
+
     /**
      * generates PRE tag with content
      * @param <type> $what 
@@ -86,19 +100,7 @@ class BSC_View {
      * operations, actions and responsible
      */
     function get_form_content( $debug = true ) {
-        $this->query = $this->query . " and s.lc = " . $this->lc;
-
-        // when from to filtering
-        if( $this->when_from != null) {
-                $this->query .= " and ( o.when >= '" . $this->when_from . "'";
-                $this->query .= " or o.when is null)";
-        }
-        if( $this->when_to!= null) {
-                $this->query .= " and ( o.when <= '" . $this->when_to . "'";
-                $this->query .= " or o.when is null)";
-        }
-
-
+        $this->query .= " and s.lc = " . $this->lc;
         $this->query .= ' order by o.when desc';
 
         $this->rows = $this->dbutil->process_query_assoc($this->query);
