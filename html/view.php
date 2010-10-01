@@ -54,7 +54,7 @@ include('classes/View.class.php');
                 var result = true;
                 for (i = 0; i < ar.length; i++) {
                     // all fields shouldn't be null except when_from and when_to
-                    alert(ar[i].name);
+                    // alert(ar[i].name);
                     if( ar[i].name == 'when_from' || ar[i].name == 'when_to')
                         continue;
                     // alert(result);
