@@ -26,6 +26,7 @@ class BSC_View {
     private $rec_per_page;
     private $when_from;
     private $when_to;
+    private $show_empty_operations;
 
     /**
      *
@@ -39,12 +40,16 @@ class BSC_View {
         $this->dbutil = $dbutil;
         $this->csfs = $csfs;
         $this->user = $user;
+        // pagination
         if(array_key_exists('rec_per_page', $get))
             $this->rec_per_page = $get['rec_per_page'];
         else
             $this->rec_per_page = 10;
+        // limits on operataion when
         $this->when_from = $get['when_from'];
         $this->when_to = $get['when_to'];
+        // either not defined or 0 - means false
+        $this->show_empty_operations = $get['empty_op'];
 
         // main big query
         $this->query = "select s.name strategy, s.id strategy_id, sa.name action, sa.id action_id, \n"
@@ -53,6 +58,14 @@ class BSC_View {
                 . " from bsc_strategy s left join bsc_action sa on (s.id = sa.strategy) \n"
                 . " left join bsc_operation o on (" . $this->action_join() . ") \n"
                 . " left join bsc_responsible r on (o.responsible = r.id) \n";
+
+        
+        // in case of now checkbox found (nor checked)
+        // don't use left joins and show only appropriate operation
+        // according to filters (where_from, where_to, etc.)
+        if( ! $this->show_empty_operations ) {
+            $this->query = str_replace( "left join", "join", $this->query );
+        }
 
         if ($this->csfs != 'all') {
             $this->query .= " where s.csfs = " . $this->csfs;
@@ -113,12 +126,12 @@ class BSC_View {
         $term_query = 'select * from terms order by 2';
         $terms = $this->dbutil->process_query_assoc($term_query);
 
-
         $this->getCsfDropDown($csfs);
         $this->get_term_section($terms);
         $this->getRecordsOnPageDropDrown();
         echo "<br>";
         $this->get_when_filters();
+        $this->get_show_empty();
         // END OF PAGE LINK
         echo "&nbsp;<a href=\"#end_of_page\" title=\"Go to the end of page\">EOP</a>";
         $this->ths = array('strategy', 'action', 'operation', 'responsible', 'when', 'status');
@@ -338,7 +351,8 @@ class BSC_View {
             'csfs' => $this->csf_id,
             'rec_per_page' => $this->rec_per_page,
             'when_from' => $this->when_from,
-            'when_to' => $this->when_to
+            'when_to' => $this->when_to,
+            'empty_op' => $this->show_empty_operations 
         );
 
         foreach( $param_list as $key => $value) {
@@ -360,6 +374,16 @@ class BSC_View {
      */
     function on_change($param_to_replace) {
         return "onchange=\"window.location.href='" .
+            $this->page_with_params($param_to_replace) . "'\"";
+    }
+
+     /**
+     * Simplifying string to prevent types with ' and "
+     * @param <type> $param_to_replace
+     * @return <type>
+     */
+    function on_click($param_to_replace) {
+        return "onclick=\"window.location.href='" .
             $this->page_with_params($param_to_replace) . "'\"";
     }
 
@@ -467,6 +491,20 @@ class BSC_View {
             echo ' value="' . $this->$when_id . '"';
             echo ' notclear="" class="when" maxlength="10" isdatepicker="true">';
         }
+    }
+
+    /**
+     * display checkbox for show empty operation option
+     */
+    function get_show_empty() {
+        echo "\nShow empty operations: ";
+        echo "<input type=\"checkbox\" name=\"empty_op\" ";
+        if( $this->show_empty_operations ) {
+            echo " checked=\"checked\" ";
+        }
+        echo $this->on_change('empty_op');
+        echo " />\n";
+
     }
 
     function get_rows_for_term($table,$term_id) {
