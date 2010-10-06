@@ -76,6 +76,15 @@ include('classes/View.class.php');
                 }
                 return retnode;
             };
+
+  DatePickerControl.onSelect = function(inputid)
+  {
+    var input = document.getElementById(inputid);
+    if(inputid.substr(0,5) == 'when_') {
+        // alert(input.value);
+        input.onchange();
+    }
+  }
         </script>
     </head>
     <body>
