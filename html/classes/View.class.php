@@ -367,6 +367,18 @@ class BSC_View {
         return $url;
     }
 
+
+    /**
+     * Simplifying string to prevent types with ' and "
+     * @param <type> $param_to_replace
+     * @return <type>
+     */
+    function on_select($param_to_replace) {
+        return "onSelect=\"window.location.href='" .
+            $this->page_with_params($param_to_replace) . "'\"";
+    }
+
+
     /**
      * Simplifying string to prevent types with ' and "
      * @param <type> $param_to_replace
@@ -485,6 +497,7 @@ class BSC_View {
     function get_when_filters() {
         $whens = array('when_from', 'when_to');
         foreach( $whens as $when_id) {
+
             echo '<input datepicker="true" id="' . $when_id . '" ';
             echo 'datepicker_format="YYYY-MM-DD" name="' . $when_id . '" ';
             echo $this->on_change($when_id);
@@ -497,7 +510,7 @@ class BSC_View {
      * display checkbox for show empty operation option
      */
     function get_show_empty() {
-        echo "\nShow empty operations: ";
+        echo "\nShow empty strategies/actions: ";
         echo "<input type=\"checkbox\" name=\"empty_op\" ";
         if( $this->show_empty_operations ) {
             echo " checked=\"checked\" ";
