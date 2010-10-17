@@ -530,14 +530,14 @@ class BSC_View {
     function sendNotification($op_id, $typeOfChange) {
         $query = "select c.name csf_name, s.name strategy_name, sa.name action_name, o.name operation_name, o.when ddl, r.name user, u.email LCPemail, u.name LCPname
 			from bsc_responsible r join
-			bsc_operations o on r.id=o.responsible join
-			bsc_strategic_action sa on sa.id = o.strategic_action join
+			bsc_operation o on r.id=o.responsible join
+			bsc_action sa on sa.id = o.action join
 			bsc_strategy s on s.id = sa.strategy join
 			csfs c on s.csfs = c.id join
 			users u on u.lc = s.lc
 			where o.id = " . $op_id;
-        $rows = $this->rows[0];
-
+        $rows = $this->dbutil->process_query_assoc($query);
+	$rows = $rows[0];
         $to = $rows['LCPemail'];
         $user = $rows['user'];
         $subject = 'Apedog - operation status changed by ' . $user;
@@ -554,7 +554,7 @@ DDL for finishing this operation was " . $rows['ddl'] . " .
 Regards,
 Your Apedog.";
         $headers = 'From: noreply@apedog.cz';
-        mail($to, $subject, $message, $headers);
+	mail($to, $subject, $message, $headers);
     }
 
     /*
@@ -706,3 +706,4 @@ name = line_index+"-new-"+i;
 }
 
 ?>
+
