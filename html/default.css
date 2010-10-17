@@ -204,6 +204,9 @@ a:hover {
         border-bottom-style:solid;
         background:#FDEEF4
 }
+#colOne .content .csfTableRow:hover {
+        text-decoration: underline;
+}
 #colOne .content .csfStatus{
         text-align: center
 }
@@ -212,6 +215,9 @@ a:hover {
         border-bottom-style:dotted;
         border-bottom-width:thin;
         border-bottom-color:black;
+}
+#colOne .content .kpi1TableRow:hover {
+        text-decoration: underline;
 }
 #colOne .content .kpi2TableRow{
 
