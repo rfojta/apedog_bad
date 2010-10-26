@@ -90,6 +90,7 @@ if ($_SESSION['country_code']==null||$_POST['Country']!=null) {
                 <div class="content">
                     <p>Apedog is a tool, which helps AIESEC Countries to track their plans. It was developed to ensure sustainable growth, improving KPIs and improving AIESEC experience.</p>
                     <p>We recommend to use Mozilla Firefox or Google Chrome for best look and performance.</p>
+                    <p>Javascript must be enabled in your browser to use full functionality of the system.</p>
                     <b><?php echo $info; ?></b>
                     <p>
                         <form action="index.php" method="post">

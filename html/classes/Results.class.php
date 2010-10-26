@@ -298,7 +298,8 @@ echo '<INPUT TYPE="BUTTON" VALUE="Export to XLS" ONCLICK="window.open(\'xlswrite
         echo '<tr class="csfTableRow">';
         echo '<td>';
         echo '<span title="' . $csf['description'] . '">'
-        . $csf['name'] . ':</span>';
+            .'<a href="view.php?csfs=' . $csf['id'] . '">'
+            . $csf['name'] . '</a>:</span>';
         echo '</td>';
         echo '<td>';
         echo '</td>';
