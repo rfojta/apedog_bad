@@ -82,6 +82,8 @@ class BSC_View {
         $this->query .= " and ( r.term = " . $this->term_id . " OR r.term IS NULL)";
         $lcs = $this->dbutil->process_query_assoc($this->lc_query . "'" . $this->user . "'");
         $this->lc = $lcs['0']['lc'];
+        $this->query .= " and r.lc = " . $this->lc;
+        $this->query .= ' order by o.when desc';
     }
 
     function action_join() {
@@ -102,19 +104,17 @@ class BSC_View {
      * generates PRE tag with content
      * @param <type> $what 
      */
-    function debug( $what ) {
-        echo "<pre>";
-        print_r($what);
-        echo "</pre>";
-    }
+ //   function debug( $what ) {
+  //      echo "<pre>";
+   //     print_r($what);
+    //    echo "</pre>";
+    //}
 
     /**
      * generates html table from strategy,
      * operations, actions and responsible
      */
-    function get_form_content( $debug = true ) {
-        $this->query .= " and s.lc = " . $this->lc;
-        $this->query .= ' order by o.when desc';
+    function get_form_content( $debug = false ) {
 
         $this->rows = $this->dbutil->process_query_assoc($this->query);
         if( $debug ) {
@@ -234,9 +234,9 @@ class BSC_View {
      */
     function submit($post, $debug = true) {
         if($debug) {
-            echo "<pre>";
-            print_r($post);
-            echo "</pre>\n";
+         //   echo "<pre>";
+          //  print_r($post);
+           // echo "</pre>\n";
         }
         $operation_ids = array();
         $new_lines = array();
@@ -522,7 +522,7 @@ class BSC_View {
 
     function get_rows_for_term($table,$term_id) {
         $new_query= "select distinct t.name `".$table."`, t.id ".$table."_id "
-                . "from bsc_".$table." t where term = ".$term_id.";";
+                . "from bsc_".$table." t where term = ".$term_id." and t.lc=".$this->lc.";";
         $new_rows = $this->dbutil->process_query_assoc($new_query);
         return $new_rows;
     }
@@ -628,6 +628,7 @@ switch ("' . $th . '")
                 $options = $this->get_rows_for_term($th, $this->term_id);
 //            $options = array();
                 $index = 0;
+	    if (!empty($options)){
                 foreach ($options as $row) {
 
                     echo 'input.options[' . $index . '] = new Option("' . $this->escape($row[$th])
@@ -636,6 +637,9 @@ switch ("' . $th . '")
 
 
                 }
+	    } else{
+		    
+	    }
             }
             echo '
 			name=line_index+"-new-' . $th . '";

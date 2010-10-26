@@ -10,5 +10,7 @@ foreach ($countries as $country) {
 
     $reminder = new Reminder($dbutil);
     $reminder->check_tracking();
+    $reminder->check_actions();
 }
 ?>
+
