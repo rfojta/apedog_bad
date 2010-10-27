@@ -540,7 +540,7 @@ class BSC_View {
 	$rows = $rows[0];
         $to = $rows['LCPemail'];
         $user = $rows['user'];
-        $subject = 'Apedog - operation status changed by ' . $user;
+        $subject = 'Apedog - status of operation'.$rows['operation_name'].' changed by ' . $user;
         $message = "Hello " . $rows['LCPname'] . "!
 
                 $user just changed status $typeOfChange for following operation:
@@ -710,4 +710,3 @@ name = line_index+"-new-"+i;
 }
 
 ?>
-
