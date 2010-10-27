@@ -173,7 +173,8 @@ class Reminder {
 			JOIN csfs c ON s.csfs = c.id
 			JOIN users u ON u.lc = s.lc
 			WHERE o.when between sysdate()
-			AND DATE_ADD( SYSDATE( ) , INTERVAL 1 DAY)";
+			AND DATE_ADD( SYSDATE( ) , INTERVAL 1 DAY)
+			AND o.status =0";
 
 		;
 		$rows = $this->dbutil->process_query_assoc($query);
@@ -216,4 +217,3 @@ If you have already fulfilled the plan, please change the status here, so your L
 }
 
 ?>
-
