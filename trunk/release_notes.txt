@@ -1,0 +1,3 @@
+bugfixes
+	-defaultni obrazek v hornim menu pokud user nema vlastni (released)
+	-changed link for wiki in useful links
