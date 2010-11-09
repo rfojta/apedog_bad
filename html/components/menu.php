@@ -23,7 +23,7 @@
     </div>
 </div>
 <div id="splash" style="background: url(<?php
-$src='\'images/';
+$src='images/';
 if ($_SESSION['country_code']!=null&&$page!='index'&&$page!='useful_links') {
     $src.='_'.$_SESSION['country_code'];
 } else {
@@ -35,6 +35,10 @@ if($page!='index'&&$page!='useful_links') {
 } else {
     $src.='.jpg';
 }
-echo $src;
-     ?>')">
-    <span style="position:relative; bottom:-123px; left: 919px; color: black; font-family:Verdana,Helvetica,sans-serif; font-weight: 900;">Apedog 1.5 &alpha;</span></div>
+if (file_exists($_SERVER['DOCUMENT_ROOT']."/apedog/".$src)){
+	echo $src;
+} else {
+	echo "images/common/img02_02.jpg";
+}
+     ?>)">
+    <span style="position:relative; bottom:-123px; left: 919px; color: black; font-family:Verdana,Helvetica,sans-serif; font-weight: 900;">Apedog 2.0</span></div>
