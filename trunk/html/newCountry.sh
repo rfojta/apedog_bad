@@ -17,27 +17,29 @@ fi
 
 
 #inserting row into base db
-#mysql -uqwerta -ptesttest -h localhost apedog_base<<EOFMYSQL
-#INSERT INTO countries (
-		
-		#Name ,
-		#Code ,
-		#Created
-		#)
-#VALUES (
-		#NULL , '$1', '$2', NOW()
-       #);
-#EOFMYSQL
+mysql -uqwerta -ptesttest -h localhost apedog_base<<EOFMYSQL
+INSERT INTO countries (
+		id,		
+		Name ,
+		Code ,
+		Created
+		)
+VALUES (
+		NULL , '$1', '$2', NOW()
+       );
+EOFMYSQL
 
 #making dirs for backuping and images
 mkdir backups/_$2
 mkdir images/_$2
-
+chmod a+rwx backups/_$2
+chmod a+rwx images/_$2
 
 #creating countries own db
 mysql -uqwerta -ptesttest -h localhost <<EOFMYSQL
 CREATE DATABASE apedog_$2;
 EOFMYSQL
 
+mysql -uqwerta -ptesttest -h localhost apedog_$2 < apedog_new_country.sql 
 #E="Please create database apedog_$2 and execute actual apedog_new_country.sql"
 #echo $E | mail -s “d” krystof1000@gmail.com 

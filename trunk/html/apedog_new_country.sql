@@ -444,14 +444,7 @@ INSERT INTO `users` (`id`, `name`, `surname`, `email`, `lc`, `pass`, `login`, `c
 (1, '', '', '', 1, 'aiesec', 'MC', '0000-00-00 00:00:00', '2009-09-01 19:44:02');
 
 
-
----
----alters
----
-
----
----10.11.2010
----
+-- alter 10.11.2010
 ALTER TABLE  `terms` ADD UNIQUE (
 `number_of_term`
 );
