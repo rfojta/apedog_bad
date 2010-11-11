@@ -104,7 +104,9 @@ class Reminder {
 		$message.='
 
 			';
-		$message .= 'Do not forget, MC will lock this KPIs in few days and you wonÂ´t be able to edit it then.
+		$message .= 'Do not forget, MC will lock this KPIs in few days and you won\'t be able to edit it then.
+			Please check it at http://praha.aiesec.cz/apedog/entering_values.php
+
 			Regards,
 			Your Apedog.';
 		$headers = 'From: noreply@apedog.cz';
@@ -142,7 +144,8 @@ class Reminder {
 		$message.='
 
 			';
-		$message .= 'Do not forget, MC will lock this KPIs in few days and you wonÂ´t be able to edit it then.
+		$message .= 'Do not forget, MC will lock this KPIs in few days and you won\'t be able to edit it then.
+			Please check it at http://praha.aiesec.cz/apedog/detail_planning.php
 			Regards,
 			Your Apedog.';
 		$headers = 'From: noreply@apedog.cz';

@@ -1,3 +1,6 @@
 bugfixes
 	-defaultni obrazek v hornim menu pokud user nema vlastni (released)
+	-fixed mysql error v enteringu kdyz neni nadefinovany zadny quarter(released)
+	-fixed trend v reportech podle number_of_term + unique key v tabulce term (released)
+	-changed MyISAM to InnoDB
 	-changed link for wiki in useful links
