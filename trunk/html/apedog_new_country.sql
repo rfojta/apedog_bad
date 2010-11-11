@@ -122,7 +122,7 @@ CREATE TABLE IF NOT EXISTS `business_perspectives` (
   `created` datetime NOT NULL,
   `updated` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=22 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=22 ;
 
 
 -- --------------------------------------------------------
@@ -162,7 +162,7 @@ CREATE TABLE IF NOT EXISTS `detail_tracking` (
   KEY `kpi` (`kpi`),
   KEY `quarter` (`quarter`),
   KEY `lc` (`lc`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2402 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2402 ;
 
 -- --------------------------------------------------------
 
@@ -175,7 +175,7 @@ CREATE TABLE IF NOT EXISTS `graphs` (
   `name` varchar(48) NOT NULL,
   `description` varchar(48) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 
 --
 -- Dumping data for table `graphs`
@@ -253,7 +253,7 @@ CREATE TABLE IF NOT EXISTS `lcs` (
   `updated` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=12 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=12 ;
 
 --
 -- Dumping data for table `lcs`
@@ -292,7 +292,7 @@ CREATE TABLE IF NOT EXISTS `locking` (
   `quarter` int(11) DEFAULT NULL,
   `term` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
 
 --
 -- Dumping data for table `locking`
@@ -353,7 +353,7 @@ CREATE TABLE IF NOT EXISTS `quarters` (
   `term` int(10) unsigned NOT NULL,
   `quarter_in_term` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=23 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=23 ;
 
 
 --
@@ -365,7 +365,7 @@ CREATE TABLE IF NOT EXISTS `roles` (
   `name` varchar(45) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
   `level` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
 -- Dumping data for table `roles`
@@ -388,7 +388,7 @@ CREATE TABLE IF NOT EXISTS `terms` (
   `number_of_term` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `term_from` (`term_from`,`term_to`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
 
 
 
@@ -410,7 +410,7 @@ CREATE TABLE IF NOT EXISTS `tracking` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `area-lc-term` (`area`,`lc`,`term`),
   KEY `term` (`term`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=19 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=19 ;
 
 --
 -- Dumping data for table `tracking`
@@ -442,3 +442,20 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 INSERT INTO `users` (`id`, `name`, `surname`, `email`, `lc`, `pass`, `login`, `created`, `updated`) VALUES
 (1, '', '', '', 1, 'aiesec', 'MC', '0000-00-00 00:00:00', '2009-09-01 19:44:02');
+
+
+
+---
+---alters
+---
+
+---
+---10.11.2010
+---
+ALTER TABLE  `terms` ADD UNIQUE (
+`number_of_term`
+);
+
+ALTER TABLE  `users` ADD UNIQUE (
+`login`
+);

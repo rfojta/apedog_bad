@@ -565,18 +565,18 @@ echo '<INPUT TYPE="BUTTON" VALUE="Export to XLS" ONCLICK="window.open(\'xlswrite
         }
         $past_actual = '';
 
-        $query = $this->quarter_query . ' WHERE id = ' . $quarter_id;
+        $query = $this->quarter_query . ' join terms t on quarters.term=t.id WHERE quarters.id = ' . $quarter_id;
         $rows = $this->dbutil->process_query_assoc($query);
         $selected_quarter = $rows[0];
 
-        $year_ago = $selected_quarter['term'] - 1;
+        $year_ago = $selected_quarter['number_of_term'] - 1;
         $quarter_in_term = $selected_quarter['quarter_in_term'];
 
-        $query = $this->quarter_query . ' WHERE term = '
+        $query = 'select q.id quarter_id from quarters q join terms t on t.id=q.term WHERE number_of_term = '
                 . $year_ago . ' and quarter_in_term = ' . $quarter_in_term;
         $rows = $this->dbutil->process_query_assoc($query);
         $quarter_term_ago = $rows[0];
-        $past_actual = $this->get_actual($this->lc_id, $quarter_term_ago['id'], $year_ago, $kpi);
+        $past_actual = $this->get_actual($this->lc_id, $quarter_term_ago['quarter_id'], $year_ago, $kpi);
         return $past_actual;
     }
 
@@ -687,3 +687,4 @@ echo '<INPUT TYPE="BUTTON" VALUE="Export to XLS" ONCLICK="window.open(\'xlswrite
 
 }
 ?>
+
