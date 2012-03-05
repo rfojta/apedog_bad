@@ -6,7 +6,8 @@
 
 /**
  * Description of generic_viewclass
- *
+ * 
+ * 
  * @author Richard
  */
 class generic_view {
@@ -17,6 +18,12 @@ class generic_view {
     protected $context;
     protected $controller;
 
+  /** 
+   * @param <string> name
+   * @param <Model> model
+   * @param <context> context
+   * @param <controller> controller
+  */
     function  __construct($name, $model, $context, $controller) {
         $this->controller = $controller;
         $this->context = $context;
